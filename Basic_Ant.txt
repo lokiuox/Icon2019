@@ -1,0 +1,75 @@
+Definiamo 3 tipologie di formiche:
+-Guerriera
+-Regina
+-Operaia
+
+Tutte hanno in comune un comportamento generale tipico dell'essere formica.
+
+Caratteristiche di stato:
+
++fame
++sete
++paura
++accoppiamento
++posizione
++porzione di mondo conosciuto(sotto insieme della matrice del mondo)
+
+Caratteristiche di movimento:
+
++rimani fermo
++movimento a sinistra
++movimento a destra
++movimento avanti
++movimento indietro
++consuma risorsa
++trasporta risorsa
++accoppiati (avviene ritornando nel formicaio dove si trova la formica regina)
+(+muore dopo un tot di turni?)
+
+Queste proprietà sono regolate dalle seguenti leggi:
+
+-La paura ha maggiore importanza della sete
+-La sete ha maggiore importanza della fame
+-La fame ha maggiore importanza dell' accoppiamento
+-Quando paura,fame e sete sono a valori accettabili allora si dà priorità all'accoppiamento
+-Ciascuno di questi fattori aumenta o diminuisce in funzione del tempo o eventi (minacce,trasporto e consumo di risorse)
+-Se dopo un lasso di tempo prestabilito fame o sete non vengono soddisfatte la formica muore
+-Vengono eseguite azioni relative alla caratteristica di stato più urgente
+-Le risorse trovate da una formica in parte vengono consumate da lei(se il parametro relativo è inferiore ad una certa soglia),in parte trasportate nel formicaio
+
+-Muovendosi viene popolata la porzione di mondo conosciuta della formica
+-Scoperta una risorsa la formica crea un percorso(segnalato con ferormone che è rappresentato da un puntatore alla casella successiva) che ripercorre ripetutamente fino ad esaurirla(eliminazione del ferormone dal percorso)
+-Lo spostamento avviene come concatenazione dei movimenti,evitando di tornare sui propri passi
+-La formica se trova tracce di ferormone segue il percorso
+
+Il mondo di gioco ha le seguenti proprietà:
+
++E' definito come una matrice NxN dove ogni casella rappresenta un punto della mappa avente le seguenti caratteristiche:
+	-Risorsa presente
+	-Quantità risorsa
+	-Avversità presente [minaccia insetto o minaccia naturale]
+	(-Presenza di ferormone di altra formica)
++Le minacce non possono muoversi nella mappa
++Le risorse si rigenerano randomicamente(?)
++Il formicaio è uno solo ed è creato all'inizio del gioco,può aumentare di dimensione senza limite(la scarsità di risorse regola l'ambiente)
+
+
+FORMICA REGINA
+
+-Unico esemplare per formicaio
+-La sua morte corrisponde a game over
+-Consuma le risorse trasportate nel formicaio
+-Può accoppiarsi con un numero indefinito di formiche contemporaneamente
+-genera operaie e guerriere secondo una certa proporzione
+
+FORMICA GUERRIERA
+
++attacca
++non trasporta risorse
++non si accoppia
+
+-Consuma le risorse trasportate nel formicaio
+-Neutralizza le minacce insetto e naturali
+-Ha un tot numero di attacchi,poi muore
+(-situazioni di svantaggio numerico o tipologia di minaccia) 
+

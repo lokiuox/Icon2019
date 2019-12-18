@@ -32,9 +32,3 @@ clauses
 	downMove(Cell(ant)) :- isFree(downCell(Cell(ant))).
 */
 clauses
-	Cell() = Position
-end implement ant
-
-
-
-
