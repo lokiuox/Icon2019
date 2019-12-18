@@ -20,6 +20,7 @@ implement ant
 facts
 	Id:integer.
 	Position:(integer X,integer Y).
+/*
 clauses
 	canLeftMove() :- isFree(leftCell(Cell(ant))).
 clauses
@@ -30,4 +31,5 @@ clauses
 	downMove(Cell(ant)) :- isFree(downCell(Cell(ant))).
 clauses
 	Cell(ant,cell):- cell is Position 
-
+*/
+end implement ant
