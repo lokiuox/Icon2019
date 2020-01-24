@@ -20,3 +20,39 @@ N.B.: data la mole di macchine incontrate, sarebbe meglio implementare un limite
 Es: Utilizzare una sola auto campione che deve raggiungere una destinazione (calcolando A-Star), mentre le altre vagano solo per la mappa raccogliendo dati.
 2. Semplificazione di 1: Mantere i pesi nell'ambiente Unity e integrarle in Prolog soltanto nel momento in cui si ricevono informazioni più recenti.
 3. Semplificazione ulteriore: utilizzare Prolog soltanto per il grafo. (Non ha molto senso);
+
+## TODO
+* Creare nomi casuali per le macchine (Consigliati nomi di Pirati) www.name-generator.org.uk
+* Associare Strade con gli Incroci
+* Creare una rappresentazione in formato nodo-arco per strade e incroci
+* Creare nuovi scenari
+
+## Possibili rappresentazioni dei dati
+1
+```
+Mappa di adiacenza:
+{
+ id_strada: lista_strade_adiacenti(percorribili), id_incrocio
+}
+
+Lista incroci:
+{
+ id_incrocio: tipo_incrocio, lista_strade_precedenza
+}
+
+Pesi delle strade:
+{
+ id_strada: peso_strada
+}
+```
+
+2
+```
+ [
+     id_incrocio_partenza, id_strada, peso_strada, id_incrocio_arrivo
+ ]
+
+ {
+     id_incrocio: tipo_incrocio, lista_strade
+ }
+```
