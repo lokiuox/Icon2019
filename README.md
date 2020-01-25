@@ -26,6 +26,9 @@ Es: Utilizzare una sola auto campione che deve raggiungere una destinazione (cal
 * Associare Strade con gli Incroci
 * Creare una rappresentazione in formato nodo-arco per strade e incroci
 * Creare nuovi scenari
+* Capire se si può importare il file .pl come stringa
+* Ridefinire A Star
+* Definire come gli eventi stradali influiscono sui pesi delle strade
 
 ## Knowledge Base Car
 ```
