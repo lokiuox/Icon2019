@@ -27,6 +27,11 @@ Es: Utilizzare una sola auto campione che deve raggiungere una destinazione (cal
 * Creare una rappresentazione in formato nodo-arco per strade e incroci
 * Creare nuovi scenari
 
+## Knowledge Base Car
+* fgd
+* mhf
+* jhf
+
 ## Possibili rappresentazioni dei dati
 1
 ```
@@ -56,3 +61,4 @@ Pesi delle strade:
      id_incrocio: tipo_incrocio, lista_strade
  }
 ```
+
