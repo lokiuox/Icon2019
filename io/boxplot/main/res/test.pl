@@ -1,23 +1,32 @@
 incrocio(A)
 strada(B)
 
+numerocivico(K,L):-
+	strada(K),
+	lunghezza(K,X) > 0,
+	lunghezza(K,X) > L.
+
 partenza(K,L):-
-  strada(K)
-  
+  	strada(K),
+	numerocivico(K,L).
+
 destinazione(K,L):-
-  strada(K)
+  	strada(K),
+	numerocivico(K,L).
 
 collega(C,D,E):-
 	 incrocio(C),
 	 strada(D),
-	 incrocio(E)
+	 incrocio(E).
 
 peso(X,Y):-
-	 strada(X)
+	 strada(X).
 
 lunghezza(X,Y):-
-	strada(X)
+	strada(X).
 
-angolo(X,Z):-
-	 strada(X)
+angolo_entrata(X,Z):-
+	 strada(X).
 
+angolo_uscita(X,Z):-
+	 strada(X).

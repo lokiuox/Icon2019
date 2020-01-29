@@ -1,4 +1,4 @@
-package io.boxplot.query;
+package query;
 
 import org.jpl7.Query;
 import org.jpl7.Term;
