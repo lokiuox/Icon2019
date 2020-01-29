@@ -1,34 +1,28 @@
-package com.patterson;
-
-import com.patterson.entity.*;
+package com.patterson.world;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class Surface extends JPanel implements ActionListener {
+public class Surface extends JPanel implements ActionListener {
 
     private Timer timer;
     private int counter = 0;
 
-    Car car = new Car_red(32*2,0,0);
-    Road road = new Road(32,5*16,0, 20*16);
-    Road road1 = new Road(32+road.getLength()+16,5*16+16,3, 20*16);
+    Scenario map = new Scenario();
+    Actors actors = new Actors(map);
 
-    Surface() {
+    public Surface() {
         timer = new Timer(33, this);
         timer.start();
-
-        //car.setRoad(road);
     }
 
     private void doDrawing(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
-        road.draw(g2d);
-        road1.draw(g2d);
-        car.draw(g2d);
+        map.draw(g2d);
+        actors.draw(g2d);
     }
 
     @Override
@@ -41,9 +35,7 @@ class Surface extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        car.tick();
-        if (car.isRoadEnd())
-            car.setRoad(road1);
+        actors.tick();
 
         repaint();
     }

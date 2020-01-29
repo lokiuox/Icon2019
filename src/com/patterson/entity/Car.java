@@ -5,6 +5,8 @@ import com.patterson.utility.Angle;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Car implements Entity {
 
@@ -17,6 +19,7 @@ public class Car implements Entity {
     protected Image[] img = new Image[4];
 
     Road road = null;
+    Queue<Road> path = new LinkedList<>();
 
     public Car(float x, float y, int d) {
         position.setLocation(x,y);
@@ -41,13 +44,50 @@ public class Car implements Entity {
         } else {
             g.drawImage(img[direction.getAngle()], (int) position.getX()-16, (int) position.getY()-16, null);
         }
+
+        // debug
         g.setPaint(Color.blue);
         g.drawLine((int) position.getX(), (int) position.getY(), (int) position.getX(), (int) position.getY());
+
+        g.drawLine((int) ( position.getX()+brakeSpace()*direction.cos()), (int) (position.getY()+brakeSpace()*direction.sin()), (int) position.getX(), (int) position.getY());
     }
 
-    // set a road for the car to follow
-    public void setRoad(Road r) {
-        road = r;
+    public Queue<Road> getPath() {
+        return path;
+    }
+
+    // do stuff during the next frame
+    public void tick() {
+
+        if (road == null)
+            road = path.poll();
+
+        // stop if there is no road to follow
+        if (road == null) {
+            stop();
+        } else {
+            // if not on the road, proceed orthogonally to it
+            if (!hasRoadLine() && !isRoadOrtho()) {
+                direction.setAngle(road.getDirection().ortho(position, road.getPosition()));
+            }
+
+            // if on the road, follow the road
+            if (hasRoadLine() && !hasRoadDir()) {
+                direction.setAngle(road.getDirection());
+            }
+
+            // if near the end of the road stop, otherwise go straight on
+            if (isRoadEnd()) {
+                roadEnd();
+                stop();
+            } else {
+                go();
+            }
+        }
+    }
+
+    private void roadEnd() {
+        road = path.poll();
     }
 
     // accelerate
@@ -71,38 +111,13 @@ public class Car implements Entity {
         position.setLocation(position.getX()+speed* direction.cos(), position.getY()+speed* direction.sin());
     }
 
-    // do stuff for the next frame
-    public void tick() {
-        // stop if there is no road to follow
-        if (road == null) {
-            stop();
-        } else {
-            // if not on the road, proceed orthogonally to it
-            if (!hasRoadLine() && !isRoadOrtho()) {
-                direction.setAngle(road.getDirection().ortho(position, road.getPosition()));
-            }
-
-            // if on the road, follow the road
-            if (hasRoadLine() && !hasRoadDir()) {
-                direction.setAngle(road.getDirection());
-            }
-
-            // if near the end of the road stop, otherwise go straight on
-            if (isRoadEnd()) {
-                stop();
-            } else {
-                go();
-            }
-        }
-    }
-
     // check if the car and the road have the same direction
-    boolean hasRoadDir() {
+    private boolean hasRoadDir() {
         return direction.equals(road.getDirection());
     }
 
     // check if the car is on the road
-    boolean hasRoadLine() {
+    private boolean hasRoadLine() {
         boolean a = false;
 
         if (road.direction.isHorizontal()) {
@@ -120,21 +135,21 @@ public class Car implements Entity {
     }
 
     // check if the car is orthogonal to the road
-    boolean isRoadOrtho() {
+    private boolean isRoadOrtho() {
         return direction.equals(road.getDirection().ortho(position,road.getPosition()));
     }
 
     // check if the car is near the end of the road
-    public boolean isRoadEnd() {
+    private boolean isRoadEnd() {
 
         boolean a = false;
 
         if (hasRoadLine() && hasRoadDir()) {
             if (direction.isHorizontal()) {
-                if (Math.abs(position.getX() - road.getEnd().getX()) <= brakeSpace()+24+speed)
+                if (Math.abs(position.getX() - road.getEnd().getX()) <= brakeSpace()+24)
                     a = true;
             } else if (direction.isVertical()) {
-                if (Math.abs(position.getY() - road.getEnd().getY()) <= brakeSpace()+20+speed)
+                if (Math.abs(position.getY() - road.getEnd().getY()) <= brakeSpace()+16)
                     a = true;
             }
         }
@@ -142,7 +157,7 @@ public class Car implements Entity {
     }
 
     // calculate how much space the car needs to completely stop
-    float brakeSpace() {
+    private float brakeSpace() {
         return speed*speed/(2*acceleration);
     }
 }

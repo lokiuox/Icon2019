@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class Road implements Entity {
+public class Road implements Entity,Cloneable {
 
     Point2D position = new Point2D.Float(0, 0);
     int length;

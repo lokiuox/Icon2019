@@ -1,6 +1,8 @@
 package com.patterson;
 
 
+import com.patterson.world.Surface;
+
 import javax.swing.*;
 import java.awt.*;
 
