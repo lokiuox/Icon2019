@@ -35,11 +35,17 @@ Es: Utilizzare una sola auto campione che deve raggiungere una destinazione (cal
 incrocio(A)
 strada(B)
 
+numerocivico(K,L):-
+	strada(K)
+	0<X<=lunghezza(K,X) ???
+	
 partenza(K,L):-
-  strada(K)
+  	strada(K),
+	numerocivico(K,L)
   
 destinazione(K,L):-
-  strada(K)
+  	strada(K),
+	numerocivico(K,L)
 
 collega(C,D,E):-
 	 incrocio(C),
@@ -52,9 +58,12 @@ peso(X,Y):-
 lunghezza(X,Y):-
 	strada(X)
 
-angolo(X,Z):-
+angolo_entrata(X,Z):-
 	 strada(X)
-  
+
+angolo_uscita(X,Z):-
+	 strada(X)
+
 ```
 
 ## Possibili rappresentazioni dei dati
