@@ -1,5 +1,6 @@
 package knowledgeBase;
 
+import org.jpl7.Term;
 import query.QueryCreator;
 import streetElements.Street;
 
@@ -20,17 +21,17 @@ public class KBimmutable implements KnowledgeBase {
 
     // variable of type String
     private String kbstart;
-    private QueryCreator query;
+    private QueryCreator query = new QueryCreator();
 
     // private constructor restricted to this class itself
     private KBimmutable(String kbfilename)
     {
         //check if kbfilename exist
 
-        this.kbstart = "consult('"+kbfilename+"')";
-        this.query.setPredicate(kbstart);
+        kbstart = "consult('"+kbfilename+"')";
+        query.setPredicate(kbstart);
         query.getResult();
-
+        //Check exception
 
 
 
@@ -47,10 +48,34 @@ public class KBimmutable implements KnowledgeBase {
 
 
     public ArrayList<Street> getNodes(){
-        this.query.setPredicate("incroci(X)");
-        System.out.println(query.getResults());
+        query.setPredicate("strada(X)");
 
-        return new ArrayList<Street>(); }
+        ArrayList<Street> strade = new ArrayList<>();
+        ArrayList<String> nomiStrade = new ArrayList<>();
+
+
+        for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                if(val.getValue().toString().compareTo("_2") != 0){
+                    nomiStrade.add(val.getValue().toString());
+                }
+
+            }
+        }
+
+        for (String n : nomiStrade){
+
+            /*query.setPredicate("lunghezza("+n+",?)");
+            HashMap<String, Term>[] res = (HashMap<String, Term>[]) query.getResults();
+            HashMap<String, Term> resSingolo = (HashMap<String, Term>[]) res.entrySet();*/
+            Street s = new Street(n, 1);
+            strade.add(s);
+        }
+
+
+
+        return strade;
+    }
     public Map<Integer,String> getCrosses(){ return new HashMap<>();}
     public Integer getLength(){ return 1;}
 }

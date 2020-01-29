@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jpl">
+    <CLASSES>
+      <root url="jar:///usr/lib/swi-prolog/lib/jpl.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

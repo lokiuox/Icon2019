@@ -1,5 +1,8 @@
-incrocio(A)
-strada(B)
+
+%clausole
+
+incrocio(A).
+strada(B).
 
 numerocivico(K,L):-
 	strada(K),
@@ -30,3 +33,12 @@ angolo_entrata(X,Z):-
 
 angolo_uscita(X,Z):-
 	 strada(X).
+
+%fatti
+
+incrocio(c).
+incrocio(d).
+strada(a).
+lunghezza(a,5).
+peso(b).
+
