@@ -20,7 +20,7 @@ class Surface extends JPanel implements ActionListener {
         timer = new Timer(33, this);
         timer.start();
 
-        car.setRoad(road);
+        //car.setRoad(road);
     }
 
     private void doDrawing(Graphics g) {
@@ -40,20 +40,8 @@ class Surface extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        /*
-        counter+=100;
 
-        if (counter%15000<10000) {
-            if (counter%15000 > 3000 && counter % 3000 == 0) {
-                car.right();
-            }
-            car.go();
-        } else {
-            car.stop();
-        }
-        */
-
-        car.move();
+        car.tick();
         if (car.isRoadEnd())
             car.setRoad(road1);
 

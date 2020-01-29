@@ -45,60 +45,63 @@ public class Car implements Entity {
         g.drawLine((int) position.getX(), (int) position.getY(), (int) position.getX(), (int) position.getY());
     }
 
-    public void go() {
+    // set a road for the car to follow
+    public void setRoad(Road r) {
+        road = r;
+    }
+
+    // accelerate
+    private void go() {
         speed += acceleration;
         if (speed>maxSpeed)
             speed=maxSpeed;
         positionUpdate();
     }
 
-    public void stop() {
+    // brake
+    private void stop() {
         speed -= acceleration;
         if (speed<0)
             speed=0;
         positionUpdate();
     }
 
-    public void right() {
-        direction.rotate(-1);
-    }
-
-    public void left() {
-        direction.rotate(1);
-    }
-
+    // apply movement
     private void positionUpdate() {
         position.setLocation(position.getX()+speed* direction.cos(), position.getY()+speed* direction.sin());
     }
 
-    public void setRoad(Road r) {
-        road = r;
-    }
-
-    public void move() {
-
-        // se non sei sulla strada, avvicinati perperdicolarmente
-        if (!hasRoadLine() && !isRoadOrtho()) {
-            direction.setAngle(road.getDirection().ortho(position, road.getPosition()));
-        }
-
-        // se sei sulla strada, vai nella stessa direzione della strada
-        if (hasRoadLine() && !hasRoadDir()) {
-            direction.setAngle(road.getDirection());
-        }
-
-        // se sei alla fine della strada fermati, altrimenti vai dritto
-        if (isRoadEnd()) {
+    // do stuff for the next frame
+    public void tick() {
+        // stop if there is no road to follow
+        if (road == null) {
             stop();
         } else {
-            go();
+            // if not on the road, proceed orthogonally to it
+            if (!hasRoadLine() && !isRoadOrtho()) {
+                direction.setAngle(road.getDirection().ortho(position, road.getPosition()));
+            }
+
+            // if on the road, follow the road
+            if (hasRoadLine() && !hasRoadDir()) {
+                direction.setAngle(road.getDirection());
+            }
+
+            // if near the end of the road stop, otherwise go straight on
+            if (isRoadEnd()) {
+                stop();
+            } else {
+                go();
+            }
         }
     }
 
+    // check if the car and the road have the same direction
     boolean hasRoadDir() {
         return direction.equals(road.getDirection());
     }
 
+    // check if the car is on the road
     boolean hasRoadLine() {
         boolean a = false;
 
@@ -116,10 +119,12 @@ public class Car implements Entity {
         return a;
     }
 
+    // check if the car is orthogonal to the road
     boolean isRoadOrtho() {
         return direction.equals(road.getDirection().ortho(position,road.getPosition()));
     }
 
+    // check if the car is near the end of the road
     public boolean isRoadEnd() {
 
         boolean a = false;
@@ -136,6 +141,7 @@ public class Car implements Entity {
         return a;
     }
 
+    // calculate how much space the car needs to completely stop
     float brakeSpace() {
         return speed*speed/(2*acceleration);
     }
