@@ -13,17 +13,19 @@ public class Actors {
     }
 
     private void initCars(Scenario m) {
-        Car c = new Car_red(32*6,0,0);
+
+        Car c = new Car_red(32*1,0,0);
         c.getPath().add(m.getRoadByID("R0"));
         c.getPath().add(m.getRoadByID("R1"));
         c.getPath().add(m.getRoadByID("R2"));
         cars.add(c);
 
-        c = new Car_green(32*6,60,0);
+         c = new Car_green(32*2,0,0);
         c.getPath().add(m.getRoadByID("R0"));
         c.getPath().add(m.getRoadByID("R1"));
         //c.getPath().add(m.getRoadByID("R2"));
         cars.add(c);
+
     }
 
     public void draw(Graphics2D g) {

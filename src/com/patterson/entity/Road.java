@@ -56,9 +56,11 @@ public class Road implements Entity,Cloneable {
             }
         }
 
-        g.setPaint(Color.blue);
+        //debug
+        /*g.setPaint(Color.blue);
         g.drawLine((int) position.getX(), (int) position.getY(), (int) position.getX(), (int) position.getY());
         g.drawLine((int) getEnd().getX(), (int) getEnd().getY(), (int) getEnd().getX(), (int) getEnd().getY());
+        */
     }
 
     protected void loadImage() {

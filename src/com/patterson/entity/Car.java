@@ -14,7 +14,7 @@ public class Car implements Entity {
     private Angle direction;
     private float speed;
     private final float maxSpeed = 8;
-    private final float acceleration = 0.22f;
+    private final float acceleration = 0.35f;
 
     protected Image[] img = new Image[4];
 
@@ -46,10 +46,12 @@ public class Car implements Entity {
         }
 
         // debug
+        /*
         g.setPaint(Color.blue);
         g.drawLine((int) position.getX(), (int) position.getY(), (int) position.getX(), (int) position.getY());
 
-        g.drawLine((int) (position.getX() + (brakeSpace()+16)*direction.cos()), (int) (position.getY() + (brakeSpace()+16)*direction.sin()), (int) position.getX()+16*direction.cos(), (int) position.getY()+16*direction.sin());
+        g.drawLine((int) (position.getX() + (brakeSpace()+24)*direction.cos()), (int) (position.getY() + (brakeSpace()+16)*direction.sin()), (int) position.getX()+24*direction.cos(), (int) position.getY()+16*direction.sin());
+        */
     }
 
     public Queue<Road> getPath() {
@@ -79,7 +81,7 @@ public class Car implements Entity {
             }
 
             // if near the end of the road stop, otherwise go straight on
-            if (isRoadEnd() || isNearCar()) {
+            if (isNearCar() || isRoadEnd()) {
                 stop();
             } else {
                 go();
@@ -95,7 +97,7 @@ public class Car implements Entity {
     }
 
     private void roadEnd() {
-        if (path.peek() != null)
+        if (path.peek() != null && !isNearCar())
             setRoad(path.poll());
     }
 
@@ -151,7 +153,7 @@ public class Car implements Entity {
     // check if the car is near the end of the road
     private boolean isRoadEnd() {
         boolean a = false;
-            if (hasRoadLine() && hasRoadDir() && isNear(road.getEnd())) {
+            if (hasRoadLine() && hasRoadDir() && isNear(road.getEnd(), 24, 20)) {
                 a = true;
                 roadEnd();
             }
@@ -160,30 +162,48 @@ public class Car implements Entity {
 
     private boolean isNearCar() {
         boolean a = false;
-        if (road != null && hasRoadDir() )
+        if (road != null )
             for (Car c: road.getCars()) {
-                if (c!=this && isNear(c.getPosition()))
+                if (c!=this && isNear(new Point2D.Float((float) c.getPosition().getX(), (float) c.getPosition().getY()), 42, 32) ) {
                     a = true;
+                }
             }
         return a;
     }
 
     // check if the car is near a point (closer than safety distance)
-    public boolean isNear(Point2D p) {
-        boolean a = false;
+    public boolean isNear(Point2D p, int xOffset, int yOffset) {
+        boolean a = false, b = false;
 
-        if ((direction.isHorizontal()
-                && Math.abs(position.getX() + (brakeSpace()+24) * direction.cos() - p.getX()) <= speed+2)
-                || (road.direction.isVertical()
-                && Math.abs(position.getY() + (brakeSpace()+16) * direction.sin() - p.getY()) <= speed+2)) {
-            a = true;
+        if (direction.isHorizontal() && Math.abs(position.getY()-p.getY()) < 32 )
+            b = true;
+        if (direction.isVertical() && Math.abs(position.getX()-p.getX()) < 32 )
+            b = true;
+
+        switch (direction.getAngle()) {
+            case 0:
+                if (position.getX() + (brakeSpace()+xOffset+speed) * direction.cos() >= p.getX() && position.getX() - speed*direction.cos() <= p.getX())
+                    a = true;
+                break;
+            case 1:
+                if (position.getY() + (brakeSpace()+yOffset+speed) * direction.sin() <= p.getY() && position.getY() - speed*direction.sin() >= p.getY())
+                    a = true;
+                break;
+            case 2:
+                if (position.getX() + (brakeSpace()+xOffset+speed) * direction.cos() <= p.getX() && position.getX() - speed*direction.cos() >= p.getX())
+                    a = true;
+                break;
+            case 3:
+                if (position.getY() + (brakeSpace()+yOffset+speed) * direction.sin() >= p.getY() && position.getY() - speed*direction.sin() <= p.getY())
+                    a = true;
+                break;
         }
 
-        return a;
+        return a && b;
     }
 
     // calculate how much space the car needs to completely stop
     private float brakeSpace() {
-        return speed * speed / (2 * acceleration);
+        return speed*speed / (2 * acceleration);
     }
 }
