@@ -75,24 +75,25 @@ public class KBimmutable implements KnowledgeBase {
         return strade;
     }
     public Map<Integer,String> getCrosses(){
+        Map<Integer,String> crosses = new HashMap<>();
         String va[] = {"X"};
         String temp;
         query.setPredicate("incrocio",va);
 
-        ArrayList<Street> strade = new ArrayList<>();
-        ArrayList<String> nomiStrade = new ArrayList<>();
+        Integer i = 0;
 
 
         for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
             for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
                 temp = val.getValue().toString();
                 if(!temp.matches("_[0-9]*")){
-                    nomiStrade.add(temp);
+                    crosses.put(i,temp);
+                    i++;
                 }
 
             }
         }
-        return new HashMap<>();
+        return crosses;
     }
     public Integer getLength(String nomeStrada){
         String[] va = new String[]{nomeStrada,"X"};
