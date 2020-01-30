@@ -66,22 +66,8 @@ public class KBimmutable implements KnowledgeBase {
         }
 
         for (String n : nomiStrade){
-             va = new String[]{n,"X"};
-            query.setPredicate("lunghezza",va);
-
-            for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
-                for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
-                    temp = val.getValue().toString();
-                    if(!temp.matches("_[0-9]*")){
-                        Street s = new Street(n, Integer.parseInt(temp));
-                        strade.add(s);
-                    }
-
-                }
-            }
-
-
-
+            Street s = new Street(n, getLength(n));
+            strade.add(s);
         }
 
 
@@ -108,5 +94,21 @@ public class KBimmutable implements KnowledgeBase {
         }
         return new HashMap<>();
     }
-    public Integer getLength(){ return 1;}
+    public Integer getLength(String nomeStrada){
+        String[] va = new String[]{nomeStrada,"X"};
+        String temp;
+        Integer i = -1;
+        query.setPredicate("lunghezza",va);
+
+        for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]*")){
+                     i =  Integer.parseInt(temp);
+                }
+            }
+        }
+
+        return i;
+    }
 }

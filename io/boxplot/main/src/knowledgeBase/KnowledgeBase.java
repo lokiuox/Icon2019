@@ -9,7 +9,7 @@ public interface KnowledgeBase {
 
     ArrayList<Street> getNodes(); //ritorna mappa nome nodo, peso, lunghezza , si potrebbe trasformare in abstract
     Map<Integer,String> getCrosses();
-    Integer getLength();
+    Integer getLength(String nomeStrada);
 
     //qui ha senso se definiamo semafori e cartelli che oltre la lunghezza influenzano il peso
     //Integer getWeight();
