@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface QueryDefiner {
 
-    void setPredicate(String predicate);
+    void setPredicate(String predicate,String[] atoms);
     Boolean getBoolean();
     Map<String, Term> getResult();
     Map<String, Term>[] getResults();

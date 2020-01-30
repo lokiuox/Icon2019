@@ -21,16 +21,15 @@ public class KBimmutable implements KnowledgeBase {
 
     // variable of type String
     private String kbstart;
-    private QueryCreator query = new QueryCreator();
+    private QueryCreator query;
 
     // private constructor restricted to this class itself
     private KBimmutable(String kbfilename)
     {
-        //check if kbfilename exist
+        //TODO check if kbfilename exist
 
-        kbstart = "consult('"+kbfilename+"')";
-        query.setPredicate(kbstart);
-        query.getResult();
+        query = new QueryCreator(kbfilename);
+
         //Check exception
 
 
@@ -48,7 +47,9 @@ public class KBimmutable implements KnowledgeBase {
 
 
     public ArrayList<Street> getNodes(){
-        query.setPredicate("strada(X)");
+        String va[] = {"X"};
+        String temp;
+        query.setPredicate("strada",va);
 
         ArrayList<Street> strade = new ArrayList<>();
         ArrayList<String> nomiStrade = new ArrayList<>();
@@ -56,26 +57,56 @@ public class KBimmutable implements KnowledgeBase {
 
         for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
             for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
-                if(val.getValue().toString().compareTo("_2") != 0){
-                    nomiStrade.add(val.getValue().toString());
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]*")){
+                    nomiStrade.add(temp);
                 }
 
             }
         }
 
         for (String n : nomiStrade){
+             va = new String[]{n,"X"};
+            query.setPredicate("lunghezza",va);
 
-            /*query.setPredicate("lunghezza("+n+",?)");
-            HashMap<String, Term>[] res = (HashMap<String, Term>[]) query.getResults();
-            HashMap<String, Term> resSingolo = (HashMap<String, Term>[]) res.entrySet();*/
-            Street s = new Street(n, 1);
-            strade.add(s);
+            for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
+                for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                    temp = val.getValue().toString();
+                    if(!temp.matches("_[0-9]*")){
+                        Street s = new Street(n, Integer.parseInt(temp));
+                        strade.add(s);
+                    }
+
+                }
+            }
+
+
+
         }
 
 
 
         return strade;
     }
-    public Map<Integer,String> getCrosses(){ return new HashMap<>();}
+    public Map<Integer,String> getCrosses(){
+        String va[] = {"X"};
+        String temp;
+        query.setPredicate("incrocio",va);
+
+        ArrayList<Street> strade = new ArrayList<>();
+        ArrayList<String> nomiStrade = new ArrayList<>();
+
+
+        for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]*")){
+                    nomiStrade.add(temp);
+                }
+
+            }
+        }
+        return new HashMap<>();
+    }
     public Integer getLength(){ return 1;}
 }

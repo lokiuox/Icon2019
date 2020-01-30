@@ -1,37 +1,72 @@
 package query;
 
+import helper.StringUtils;
+import org.jpl7.Atom;
 import org.jpl7.Query;
 import org.jpl7.Term;
+import org.jpl7.Variable;
 
 import java.util.Map;
+
+import static java.lang.Character.isUpperCase;
 
 public class QueryCreator implements QueryDefiner{
 
     int nSolutions = 0;
-    String predicate = "";
+    String predicate = "",baseName = "";
     Query query;
     Boolean resultBoolean;
     private Object result;
     Boolean is_valid = false;
 
-    public QueryCreator(){}
+    public QueryCreator(String filename){
+        baseName = filename;
+        setKB();
+
+    }
+
+    private void setKB(){
+        query = new Query(
+                "consult",
+                new Term[] {new Atom(baseName)}
+        );
+
+        System.out.println( "consult " + (query.hasSolution() ? "succeeded" : "failed"));
+
+    }
 
 
-    public void setPredicate(String predicate){
+    public void setPredicate(String predicate,String[] atoms) {
         this.is_valid = false;
+
+        Term[] TermArray = new Term[atoms.length];
+        int length = 0;
+
+        for (String atom : atoms){
+            if(StringUtils.isAllUpperCase(atom)){
+                TermArray[length] = new Variable(atom);
+                length ++;
+            }else if(StringUtils.isAllLowerCase(atom)){
+                TermArray[length] = new Atom(atom);
+                length ++;
+            }else{
+                System.err.println("ne atomo ne variabile");
+                //throw new Exception("ne atomo ne variabile");
+            }
+        }
+
+        query = new Query(predicate, TermArray);
         this.predicate = predicate;
     }
 
     public Boolean getBoolean(){
         if(is_valid && !predicate.isEmpty()){ return resultBoolean;}
-        query = new Query(predicate);
         this.is_valid = true;
         return resultBoolean = query.hasSolution();
     }
 
     public Map<String, Term> getResult(){
         if(is_valid && !predicate.isEmpty() && this.nSolutions == 1){ return (Map<String, Term>)  this.result;}
-        query = new Query(predicate);
         this.is_valid = true;
 
         this.nSolutions = query.allSolutions().length;
@@ -49,8 +84,18 @@ public class QueryCreator implements QueryDefiner{
 
     public Map<String, Term>[] getResults(){
         if(is_valid && !predicate.isEmpty() && this.nSolutions > 1){ return (Map<String, Term>[])  this.result;}
-        query = new Query(predicate);
         this.is_valid = true;
+
+        /*
+
+        java.util.Map<String,Term>[] solutions = query.allSolutions();
+        for ( int i=0 ; i < solutions.length ; i++ ) {
+            System.out.println( "X = " + solutions[i].get("X"));
+        }
+
+        System.out.println(query.allSolutions().toString());
+
+         */
 
         this.nSolutions = query.allSolutions().length;
 
