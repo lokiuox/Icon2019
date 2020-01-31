@@ -27,8 +27,10 @@ incrocio(c).
 incrocio(d).
 strada(a).
 lunghezza(a,5).
+peso(a,5).
 strada(b).
 lunghezza(b,5).
+peso(b,5).
 
 collega(c,a,d).
 collega(d,b,c).

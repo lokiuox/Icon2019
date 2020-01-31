@@ -7,6 +7,7 @@ import streetElements.Cross;
 import streetElements.Street;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class KBmethods {
@@ -31,7 +32,7 @@ public class KBmethods {
         }
 
         for (String n : nomiStrade){
-            Street s = new Street(n, getLength(query,n),getLength(query,n)); //lunghezza e peso sono uguali
+            Street s = new Street(n, getLength(query,n),getWeight(query,n)); //lunghezza e peso sono uguali
             strade.add(s);
         }
 
@@ -66,6 +67,26 @@ public class KBmethods {
         query.setPredicate("lunghezza",va);
 
         for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]+")){
+                    i =  Integer.parseInt(temp);
+                }
+            }
+        }
+
+        return i;
+    }
+
+    public static Integer getWeight(QueryCreator query,String nomeStrada){
+        String[] va = new String[]{nomeStrada,"X"};
+        String temp;
+        Integer i = -1;
+        query.setPredicate("peso",va);
+
+        query.getBoolean();
+
+        for (HashMap<String, Term> entry : query.getResults()) { //itero sulle mappe
             for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
                 temp = val.getValue().toString();
                 if(!temp.matches("_[0-9]+")){

@@ -39,6 +39,7 @@ angolo_uscita(X,Z):-
 incrocio(c).
 incrocio(d).
 strada(a).
+strada(b).
 lunghezza(a,5).
-peso(b).
-
+lunghezza(b,5).
+peso(b,6).

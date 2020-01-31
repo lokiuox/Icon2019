@@ -47,6 +47,10 @@ public class Main {
 
         System.out.println(carKB.getNodes().toString());
         System.out.println(carKB.getCrosses().toString());
+
+        carKB.setWeight("a",6);
+        System.out.println(carKB.getNodes().toString());
+
         //creazione auto -> per ogni auto definire inizio e fine -> calcolare a*
         //interazione fra auto
     }
