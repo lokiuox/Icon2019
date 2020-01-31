@@ -1,11 +1,14 @@
 package knowledgeBase;
 
+import algorithms.AlgoInterface;
 import helper.StringUtils;
 import query.QueryCreator;
 import streetElements.Cross;
 import streetElements.Street;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KBenanched implements KnowledgeBase {
 
@@ -43,12 +46,27 @@ public class KBenanched implements KnowledgeBase {
         }
     }
 
+    public Map<String, String> getStart(){
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("street", streetStart);
+        map.put("number", nStart.toString());
+        return map;
+    }
 
 
-    public void calculatePath(Object o){
+    public Map<String, String> getEnd(){
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("street", streetEnd);
+        map.put("number", nEnd.toString());
+        return map;
+    }
+
+
+
+    public void calculatePath(AlgoInterface o){
         if(endSetted && startSetted){
             //ora calcoli
-            //o.exec(getStart(streetStart,nStart),getEnd(streetEnd,nEnd));
+            o.exec(streetStart,nStart.toString(),streetEnd,nEnd.toString());
         }else{
             System.out.println("definire partenza e fine");
         }
