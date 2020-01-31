@@ -59,6 +59,12 @@ public class QueryCreator implements QueryDefiner{
         this.predicate = predicate;
     }
 
+    public void setPredicate(String predicate) {
+        this.is_valid = false;
+        query = new Query(predicate);
+        this.predicate = predicate;
+    }
+
     public Boolean getBoolean(){
         if(is_valid && !predicate.isEmpty()){ return resultBoolean;}
         this.is_valid = true;

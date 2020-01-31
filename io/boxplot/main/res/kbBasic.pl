@@ -13,6 +13,8 @@ collega(C,D,E):-
 lunghezza(X,Y):-
 	strada(X).
 
+
+
 angoloEntrata(X,Z):-
 	 strada(X).
 
@@ -29,5 +31,6 @@ strada(b).
 lunghezza(b,5).
 
 collega(c,a,d).
+collega(d,b,c).
 
 

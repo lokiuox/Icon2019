@@ -15,6 +15,14 @@ public class Street {
         weight = w;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Integer getLength() {
+        return length;
+    }
+
     @Override
     public String toString() {
         return "Street{" +

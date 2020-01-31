@@ -2,10 +2,10 @@ package knowledgeBase;
 
 import org.jpl7.Term;
 import query.QueryCreator;
+import streetElements.Cross;
 import streetElements.Street;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,16 +15,14 @@ import java.util.Map;
  * Tipo di classe Singleton
  */
 
-public class KBimmutable implements KnowledgeBase {
+public class KBimmutable  implements  KnowledgeBase{
 
     private static KBimmutable single_instance = null;
 
-    // variable of type String
-    private String kbstart;
     private QueryCreator query;
 
     // private constructor restricted to this class itself
-    private KBimmutable(String kbfilename)
+     private KBimmutable(String kbfilename)
     {
         //TODO check if kbfilename exist
 
@@ -47,69 +45,22 @@ public class KBimmutable implements KnowledgeBase {
 
 
     public ArrayList<Street> getNodes(){
-        String va[] = {"X"};
-        String temp;
-        query.setPredicate("strada",va);
-
-        ArrayList<Street> strade = new ArrayList<>();
-        ArrayList<String> nomiStrade = new ArrayList<>();
-
-
-        for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
-            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
-                temp = val.getValue().toString();
-                if(!temp.matches("_[0-9]*")){
-                    nomiStrade.add(temp);
-                }
-
-            }
-        }
-
-        for (String n : nomiStrade){
-            Street s = new Street(n, getLength(n));
-            strade.add(s);
-        }
-
-
-
-        return strade;
-    }
-    public Map<Integer,String> getCrosses(){
-        Map<Integer,String> crosses = new HashMap<>();
-        String va[] = {"X"};
-        String temp;
-        query.setPredicate("incrocio",va);
-
-        Integer i = 0;
-
-
-        for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
-            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
-                temp = val.getValue().toString();
-                if(!temp.matches("_[0-9]*")){
-                    crosses.put(i,temp);
-                    i++;
-                }
-
-            }
-        }
-        return crosses;
+         return KBmethods.getNodes(query);
+    } //ritorna mappa nome nodo, peso, lunghezza , si potrebbe trasformare in abstract
+    public ArrayList<Cross> getCrosses(){
+        return KBmethods.getCrosses(query);
     }
     public Integer getLength(String nomeStrada){
-        String[] va = new String[]{nomeStrada,"X"};
-        String temp;
-        Integer i = -1;
-        query.setPredicate("lunghezza",va);
-
-        for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
-            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
-                temp = val.getValue().toString();
-                if(!temp.matches("_[0-9]*")){
-                     i =  Integer.parseInt(temp);
-                }
-            }
-        }
-
-        return i;
+        return KBmethods.getLength(query,nomeStrada);
     }
+    public ArrayList<String> getConnection(String nomeIncrocio){
+        return KBmethods.getConnection(query,nomeIncrocio);
+    }
+
+
+
+
+
+
+
 }
