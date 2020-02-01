@@ -29,6 +29,9 @@ Es: Utilizzare una sola auto campione che deve raggiungere una destinazione (cal
 * Capire se si può importare il file .pl come stringa
 * Ridefinire A Star
 * Definire come gli eventi stradali influiscono sui pesi delle strade
+* Funzione genera pesi archi strade
+* Definire una knowledge unica,eliminando quella super partes delle regole stradali e quella immutable
+* Riconsiderare se il caso,l'uso di JIProlog
 
 ## Knowledge Base Car
 ```
@@ -41,11 +44,9 @@ numerocivico(K,L):-
 	0<L<=X. ???
 	
 partenza(K,L):-
-  	strada(K),
 	numerocivico(K,L).
   
 destinazione(K,L):-
-  	strada(K),
 	numerocivico(K,L).
 
 collega(C,D,E):-
@@ -61,6 +62,12 @@ lunghezza(X,Y):-
 
 angolo(X,Z):-
 	 strada(X).
+	 
+limitevelocità
+
+precedenza_a_destra
+
+semafori
 
 ```
 
