@@ -51,6 +51,8 @@ class Surface extends JPanel {
     }
 
     private void initUI() {
+        setFocusable(true);
+        addKeyListener(new PressAdapter());
         MovingAdapter ma = new MovingAdapter();
         addMouseMotionListener(ma);
         addMouseListener(ma);
@@ -165,6 +167,21 @@ class Surface extends JPanel {
             if (visible) {
                 g.drawLine(xStart, yStart, xEnd, yEnd);
             }
+        }
+    }
+
+    class PressAdapter extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    System.out.println("left");
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    System.out.println("right");
+                    break;
+            }
+            repaint();
         }
     }
 
