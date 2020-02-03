@@ -1,3 +1,4 @@
+import algorithms.AStar;
 import knowledgeBase.KBenanched;
 import knowledgeBase.KBimmutable;
 import streetElements.Street;
@@ -18,6 +19,11 @@ public class Main {
 
 
         ArrayList<Street> strade = mainKB.getNodes();
+
+        AStar singleIstance = AStar.getInstance(10,10);
+
+
+        //il codice seguente sarà eseguito in un threads
 
 
         //scelta strada partenza e fine randomica
@@ -44,12 +50,17 @@ public class Main {
         carKB.setEnd(strade.get(end).getName(),nEnd);
 
 
+        carKB.calculatePath(singleIstance);
+
+
 
         System.out.println(carKB.getNodes().toString());
         System.out.println(carKB.getCrosses().toString());
 
-        carKB.setWeight("a",6);
-        System.out.println(carKB.getNodes().toString());
+        //carKB.setWeight("b",6);
+
+
+
 
         //creazione auto -> per ogni auto definire inizio e fine -> calcolare a*
         //interazione fra auto

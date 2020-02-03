@@ -1,8 +1,22 @@
 
+%fatti
+
+incrocio(c).
+incrocio(d).
+strada(a).
+lunghezza(a,5).
+peso(a,6).
+strada(b).
+lunghezza(b,5).
+peso(b,5).
+
+collega(c,a,d).
+collega(d,b,c).
+
+
 %clausole
 
-incrocio(A).
-strada(B).
+direction(X,M):- strada(X), M == "V"; M == "O".
 
 
 collega(C,D,E):-
@@ -21,18 +35,5 @@ angoloEntrata(X,Z):-
 angoloUscita(X,Z):-
 	 strada(X).
 
-%fatti
-
-incrocio(c).
-incrocio(d).
-strada(a).
-lunghezza(a,5).
-peso(a,5).
-strada(b).
-lunghezza(b,5).
-peso(b,5).
-
-collega(c,a,d).
-collega(d,b,c).
 
 

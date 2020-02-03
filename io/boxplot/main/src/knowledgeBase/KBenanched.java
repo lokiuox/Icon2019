@@ -1,7 +1,9 @@
 package knowledgeBase;
 
 import algorithms.AlgoInterface;
+import algorithms.Node;
 import helper.StringUtils;
+import org.jpl7.Term;
 import query.QueryCreator;
 import streetElements.Cross;
 import streetElements.Street;
@@ -46,25 +48,44 @@ public class KBenanched implements KnowledgeBase {
         }
     }
 
-    public Map<String, String> getStart(){
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("street", streetStart);
+    public Map<String, Object> getStart(){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("street", this.getStreet(streetStart));
         map.put("number", nStart.toString());
         return map;
     }
 
 
-    public Map<String, String> getEnd(){
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("street", streetEnd);
-        map.put("number", nEnd.toString());
+    public Map<String, Object> getEnd(){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("street", this.getStreet(streetEnd));
+        map.put("number", nStart.toString());
         return map;
     }
 
 
 
+
+
     public void calculatePath(AlgoInterface o){
         if(endSetted && startSetted){
+
+            //recupera start se orizzontale o verticale il numero civico get corrisponde alla partenza
+
+            Map<String,Object> start = getStart();
+            Street s = (Street) start.get("street");
+            /*
+            if(s.getOrientation().compareTo("V")){
+
+                //Node begin = new Node(s.getCoordinate(),nStart);
+
+            }else{
+                //Node begin = new Node(nStart,s.getCoordinate());
+
+            }             */
+
+            //o.setInitialNode(begin);
+            //o.setFinalNode(begin);
             //ora calcoli
             o.exec(streetStart,nStart.toString(),streetEnd,nEnd.toString());
         }else{
@@ -77,10 +98,16 @@ public class KBenanched implements KnowledgeBase {
         if(!StringUtils.isAllLowerCase(nomeStrada)){
             System.out.println("nome strada non valido");
         }else {
-            query.setPredicate("assert(peso("+nomeStrada+","+peso.toString()+"))");
+            query.setPredicate("retract(peso("+nomeStrada+","+KBmethods.getWeight(query,nomeStrada)+"))");
+            query.setPredicate("assert(peso("+nomeStrada+","+peso+"))");
             query.getBoolean();
         }
     }
+
+    public Street getStreet(String nameStreet){
+        return KBmethods.getStreet(query,nameStreet);
+    }
+
 
     public ArrayList<Street> getNodes(){
         return KBmethods.getNodes(query);

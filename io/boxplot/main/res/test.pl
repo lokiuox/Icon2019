@@ -1,8 +1,16 @@
+%fatti
+
+incrocio(c).
+incrocio(d).
+strada(a).
+strada(b).
+lunghezza(a,5).
+lunghezza(b,6).
+peso(b,6).
 
 %clausole
 
-incrocio(A).
-strada(B).
+:-dynamic(peso/2).
 
 numerocivico(K,L):-
 	strada(K),
@@ -34,12 +42,4 @@ angolo_entrata(X,Z):-
 angolo_uscita(X,Z):-
 	 strada(X).
 
-%fatti
 
-incrocio(c).
-incrocio(d).
-strada(a).
-strada(b).
-lunghezza(a,5).
-lunghezza(b,5).
-peso(b,6).

@@ -12,6 +12,10 @@ import java.util.Map;
 
 public class KBmethods {
 
+    public static Street getStreet(QueryCreator query,String nomeStrada){
+        return new Street(nomeStrada, getLength(query,nomeStrada),getWeight(query,nomeStrada));
+    }
+
     public static ArrayList<Street> getNodes(QueryCreator query){
         String va[] = {"X"};
         String temp;
@@ -32,7 +36,7 @@ public class KBmethods {
         }
 
         for (String n : nomiStrade){
-            Street s = new Street(n, getLength(query,n),getWeight(query,n)); //lunghezza e peso sono uguali
+            Street s = new Street(n, getLength(query,n),getWeight(query,n));
             strade.add(s);
         }
 
@@ -80,7 +84,7 @@ public class KBmethods {
 
     public static Integer getWeight(QueryCreator query,String nomeStrada){
         String[] va = new String[]{nomeStrada,"X"};
-        String temp;
+        String temp = "";
         Integer i = -1;
         query.setPredicate("peso",va);
 
