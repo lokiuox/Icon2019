@@ -1,9 +1,9 @@
 package algorithms;
 
+import java.util.List;
+
 public interface AlgoInterface {
-    void exec(String streetStart,String nStart,String streeEnd,String nEnd);
-
-
+    List<Node> findPath();
     void setInitialNode(Node initialNode);
     void setFinalNode(Node finalNode);
 

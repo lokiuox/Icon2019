@@ -1,10 +1,10 @@
 import algorithms.AStar;
+import algorithms.Node;
 import knowledgeBase.KBenanched;
 import knowledgeBase.KBimmutable;
 import streetElements.Street;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 public class Main {
 
@@ -18,9 +18,25 @@ public class Main {
         //System.out.println(mainKB.getCrosses().toString());
 
 
+        HashMap<Integer,Integer> puntiBloccati = new HashMap<>();
         ArrayList<Street> strade = mainKB.getNodes();
+        for(Street s : strade){
+            if(s.getOrientation().compareTo("V") == 0){
+                for (int i = 0; i <= s.getLength(); i++){
+                    puntiBloccati.put(s.getCoordinate(),i);
+                }
+            }else{
+                for (int i = 0; i <= s.getLength(); i++){
+                    puntiBloccati.put(i,s.getCoordinate());
+                }
+            }
+        }
+
+
+
 
         AStar singleIstance = AStar.getInstance(10,10);
+        singleIstance.setBlocks(puntiBloccati);
 
 
         //il codice seguente sarà eseguito in un threads
@@ -50,20 +66,27 @@ public class Main {
         carKB.setEnd(strade.get(end).getName(),nEnd);
 
 
-        carKB.calculatePath(singleIstance);
+        //ora calcoli
+        List<Node> path = carKB.calculatePath(singleIstance);
+        for (Node node : path) {
+            System.out.println(node);
+        }
+
+
 
 
 
         System.out.println(carKB.getNodes().toString());
         System.out.println(carKB.getCrosses().toString());
 
+        //interazione fra auto
         //carKB.setWeight("b",6);
 
 
 
 
-        //creazione auto -> per ogni auto definire inizio e fine -> calcolare a*
-        //interazione fra auto
+
+
     }
 
 }

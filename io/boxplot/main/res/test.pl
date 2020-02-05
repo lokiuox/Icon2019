@@ -1,16 +1,27 @@
 %fatti
 
+
+
 incrocio(c).
 incrocio(d).
 strada(a).
-strada(b).
+orientation(a,"V").
+coordinate(a,3).
 lunghezza(a,5).
-lunghezza(b,6).
-peso(b,6).
+peso(a,6).
+strada(b).
+orientation(b,"O").
+coordinate(b,3).
 
 %clausole
 
 :-dynamic(peso/2).
+
+strada(X) :- orientation(X,Y).
+orientation(X,M):-  M == "V"; M == "O".
+
+coordinate(X,Y).
+
 
 numerocivico(K,L):-
 	strada(K),
@@ -30,11 +41,9 @@ collega(C,D,E):-
 	 strada(D),
 	 incrocio(E).
 
-peso(X,Y):-
-	 strada(X).
+peso(X,Y).
 
-lunghezza(X,Y):-
-	strada(X).
+lunghezza(X,Y).
 
 angolo_entrata(X,Z):-
 	 strada(X).

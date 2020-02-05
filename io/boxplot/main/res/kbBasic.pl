@@ -4,9 +4,14 @@
 incrocio(c).
 incrocio(d).
 strada(a).
+orientation(a,"V").
+coordinate(a,3).
 lunghezza(a,5).
 peso(a,6).
 strada(b).
+orientation(b,"O").
+coordinate(b,3).
+
 lunghezza(b,5).
 peso(b,5).
 
@@ -15,17 +20,21 @@ collega(d,b,c).
 
 
 %clausole
+strada(X) :- orientation(X,Y).
+strada(X) :- lunghezza(X,Y).
+strada(X) :- peso(X,Y).
+strada(X) :- coordinate(X,Y).
 
-direction(X,M):- strada(X), M == "V"; M == "O".
-
+orientation(X,M):- ==(M,"V"); ==(M,"O").
 
 collega(C,D,E):-
 	 incrocio(C),
 	 strada(D),
 	 incrocio(E).
 
-lunghezza(X,Y):-
-	strada(X).
+lunghezza(X,Y).
+peso(X,Y).
+coordinate(X,Y).
 
 
 

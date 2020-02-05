@@ -10,6 +10,7 @@ import streetElements.Street;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KBenanched implements KnowledgeBase {
@@ -67,30 +68,38 @@ public class KBenanched implements KnowledgeBase {
 
 
 
-    public void calculatePath(AlgoInterface o){
+    public List<Node> calculatePath(AlgoInterface o){
         if(endSetted && startSetted){
 
             //recupera start se orizzontale o verticale il numero civico get corrisponde alla partenza
 
-            Map<String,Object> start = getStart();
-            Street s = (Street) start.get("street");
-            /*
-            if(s.getOrientation().compareTo("V")){
+            Map<String,Object> point = getStart();
+            Street s = (Street) point.get("street");
 
-                //Node begin = new Node(s.getCoordinate(),nStart);
 
+            if(s.getOrientation().compareTo("V") == 0){
+                o.setInitialNode(new Node(s.getCoordinate(),nStart));
             }else{
-                //Node begin = new Node(nStart,s.getCoordinate());
+                o.setInitialNode(new Node(nStart,s.getCoordinate()));
+            }
 
-            }             */
+            point = getEnd();
+            s = (Street) point.get("street");
 
-            //o.setInitialNode(begin);
-            //o.setFinalNode(begin);
-            //ora calcoli
-            o.exec(streetStart,nStart.toString(),streetEnd,nEnd.toString());
+            if(s.getOrientation().compareTo("V") == 0){
+                o.setFinalNode(new Node(s.getCoordinate(),nStart));
+            }else{
+                o.setFinalNode(new Node(nStart,s.getCoordinate()));
+            }
+
+            return o.findPath();
+
+
         }else{
             System.out.println("definire partenza e fine");
         }
+
+        return new ArrayList<Node>();
 
     }
 

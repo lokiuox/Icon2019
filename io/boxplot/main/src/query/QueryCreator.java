@@ -96,8 +96,8 @@ public class QueryCreator implements QueryDefiner{
         this.nSolutions = query.allSolutions().length;
 
         if(this.nSolutions == 1) {
-            System.out.println("Attention only one solution available");
-            this.result = query.oneSolution();
+            //System.out.println("Attention only one solution available");
+            this.result = query.allSolutions();
             return (HashMap<String, Term>[]) this.result;
 
         }

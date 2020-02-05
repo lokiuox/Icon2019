@@ -13,7 +13,7 @@ import java.util.Map;
 public class KBmethods {
 
     public static Street getStreet(QueryCreator query,String nomeStrada){
-        return new Street(nomeStrada, getLength(query,nomeStrada),getWeight(query,nomeStrada));
+        return new Street(nomeStrada, getLength(query,nomeStrada),getWeight(query,nomeStrada),getStreetOrientation(query,nomeStrada),getStreetCoord(query,nomeStrada));
     }
 
     public static ArrayList<Street> getNodes(QueryCreator query){
@@ -28,19 +28,18 @@ public class KBmethods {
         for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
             for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
                 temp = val.getValue().toString();
-                if(!temp.matches("_[0-9]+")){
+                if(!temp.matches("_[0-9]+") && !nomiStrade.contains(temp)){
                     nomiStrade.add(temp);
                 }
 
             }
         }
 
+        //non ricordo perchè l'ho messo fuori dal for di sopra
         for (String n : nomiStrade){
-            Street s = new Street(n, getLength(query,n),getWeight(query,n));
+            Street s = new Street(n, getLength(query,n),getWeight(query,n),getStreetOrientation(query,n),getStreetCoord(query,n));
             strade.add(s);
         }
-
-
 
         return strade;
     }
@@ -70,6 +69,7 @@ public class KBmethods {
         Integer i = -1;
         query.setPredicate("lunghezza",va);
 
+
         for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
             for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
                 temp = val.getValue().toString();
@@ -81,27 +81,24 @@ public class KBmethods {
 
         return i;
     }
-
     public static Integer getWeight(QueryCreator query,String nomeStrada){
         String[] va = new String[]{nomeStrada,"X"};
         String temp = "";
         Integer i = -1;
         query.setPredicate("peso",va);
 
-        query.getBoolean();
 
         for (HashMap<String, Term> entry : query.getResults()) { //itero sulle mappe
-            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+            for (Map.Entry<String, Term> val : entry.entrySet()) { //singolo valore
                 temp = val.getValue().toString();
-                if(!temp.matches("_[0-9]+")){
-                    i =  Integer.parseInt(temp);
+                if (!temp.matches("_[0-9]+")) {
+                    i = Integer.parseInt(temp);
                 }
             }
         }
 
         return i;
     }
-
     public static ArrayList<String> getConnection(QueryCreator query,String nomeIncrocio){
 
 
@@ -121,5 +118,39 @@ public class KBmethods {
         }
 
         return connessioni;
+    }
+    public static String getStreetOrientation(QueryCreator query,String nomeStrada){
+        String[] va = new String[]{nomeStrada,"X"};
+        String temp = "",dir= "";
+        query.setPredicate("orientation",va);
+
+        for (HashMap<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]+")){
+                    dir = temp;
+                }
+            }
+        }
+
+        return dir;
+    }
+
+    public static Integer getStreetCoord(QueryCreator query,String nomeStrada){
+        String[] va = new String[]{nomeStrada,"X"};
+        String temp = "";
+        Integer coord= 0;
+        query.setPredicate("coordinate",va);
+
+        for (HashMap<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]+")){
+                    coord = Integer.parseInt(temp);
+                }
+            }
+        }
+
+        return coord;
     }
 }

@@ -18,8 +18,8 @@ public class AStar implements  AlgoInterface{
     private Node[][] searchArea;
     private PriorityQueue<Node> openList;
     private Set<Node> closedSet;
-    private Node initialNode;
-    private Node finalNode;
+    private Node initialNode = null;
+    private Node finalNode = null;
     private static AStar single_instance = null;
 
     public void exec(String streetStart,String nStart,String streeEnd,String nEnd){}
@@ -29,8 +29,8 @@ public class AStar implements  AlgoInterface{
     private AStar(int rows, int cols, Node initialNode, Node finalNode, int hvCost, int diagonalCost) {
         this.hvCost = hvCost;
         this.diagonalCost = diagonalCost;
-        setInitialNode(initialNode);
-        setFinalNode(finalNode);
+        //setInitialNode(initialNode);
+        //setFinalNode(finalNode);
         this.searchArea = new Node[rows][cols];
         this.openList = new PriorityQueue<Node>(new Comparator<Node>() {
             @Override
@@ -79,19 +79,20 @@ public class AStar implements  AlgoInterface{
         for (int i = 0; i < searchArea.length; i++) {
             for (int j = 0; j < searchArea[0].length; j++) {
                 Node node = new Node(i, j);
+                if(getFinalNode() != null){
+                    node.calculateHeuristic(getFinalNode());
 
-                node.calculateHeuristic(getFinalNode());
+                }
                 this.searchArea[i][j] = node;
             }
         }
     }
 
-    public void setBlocks(int[][] blocksArray) {
-        for (int i = 0; i < blocksArray.length; i++) {
-            int row = blocksArray[i][0];
-            int col = blocksArray[i][1];
-            setBlock(row, col);
+    public void setBlocks(HashMap<Integer,Integer> blocksArray) {
+        for (Map.Entry<Integer, Integer> entry : blocksArray.entrySet()) {
+           setBlock(entry.getKey(),entry.getValue());
         }
+
     }
 
     public List<Node> findPath() {
@@ -203,6 +204,9 @@ public class AStar implements  AlgoInterface{
 
     public void setInitialNode(Node initialNode) {
         this.initialNode = initialNode;
+        if(finalNode != null){
+            setNodes();
+        }
     }
 
     public Node getFinalNode() {
@@ -211,6 +215,9 @@ public class AStar implements  AlgoInterface{
 
     public void setFinalNode(Node finalNode) {
         this.finalNode = finalNode;
+        if(initialNode != null){
+            setNodes();
+        }
     }
 
     public Node[][] getSearchArea() {
