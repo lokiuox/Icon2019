@@ -1,0 +1,156 @@
+package knowledgeBase;
+
+import org.jpl7.Query;
+import org.jpl7.Term;
+import query.QueryCreator;
+import streetElements.Cross;
+import streetElements.Street;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class KBmethods {
+
+    public static Street getStreet(QueryCreator query,String nomeStrada){
+        return new Street(nomeStrada, getLength(query,nomeStrada),getWeight(query,nomeStrada),getStreetOrientation(query,nomeStrada),getStreetCoord(query,nomeStrada));
+    }
+
+    public static ArrayList<Street> getNodes(QueryCreator query){
+        String va[] = {"X"};
+        String temp;
+        query.setPredicate("strada",va);
+
+        ArrayList<Street> strade = new ArrayList<>();
+        ArrayList<String> nomiStrade = new ArrayList<>();
+
+
+        for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]+") && !nomiStrade.contains(temp)){
+                    nomiStrade.add(temp);
+                }
+
+            }
+        }
+
+        //non ricordo perchè l'ho messo fuori dal for di sopra
+        for (String n : nomiStrade){
+            Street s = new Street(n, getLength(query,n),getWeight(query,n),getStreetOrientation(query,n),getStreetCoord(query,n));
+            strade.add(s);
+        }
+
+        return strade;
+    }
+    public static ArrayList<Cross> getCrosses(QueryCreator query){
+        ArrayList<Cross> crosses = new ArrayList<>();
+        String va[] = {"X"};
+        String temp;
+        query.setPredicate("incrocio",va);
+
+        for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]+")){
+                    Cross c = new Cross(temp);
+                    ArrayList<String>  conn = getConnection(query,temp);
+                    conn.forEach((n) -> c.insertConnection(n));
+                    crosses.add(c);
+                }
+
+            }
+        }
+        return crosses;
+    }
+    public static Integer getLength(QueryCreator query,String nomeStrada){
+        String[] va = new String[]{nomeStrada,"X"};
+        String temp;
+        Integer i = -1;
+        query.setPredicate("lunghezza",va);
+
+
+        for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]+")){
+                    i =  Integer.parseInt(temp);
+                }
+            }
+        }
+
+        return i;
+    }
+    public static Integer getWeight(QueryCreator query,String nomeStrada){
+        String[] va = new String[]{nomeStrada,"X"};
+        String temp = "";
+        Integer i = -1;
+        query.setPredicate("peso",va);
+
+
+        for (HashMap<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String, Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if (!temp.matches("_[0-9]+")) {
+                    i = Integer.parseInt(temp);
+                }
+            }
+        }
+
+        return i;
+    }
+    public static ArrayList<String> getConnection(QueryCreator query,String nomeIncrocio){
+
+
+        String[] va = new String[]{nomeIncrocio,"X","Y"};
+        ArrayList<String> connessioni = new ArrayList<>();
+        String temp;
+        query.setPredicate("collega",va);
+
+        for (Map<String, Term> entry : query.getResults()) { //itero sulle mappe
+            Term t = entry.get("X");
+            temp = t.toString();
+            if(!temp.matches("_[0-9]+")){
+                if(!connessioni.contains(temp)){
+                    connessioni.add(temp);
+                }
+            }
+        }
+
+        return connessioni;
+    }
+    public static String getStreetOrientation(QueryCreator query,String nomeStrada){
+        String[] va = new String[]{nomeStrada,"X"};
+        String temp = "",dir= "";
+        query.setPredicate("orientation",va);
+
+        for (HashMap<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]+")){
+                    dir = temp;
+                }
+            }
+        }
+
+        return dir;
+    }
+
+    public static Integer getStreetCoord(QueryCreator query,String nomeStrada){
+        String[] va = new String[]{nomeStrada,"X"};
+        String temp = "";
+        Integer coord= 0;
+        query.setPredicate("coordinate",va);
+
+        for (HashMap<String, Term> entry : query.getResults()) { //itero sulle mappe
+            for (Map.Entry<String,Term> val : entry.entrySet()) { //singolo valore
+                temp = val.getValue().toString();
+                if(!temp.matches("_[0-9]+")){
+                    coord = Integer.parseInt(temp);
+                }
+            }
+        }
+
+        return coord;
+    }
+}
