@@ -10,6 +10,7 @@ import java.util.Queue;
 
 public class Car implements Entity {
 
+    String ID;
     private Point2D position = new Point2D.Float(0, 0);
     private Angle direction;
     private float speed;
@@ -21,14 +22,15 @@ public class Car implements Entity {
     Road road = null;
     Queue<Road> path = new LinkedList<>();
 
-    public Car(float x, float y, int d) {
+    public Car(String id, float x, float y, int d) {
+        ID = id;
         position.setLocation(x, y);
         direction = new Angle(d);
         loadImage();
     }
 
-    public Car(float x, float y) {
-        this(x, y, 0);
+    public Car(String id, float x, float y) {
+        this(id, x, y, 0);
     }
 
     protected void loadImage() {
@@ -52,6 +54,10 @@ public class Car implements Entity {
 
         g.drawLine((int) (position.getX() + (brakeSpace()+24)*direction.cos()), (int) (position.getY() + (brakeSpace()+16)*direction.sin()), (int) position.getX()+24*direction.cos(), (int) position.getY()+16*direction.sin());
         */
+    }
+
+    public String getID() {
+        return ID;
     }
 
     public Queue<Road> getPath() {

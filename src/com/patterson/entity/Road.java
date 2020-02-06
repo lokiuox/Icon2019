@@ -7,20 +7,44 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
 
-public class Road implements Entity,Cloneable {
+public class Road implements Entity {
 
+    String ID;
     Point2D position = new Point2D.Float(0, 0);
     int length;
     Angle direction;
 
     protected Image[] img = new Image[4];
     Set<Car> cars = new HashSet<>();
+    Intersection intersection = null;
 
-    public Road(float x, float y, int d, int l) {
+    public Road(String id, float x, float y, int d, int l) {
+        ID = id;
         position.setLocation(x,y);
         direction = new Angle(d);
         length = l;
         loadImage();
+    }
+
+    public Road(String id, float x, float y, int d, int l, Intersection i) {
+        ID = id;
+        position.setLocation(x,y);
+        direction = new Angle(d);
+        length = l;
+        setIntersection(i);
+        loadImage();
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setIntersection(Intersection i) {
+        if (intersection!=null)
+            i.getRoads().remove(intersection);
+
+        intersection = i;
+        i.getRoads().add(this);
     }
 
     public Point2D getPosition() {

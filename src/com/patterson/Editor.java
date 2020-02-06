@@ -226,7 +226,7 @@ class Surface extends JPanel {
             t.invisible();
 
             if (t.length()>0 && SwingUtilities.isLeftMouseButton(e)) {
-                r = new Road(t.xStart, t.yStart, t.direction().getAngle(), t.length());
+                r = new Road("R" + roads.size(), t.xStart, t.yStart, t.direction().getAngle(), t.length());
                 roads.put("R" + roads.size(), r);
             }
 

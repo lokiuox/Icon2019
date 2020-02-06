@@ -4,8 +4,8 @@ import javax.swing.*;
 
 public class Car_red extends Car {
 
-    public Car_red(float x, float y, int d) {
-        super(x, y, d);
+    public Car_red(String id, float x, float y, int d) {
+        super(id, x, y, d);
     }
 
     @Override

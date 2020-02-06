@@ -1,5 +1,7 @@
 package com.patterson.world;
 
+import com.patterson.entity.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,8 +12,7 @@ public class Surface extends JPanel implements ActionListener {
     private Timer timer;
     private int counter = 0;
 
-    Scenario map = new Scenario();
-    Actors actors = new Actors(map);
+    Scenario scenario = new DemoScenario();
 
     public Surface() {
         timer = new Timer(33, this);
@@ -19,24 +20,19 @@ public class Surface extends JPanel implements ActionListener {
     }
 
     private void doDrawing(Graphics g) {
-
         Graphics2D g2d = (Graphics2D) g;
-        map.draw(g2d);
-        actors.draw(g2d);
+        scenario.draw(g2d);
     }
 
     @Override
     public void paintComponent(Graphics g) {
-
         super.paintComponent(g);
         doDrawing(g);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        actors.tick();
-
+        scenario.tick();
         repaint();
     }
 }

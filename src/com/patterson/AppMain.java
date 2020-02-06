@@ -19,7 +19,7 @@ public class AppMain extends JFrame {
 
         pack();
         setTitle("Traffic2D");
-        setSize(450,500);
+        setSize(600,500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
