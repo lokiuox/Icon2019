@@ -204,7 +204,7 @@ class Surface extends JPanel {
                 t.set(x,y,x,y);
                 t.visible();
             } else if (SwingUtilities.isRightMouseButton(e) && roads.size()>0) {
-                roads.remove("R"+(roads.size()-1));
+                roads.remove("r"+(roads.size()-1));
             }
 
             repaint();
@@ -226,8 +226,8 @@ class Surface extends JPanel {
             t.invisible();
 
             if (t.length()>0 && SwingUtilities.isLeftMouseButton(e)) {
-                r = new Road("R" + roads.size(), t.xStart, t.yStart, t.direction().getAngle(), t.length());
-                roads.put("R" + roads.size(), r);
+                r = new Road("r" + roads.size(), t.xStart, t.yStart, t.direction().getAngle(), t.length());
+                roads.put("r" + roads.size(), r);
             }
 
             repaint();

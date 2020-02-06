@@ -19,37 +19,37 @@ public class DemoScenario implements Scenario {
         Car c;
         Intersection i;
 
-        i = new Intersection("I0", 32+20*16, 4*16, 16, 16);
+        i = new Intersection("i0", 32+20*16, 4*16, 16, 16);
         intersections.add(i);
 
-        i = new Intersection("I1", 32+20*16, 4*16+32+20*16, 16, 16);
+        i = new Intersection("i1", 32+20*16, 4*16+32+20*16, 16, 16);
         intersections.add(i);
 
-        Road r0 = new Road("R0",32,5*16,0, 20*16);
+        Road r0 = new Road("r0",32,5*16,0, 20*16);
         roads.add(r0);
 
-        Road r1 = new Road("R1",32+20*16+16,5*16+16,3, 20*16);
+        Road r1 = new Road("r1",32+20*16+16,5*16+16,3, 20*16);
         roads.add(r1);
 
-        Road r2 = new Road("R2", 32+20*16, 5*16+32+20*16, 2, 10*16);
+        Road r2 = new Road("r2", 32+20*16, 5*16+32+20*16, 2, 10*16);
         roads.add(r2);
 
-        Road r3 = new Road("R3", 32+20*16+16+16+10*16, 5*16, 2, 10*16);
+        Road r3 = new Road("r3", 32+20*16+16+16+10*16, 5*16, 2, 10*16);
         roads.add(r3);
 
-        c = new Car_red("C0",32*1,0,0);
+        c = new Car_red("c0",32*1,0,0);
         c.getPath().add(r0);
         c.getPath().add(r1);
         c.getPath().add(r2);
         cars.add(c);
 
-        c = new Car_green("C1",32*2,0,0);
+        c = new Car_green("c1",32*2,0,0);
         c.getPath().add(r0);
         c.getPath().add(r1);
         //c.getPath().add(r2);
         cars.add(c);
 
-        c = new Car("C2",32*18,0,0);
+        c = new Car("c2",32*18,0,0);
         c.getPath().add(r3);
         c.getPath().add(r1);
         c.getPath().add(r2);
