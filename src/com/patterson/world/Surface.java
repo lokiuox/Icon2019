@@ -15,7 +15,7 @@ public class Surface extends JPanel implements ActionListener {
     Scenario scenario = new DemoScenario();
 
     public Surface() {
-        timer = new Timer(33, this);
+        timer = new Timer(30, this);
         timer.start();
     }
 
@@ -32,7 +32,9 @@ public class Surface extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        timer.stop();
         scenario.tick();
         repaint();
+        timer.start();
     }
 }

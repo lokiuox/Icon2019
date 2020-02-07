@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 public class Intersection implements Entity {
@@ -15,6 +16,7 @@ public class Intersection implements Entity {
     int width = 0;
     int height = 0;
     Set<Road> roads = new HashSet<>();
+    Set<Car> passing = new HashSet<>();
 
     protected Image img;
 
@@ -45,5 +47,23 @@ public class Intersection implements Entity {
 
     protected void loadImage() {
         img = new ImageIcon("resources/road/asphalt.png").getImage();
+    }
+
+    public void giveRightToPass() {
+        if (passing.isEmpty()) {
+            for (Road r : roads) {
+                if (!r.getCars().isEmpty()) {
+                    r.getCars().get(0).setRightToPass();
+                }
+            }
+        }
+    }
+
+    public void carPassing(Car c) {
+        passing.add(c);
+    }
+
+    public void carPassed(Car c) {
+        passing.remove(c);
     }
 }

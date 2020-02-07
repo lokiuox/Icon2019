@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.List;
 
 public class Road implements Entity {
 
@@ -15,8 +16,8 @@ public class Road implements Entity {
     Angle direction;
 
     protected Image[] img = new Image[4];
-    Set<Car> cars = new HashSet<>();
-    Intersection intersection = null;
+    List<Car> cars = new LinkedList<>();
+    Intersection intersection;
 
     public Road(String id, float x, float y, int d, int l) {
         ID = id;
@@ -47,6 +48,10 @@ public class Road implements Entity {
         i.getRoads().add(this);
     }
 
+    public Intersection getIntersection() {
+        return intersection;
+    }
+
     public Point2D getPosition() {
         return position;
     }
@@ -63,7 +68,7 @@ public class Road implements Entity {
         return new Point2D.Float((float) position.getX()+length*direction.cos(), (float) position.getY()+length*direction.sin());
     }
 
-    public Set<Car> getCars() {
+    public List<Car> getCars() {
         return cars;
     }
 

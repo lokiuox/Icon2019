@@ -20,6 +20,11 @@ public class Car implements Entity {
     protected Image[] img = new Image[4];
 
     Road road = null;
+    Road previousRoad = null;
+
+    boolean passing = false;
+    boolean rightToPass = false;
+
     Queue<Road> path = new LinkedList<>();
 
     public Car(String id, float x, float y, int d) {
@@ -68,6 +73,15 @@ public class Car implements Entity {
         return position;
     }
 
+    public Road getCurrentRoad() {
+        return road;
+    }
+
+    public Road getPreviousRoadRoad() {
+        return previousRoad;
+    }
+
+
     // do stuff during the next frame
     public void tick() {
 
@@ -86,6 +100,11 @@ public class Car implements Entity {
                 direction.setAngle(road.getDirection());
             }
 
+            if (passing && hasReachedRoad()) {
+                passing = false;
+                previousRoad.getIntersection().carPassed(this);
+            }
+
             // if near the end of the road stop, otherwise go straight on
             if (isNearCar() || isRoadEnd()) {
                 stop();
@@ -95,16 +114,29 @@ public class Car implements Entity {
         }
     }
 
+    private void roadEnd() {
+        if (path.peek() != null && !isNearCar()) {
+            if (rightToPass || road.getIntersection()==null) {
+                rightToPass = false;
+                road.getIntersection().carPassing(this);
+                setRoad(path.poll());
+                passing = true;
+            } else {
+                road.getIntersection().giveRightToPass();
+            }
+        }
+    }
+
     private void setRoad(Road r) {
         if (road != null)
             road.getCars().remove(this);
+        previousRoad = road;
         road = r;
         road.getCars().add(this);
     }
 
-    private void roadEnd() {
-        if (path.peek() != null && !isNearCar())
-            setRoad(path.poll());
+    public void setRightToPass() {
+        rightToPass = true;
     }
 
     // accelerate
@@ -133,7 +165,7 @@ public class Car implements Entity {
         return direction.equals(road.getDirection());
     }
 
-    // check if the car is on the road
+    // check if the car is aligned with the road
     private boolean hasRoadLine() {
         boolean a = false;
 
@@ -149,6 +181,32 @@ public class Car implements Entity {
             }
         }
         return a;
+    }
+
+    // check if the car has reached his road
+    private boolean hasReachedRoad() {
+        boolean a = false;
+
+        switch (road.getDirection().getAngle()) {
+            case 0:
+                if (position.getX() >= road.getPosition().getX() )
+                    a = true;
+                break;
+            case 1:
+                if (position.getY() <= road.getPosition().getY() )
+                    a = true;
+                break;
+            case 2:
+                if (position.getX() <= road.getPosition().getX() )
+                    a = true;
+                break;
+            case 3:
+                if (position.getY() >= road.getPosition().getY() )
+                    a = true;
+                break;
+        }
+
+        return a && hasRoadDir();
     }
 
     // check if the car is orthogonal to the road
@@ -174,6 +232,7 @@ public class Car implements Entity {
                     a = true;
                 }
             }
+
         return a;
     }
 
