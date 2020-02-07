@@ -1,10 +1,14 @@
 package com.patterson.world;
 
 import com.patterson.entity.*;
+import com.patterson.utility.KnowledgeBase;
+import org.jpl7.Query;
 
 import java.awt.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class DemoScenario implements Scenario {
 
@@ -17,6 +21,9 @@ public class DemoScenario implements Scenario {
     }
 
     private void initScenario() {
+
+        KnowledgeBase.init("resources/KB.pl");
+
         Car c;
         Intersection i;
 
@@ -44,7 +51,7 @@ public class DemoScenario implements Scenario {
         c = new Car_green("c1",32*2,0,0);
         c.getPath().add(r0);
         c.getPath().add(r1);
-        //c.getPath().add(r2);
+        c.getPath().add(r2);
         cars.add(c);
 
         c = new Car_red("c0", 32,0,0);

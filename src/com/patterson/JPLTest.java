@@ -27,11 +27,16 @@ public class JPLTest {
         }
         */
 
-        /*
+
         q1 = new Query("assert(prova(a)).");
-        q1.hasSolution();
+        System.out.println(q1.hasSolution());
         q1.close();
 
+        q1 = new Query("prova(b).");
+        System.out.println(q1.hasSolution());
+        q1.close();
+
+        /*
         q1 = new Query("consult('resources/KB.pl').");
         q1.hasSolution();
         q1.close();
@@ -44,32 +49,6 @@ public class JPLTest {
         System.out.println(q1.hasSolution());
         q1.close();
          */
-        (new RunThread("consult('resources/KB.pl').", 0)).start();
-        (new RunThread("assert(test(a)).", 50)).start();
-        (new RunThread("test(a).", 51)).start();
 
-    }
-
-    static class RunThread extends Thread {
-
-        String query;
-        int delay;
-
-        public RunThread(String q, int d) {
-            delay = d;
-            query = q;
-        }
-
-        @Override
-        public void run() {
-            try {
-                this.sleep(delay);
-                Query q1 = new Query(query);
-                System.out.println(q1.hasSolution());
-                q1.close();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

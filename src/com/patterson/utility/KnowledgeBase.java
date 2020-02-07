@@ -38,14 +38,19 @@ public class KnowledgeBase {
         return (new Query(q)).hasSolution();
     }
 
-    public Set<Map<String, String>> varQuery(String q) {
-        Set<Map<String, String>> res = new HashSet<>();
+    public  void list() {
+        for (String s: assertions)
+            System.out.println(s);
+    }
 
-        for (Map<String,Term> m : new Query(q)) {
-            res.add(prologToString(m));
+    public Set<Map<String, String>> stringQuery(String q) {
+        Set<Map<String, String>> set = new HashSet<>();
+
+        for (Map<String,Term> res : new Query(q)) {
+            set.add(prologToString(res));
         }
 
-        return res;
+        return set;
     }
 
     private Map<String, String> prologToString (Map<String, Term> prolog) {

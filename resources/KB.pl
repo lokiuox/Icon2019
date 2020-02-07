@@ -1,3 +1,6 @@
+:-dynamic(strada_corrente/2).
+:-dynamic(prossima_strada/2).
+
 partenza(k,l).
 destinazione(j,v).
 numerocivico(K,L):- partenza(K,L).  
@@ -15,11 +18,11 @@ strada(L):- coordinata(L,X,Y).
 incrocio(y).
 incrocio(C):- collega(C,D,E).
 incrocio(E):- collega(C,D,E).
-collega(by,bs,y).
-collega(dy,ds,y).
-collega(py,ps,y).
-collega(ly,ls,y).
 
+collega(iz, r0, i0).
+collega(ix, r3, i0).
+collega(i0, r1, i1).
+collega(i1, r2, iy).
 
 lunghezza(x,y).
 angolo(bs,180).
@@ -28,12 +31,21 @@ angolo(ps,0).
 angolo(ps,360).
 angolo(ls,90).
 peso(f,n).
-strada_corrente(lm,ls).
-strada_corrente(dm,ds).
-strada_corrente(pm,ps).
-prossima_strada(lm,ds).
-prossima_strada(dm,bs).
-prossima_strada(pm,ds).
+angolo(r0,270).
+angolo(r1,0).
+angolo(r1,360).
+angolo(r2,0).
+angolo(r2,360).
+angolo(r3,90).
+rosso(ds).
+stop(q).
+prima(q,w).
+
+collega(by,bs,y).
+collega(dy,ds,y).
+collega(py,ps,y).
+collega(ly,ls,y).
+ 
 rosso(ds).
 stop(q).
 prima(q,w).
@@ -75,3 +87,4 @@ precedenza(A,B) :-
 
 /* precedenza(A): A ha la precendenza */
 precedenza(A) :- \+(precedenza(A,B)).
+

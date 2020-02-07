@@ -3,6 +3,7 @@ package com.patterson;
 
 import com.patterson.utility.KnowledgeBase;
 import com.patterson.world.Surface;
+import org.jpl7.Query;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ public class AppMain extends JFrame {
 
     public AppMain() {
         initUI();
-        KnowledgeBase.init("resources/KB.pl");
+        //KnowledgeBase.init("resources/KB.pl");
     }
 
     private void initUI() {
