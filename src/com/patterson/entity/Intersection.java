@@ -17,6 +17,7 @@ public class Intersection implements Entity {
     int height = 0;
     Set<Road> roads = new HashSet<>();
     Set<Car> passing = new HashSet<>();
+    KnowledgeBase kb = new KnowledgeBase();
 
     protected Image img;
 
@@ -50,6 +51,24 @@ public class Intersection implements Entity {
     }
 
     public void giveRightToPass() {
+
+        String assertion;
+
+        if (passing.isEmpty()) {
+            for (Road r : roads) {
+                if (!r.getCars().isEmpty()) {
+                    assertion = "strada_corrente(" + r.getCars().get(0).getID() + "," + r.getCars().get(0).getCurrentRoad().getID() + ")";
+                    System.out.println(assertion);
+                    kb.addAssertion(assertion);
+                    assertion = "prossima_strada(" + r.getCars().get(0).getID() + "," + r.getCars().get(0).getNextRoad().getID() + ")";
+                    kb.addAssertion(assertion);
+                    System.out.println(assertion);
+                }
+            }
+        }
+
+
+
         if (passing.isEmpty()) {
             for (Road r : roads) {
                 if (!r.getCars().isEmpty()) {

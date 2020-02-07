@@ -77,8 +77,12 @@ public class Car implements Entity {
         return road;
     }
 
-    public Road getPreviousRoadRoad() {
+    public Road getPreviousRoad() {
         return previousRoad;
+    }
+
+    public Road getNextRoad() {
+        return path.peek();
     }
 
 
@@ -185,7 +189,7 @@ public class Car implements Entity {
 
     // check if the car has reached his road
     private boolean hasReachedRoad() {
-        boolean a = false;
+        /*boolean a = false;
 
         switch (road.getDirection().getAngle()) {
             case 0:
@@ -206,7 +210,8 @@ public class Car implements Entity {
                 break;
         }
 
-        return a && hasRoadDir();
+        return a && hasRoadDir();*/
+        return isNear(road.getPosition(),0,0) && hasRoadDir();
     }
 
     // check if the car is orthogonal to the road
