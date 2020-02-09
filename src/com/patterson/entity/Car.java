@@ -8,7 +8,7 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Car implements Entity {
+public class Car implements IEntity {
 
     String ID;
     private Point2D position = new Point2D.Float(0, 0);

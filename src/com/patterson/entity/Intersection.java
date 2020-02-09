@@ -1,17 +1,14 @@
 package com.patterson.entity;
 
 import com.patterson.utility.*;
-import org.jpl7.Query;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
 import java.util.Set;
 
-public class Intersection implements Entity {
+public class Intersection implements IEntity {
 
     String ID;
     Point2D position = new Point2D.Float(0, 0);

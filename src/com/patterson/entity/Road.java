@@ -8,7 +8,7 @@ import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
 
-public class Road implements Entity {
+public class Road implements IEntity {
 
     String ID;
     Point2D position = new Point2D.Float(0, 0);

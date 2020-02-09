@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-public class DemoScenario implements Scenario {
+public class DemoScenario implements IScenario {
 
     private Set<Intersection> intersections = new HashSet<>();
     private Set<Road> roads = new HashSet<>();
