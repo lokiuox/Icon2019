@@ -1,10 +1,14 @@
 package com.patterson.entity;
 
 import com.patterson.utility.Angle;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -275,5 +279,31 @@ public class Car implements IEntity {
     // calculate how much space the car needs to completely stop
     private float brakeSpace() {
         return speed*speed / (2 * acceleration);
+    }
+
+    public void addRoad(Road r) {
+        this.path.add(r);
+    }
+
+    public void addRoads(java.util.List<Road> list) {
+        path.addAll(list);
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject car = new JSONObject();
+        car.put("id", ID);
+        car.put("posX", position.getX());
+        car.put("posY", position.getY());
+        car.put("direction", direction.getAngle());
+        JSONArray ja_path = new JSONArray();
+        for (Road r: new ArrayList<Road>(path))
+            ja_path.put(r.getID());
+        car.put("path", ja_path);
+        return car;
+    }
+
+    public String toJSON() {
+        JSONObject json_object = this.toJSONObject();
+        return json_object.toString();
     }
 }

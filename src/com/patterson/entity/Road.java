@@ -1,9 +1,12 @@
 package com.patterson.entity;
 
 import com.patterson.utility.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
@@ -42,7 +45,7 @@ public class Road implements IEntity {
 
     public void setIntersection(Intersection i) {
         if (intersection!=null)
-            i.getRoads().remove(intersection);
+            intersection.getRoads().remove(this);
 
         intersection = i;
         i.getRoads().add(this);
@@ -97,5 +100,28 @@ public class Road implements IEntity {
         img[1] = new ImageIcon("resources/road/roadH_bottom.png").getImage();
         img[2] = new ImageIcon("resources/road/roadV_left.png").getImage();
         img[3] = new ImageIcon("resources/road/roadV_right.png").getImage();
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject road = new JSONObject();
+        road.put("id", ID);
+        road.put("posX", position.getX());
+        road.put("posY", position.getY());
+        road.put("length", length);
+        road.put("direction", direction.getAngle());
+        if (intersection != null)
+            road.put("intersection", intersection.getID());
+        else
+            road.put("intersection", "null");
+        JSONArray ja_cars = new JSONArray();
+        for (Car c: cars)
+            ja_cars.put(c.getID());
+        road.put("cars", ja_cars);
+        return road;
+    }
+
+    public String toJSON() {
+        JSONObject json_object = this.toJSONObject();
+        return json_object.toString();
     }
 }

@@ -1,9 +1,12 @@
 package com.patterson.entity;
 
 import com.patterson.utility.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +19,7 @@ public class Intersection implements IEntity {
     int height = 0;
     Set<Road> roads = new HashSet<>();
     Set<Car> passing = new HashSet<>();
-    KnowledgeBase kb = new KnowledgeBase();
+    KnowledgeBase kb = new KnowledgeBase(); //Not initialized?
 
     protected Image img;
 
@@ -100,5 +103,24 @@ public class Intersection implements IEntity {
 
     public void carPassed(Car c) {
         passing.remove(c);
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject intersection = new JSONObject();
+        intersection.put("id", ID);
+        intersection.put("posX", position.getX());
+        intersection.put("posY", position.getY());
+        intersection.put("width", width);
+        intersection.put("height", height);
+        JSONArray ja_roads = new JSONArray();
+        for (Road r: roads)
+            ja_roads.put(r.getID());
+        intersection.put("roads", ja_roads);
+        return intersection;
+    }
+
+    public String toJSON() {
+        JSONObject json_object = this.toJSONObject();
+        return json_object.toString();
     }
 }

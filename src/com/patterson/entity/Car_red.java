@@ -1,6 +1,6 @@
 package com.patterson.entity;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 public class Car_red extends Car {
 
