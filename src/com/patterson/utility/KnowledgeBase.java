@@ -8,7 +8,8 @@ import java.util.*;
 public class KnowledgeBase {
     Set<String> assertions = new HashSet<>();
 
-    static public void init(String file) {
+    public static void init(String file) {
+        suppressWarnings();
         Query q = new Query("consult('"+ file +"').");
         q.hasSolution();
         q.close();
@@ -38,7 +39,7 @@ public class KnowledgeBase {
         return (new Query(q)).hasSolution();
     }
 
-    public  void list() {
+    public void list() {
         for (String s: assertions)
             System.out.println(s);
     }
@@ -62,5 +63,11 @@ public class KnowledgeBase {
         }
 
         return res;
+    }
+
+    private static void suppressWarnings() {
+        Query q = new Query("style_check(-discontiguous), style_check(-singleton).");
+        q.hasSolution();
+        q.close();
     }
 }
