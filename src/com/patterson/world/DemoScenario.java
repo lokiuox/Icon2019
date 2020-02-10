@@ -1,79 +1,54 @@
 package com.patterson.world;
 
 import com.patterson.entity.*;
-import com.patterson.utility.KnowledgeBase;
-import org.jpl7.Query;
 
-import java.awt.*;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+public class DemoScenario {
 
-public class DemoScenario implements IScenario {
-
-    private Set<Intersection> intersections = new HashSet<>();
-    private Set<Road> roads = new HashSet<>();
-    private List<Car> cars = new LinkedList<>();
-
-    DemoScenario() {
-        initScenario();
+    private DemoScenario() {
     }
 
-    private void initScenario() {
+    public static Scenario getScenario() {
+        Scenario s = new Scenario();
 
-        KnowledgeBase.init("resources/KB.pl");
+        Intersection i0 = new Intersection("i0", 32 + 20 * 16, 4 * 16, 16, 16);
+        s.addIntersection(i0);
 
-        Car c;
-        Intersection i;
+        Intersection i1 = new Intersection("i1", 32 + 20 * 16, 4 * 16 + 32 + 20 * 16, 16, 16);
+        s.addIntersection(i1);
 
-        Intersection i0 = new Intersection("i0", 32+20*16, 4*16, 16, 16);
-        intersections.add(i0);
-
-        Intersection i1 = new Intersection("i1", 32+20*16, 4*16+32+20*16, 16, 16);
-        intersections.add(i1);
-
-        Road r0 = new Road("r0",32,5*16,0, 20*16);
+        Road r0 = new Road("r0", 32, 5 * 16, 0, 20 * 16);
         r0.setIntersection(i0);
-        roads.add(r0);
+        s.addRoad(r0);
 
-        Road r1 = new Road("r1",32+20*16+16,5*16+16,3, 20*16);
+        Road r1 = new Road("r1", 32 + 20 * 16 + 16, 5 * 16 + 16, 3, 20 * 16);
         r1.setIntersection(i1);
-        roads.add(r1);
+        s.addRoad(r1);
 
-        Road r2 = new Road("r2", 32+20*16, 5*16+32+20*16, 2, 10*16);
-        roads.add(r2);
+        Road r2 = new Road("r2", 32 + 20 * 16, 5 * 16 + 32 + 20 * 16, 2, 10 * 16);
+        s.addRoad(r2);
 
-        Road r3 = new Road("r3", 32+20*16+16+16+10*16, 5*16, 2, 10*16);
+        Road r3 = new Road("r3", 32 + 20 * 16 + 16 + 16 + 10 * 16, 5 * 16, 2, 10 * 16);
         r3.setIntersection(i0);
-        roads.add(r3);
+        s.addRoad(r3);
 
-        c = new Car_green("c1",32*2,0,0);
-        c.getPath().add(r0);
-        c.getPath().add(r1);
-        c.getPath().add(r2);
-        cars.add(c);
+        Car c1 = new Car_green("c1", 32 * 2, 0, 0);
+        c1.getPath().add(r0);
+        c1.getPath().add(r1);
+        c1.getPath().add(r2);
+        s.addCar(c1);
 
-        c = new Car_red("c0", 32,0,0);
-        c.getPath().add(r0);
-        c.getPath().add(r1);
-        c.getPath().add(r2);
-        cars.add(c);
+        Car c2 = new Car_red("c0", 32, 0, 0);
+        c2.getPath().add(r0);
+        c2.getPath().add(r1);
+        c2.getPath().add(r2);
+        s.addCar(c2);
 
-        c = new Car("c2",32*18,0,0);
-        c.getPath().add(r3);
-        c.getPath().add(r1);
-        c.getPath().add(r2);
-        cars.add(c);
-    }
-
-    public void draw(Graphics2D g) {
-        for (Intersection i : intersections) i.draw(g);
-        for (Road r : roads) r.draw(g);
-        for (Car c : cars) c.draw(g);
-    }
-
-    public void tick() {
-        for (Car c : cars) c.tick();
+        Car c3 = new Car("c2", 32 * 18, 0, 0);
+        c3.getPath().add(r3);
+        c3.getPath().add(r1);
+        c3.getPath().add(r2);
+        s.addCar(c3);
+        s.setName("DemoScenario");
+        return s;
     }
 }

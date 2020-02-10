@@ -12,11 +12,16 @@ public class Surface extends JPanel implements ActionListener {
     private Timer timer;
     private int counter = 0;
 
-    IScenario scenario = new DemoScenario();
+    private Scenario scenario;
 
     public Surface() {
+        scenario = DemoScenario.getScenario();
         timer = new Timer(30, this);
         timer.start();
+    }
+
+    public String getSceneName() {
+        return scenario.getName();
     }
 
     private void doDrawing(Graphics g) {
