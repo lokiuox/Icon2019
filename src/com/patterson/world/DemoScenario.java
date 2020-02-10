@@ -32,21 +32,21 @@ public class DemoScenario {
         s.addRoad(r3);
 
         Car c1 = new Car_green("c1", 32 * 2, 0, 0);
-        c1.getPath().add(r0);
-        c1.getPath().add(r1);
-        c1.getPath().add(r2);
+        c1.addRoad(r0);
+        c1.addRoad(r1);
+        c1.addRoad(r2);
         s.addCar(c1);
 
         Car c2 = new Car_red("c0", 32, 0, 0);
-        c2.getPath().add(r0);
-        c2.getPath().add(r1);
-        c2.getPath().add(r2);
+        c2.addRoad(r0);
+        c2.addRoad(r1);
+        c2.addRoad(r2);
         s.addCar(c2);
 
         Car c3 = new Car("c2", 32 * 18, 0, 0);
-        c3.getPath().add(r3);
-        c3.getPath().add(r1);
-        c3.getPath().add(r2);
+        c3.addRoad(r3);
+        c3.addRoad(r1);
+        c3.addRoad(r2);
         s.addCar(c3);
         s.setName("DemoScenario");
         return s;

@@ -1,9 +1,6 @@
 package com.patterson.world;
 
-import com.patterson.entity.Car;
-import com.patterson.entity.IScenario;
-import com.patterson.entity.Intersection;
-import com.patterson.entity.Road;
+import com.patterson.entity.*;
 import com.patterson.utility.KnowledgeBase;
 
 import org.json.*;
@@ -22,24 +19,72 @@ public class Scenario implements IScenario {
         init();
     }
 
-    Scenario(Collection<Road> r, Collection<Intersection> i, Collection<Car> c) {
-        if (r != null)
-            this.addRoads(r);
-        if (i != null)
-            this.addIntersections(i);
-        if (c != null)
-            this.addCars(c);
-        init();
-    }
+    Scenario(String json_file) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(json_file));
 
-    Scenario(Collection<Road> r, Collection<Intersection> i, Collection<Car> c, String kb_path) {
-        if (r != null)
-            this.addRoads(r);
-        if (i != null)
-            this.addIntersections(i);
-        if (c != null)
-            this.addCars(c);
-        this.kb_path = kb_path;
+            //Getting base contents
+            JSONTokener jsonTokener = new JSONTokener(reader);
+            JSONObject jo_scenario = new JSONObject(jsonTokener);
+            JSONArray ja_roads = jo_scenario.getJSONArray("roads");
+            JSONArray ja_intersections = jo_scenario.getJSONArray("intersections");
+            JSONArray ja_cars = jo_scenario.getJSONArray("cars");
+            String name = jo_scenario.getString("name");
+            String kb_path = jo_scenario.getString("kb");
+            this.kb_path = kb_path;
+
+            //Creating containing structures
+            Map<String, Road> roads = new HashMap<>();
+            Map<String, Intersection> intersections = new HashMap<>();
+            Map<String, Car> cars = new HashMap<>();
+
+
+            //Creating entities
+            for (int i = 0; i < ja_intersections.length(); i++) {
+                JSONObject obj = ja_intersections.getJSONObject(i);
+                Intersection intersection = new Intersection(obj);
+                intersections.put(obj.getString("id"), intersection);
+                this.addIntersection(intersection);
+            }
+
+            for (int i = 0; i < ja_roads.length(); i++) {
+                JSONObject obj = ja_roads.getJSONObject(i);
+                Road r = new Road(obj);
+                String intersection_id = obj.getString("intersection");
+                if (intersection_id!=null && !intersection_id.equals("null")) {
+                    Intersection intersection = intersections.get(intersection_id);
+                    r.setIntersection(intersection);
+                }
+                roads.put(obj.getString("id"), r);
+                this.addRoad(r);
+            }
+
+            for (int i = 0; i < ja_cars.length(); i++) {
+                JSONObject obj = ja_cars.getJSONObject(i);
+                Car car = null;
+                switch (obj.getString("type")) {
+                    case "Car":
+                        car = new Car(obj);
+                        break;
+                    case "CarGreen":
+                        car = new Car_green(obj);
+                        break;
+                    case "CarRed":
+                        car = new Car_red(obj);
+                }
+                JSONArray ja_path = obj.getJSONArray("path");
+                for (int j = 0; j < ja_path.length(); j++) {
+                    String road_id = ja_path.getString(j);
+                    Road r = roads.get(road_id);
+                    car.addRoad(r);
+                }
+                cars.put(obj.getString("id"), car);
+                this.addCar(car);
+            }
+            this.setName(name);
+        } catch (FileNotFoundException e) {
+            System.err.println("ERRORE: file non trovato");
+        }
         init();
     }
 
@@ -56,7 +101,8 @@ public class Scenario implements IScenario {
     }
 
     public void setKB(String s) {
-        this.kb_path = s;
+        if (s != null && !s.equals("null"))
+            this.kb_path = s;
     }
 
     public Road getRoadByID(String id) {
@@ -147,8 +193,8 @@ public class Scenario implements IScenario {
         return sw.toString();
     }
 
-    public void export(String path) {
-        System.err.print("Esporto...");
+    public void save(String path) {
+        System.err.print("Esporto JSON...");
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(path));
             this.toJSON(writer);
@@ -159,7 +205,6 @@ public class Scenario implements IScenario {
             e.printStackTrace();
         }
     }
-
 
     public void draw(Graphics2D g) {
         for (Intersection i : intersections.values()) i.draw(g);

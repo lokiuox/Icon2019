@@ -1,9 +1,6 @@
 package com.patterson;
 
-
-import com.patterson.utility.KnowledgeBase;
 import com.patterson.world.Surface;
-import org.jpl7.Query;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,22 +10,21 @@ public class AppMain extends JFrame {
 
     public AppMain() {
         initUI();
-        //KnowledgeBase.init("resources/KB.pl");
+        //KnowledgeBase.init("resources/KB.pl"); //Is this needed? We can init from the Scenario constructor
     }
 
     private void initUI() {
-
-        add(new Surface());
+        Surface s = new Surface();
+        add(s);
 
         pack();
-        setTitle("Traffic2D");
+        setTitle("Traffic2D: " + s.getSceneName());
         setSize(600,500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public static void main(String[] args) {
-
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
