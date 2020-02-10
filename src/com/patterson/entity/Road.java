@@ -39,6 +39,14 @@ public class Road implements IEntity {
         loadImage();
     }
 
+    public Road(JSONObject jo_road) {
+        this(jo_road.getString("id"),
+                jo_road.getFloat("posX"),
+                jo_road.getFloat("posY"),
+                jo_road.getInt("direction"),
+                jo_road.getInt("length"));
+    }
+
     public String getID() {
         return ID;
     }

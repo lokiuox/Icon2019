@@ -8,9 +8,7 @@ import javax.swing.ImageIcon;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class Car implements IEntity {
 
@@ -41,6 +39,15 @@ public class Car implements IEntity {
     public Car(String id, float x, float y) {
         this(id, x, y, 0);
     }
+
+    public Car(JSONObject jo_car) {
+        this(jo_car.getString("id"),
+                jo_car.getFloat("posX"),
+                jo_car.getFloat("posY"),
+                jo_car.getInt("direction"));
+    }
+
+    public String getType() { return "Car"; }
 
     protected void loadImage() {
         img[0] = new ImageIcon("resources/car/car0_grey.png").getImage();
@@ -285,7 +292,7 @@ public class Car implements IEntity {
         this.path.add(r);
     }
 
-    public void addRoads(java.util.List<Road> list) {
+    public void addRoads(List<Road> list) {
         path.addAll(list);
     }
 
@@ -295,6 +302,7 @@ public class Car implements IEntity {
         car.put("posX", position.getX());
         car.put("posY", position.getY());
         car.put("direction", direction.getAngle());
+        car.put("type", getType());
         JSONArray ja_path = new JSONArray();
         for (Road r: new ArrayList<Road>(path))
             ja_path.put(r.getID());

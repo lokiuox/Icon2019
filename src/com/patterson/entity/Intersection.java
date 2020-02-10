@@ -23,12 +23,20 @@ public class Intersection implements IEntity {
 
     protected Image img;
 
-    public Intersection(String id, int x, int y, int w, int h) {
+    public Intersection(String id, float x, float y, int w, int h) {
         ID = id;
         position.setLocation(x,y);
         width = w;
         height = h;
         loadImage();
+    }
+
+    public Intersection(JSONObject jo_intersection) {
+        this(jo_intersection.getString("id"),
+                jo_intersection.getFloat("posX"),
+                jo_intersection.getFloat("posY"),
+                jo_intersection.getInt("width"),
+                jo_intersection.getInt("height"));
     }
 
     public String getID() {
