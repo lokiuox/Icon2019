@@ -48,7 +48,9 @@ public class KnowledgeBase {
         Set<Map<String, String>> set = new HashSet<>();
 
         for (Map<String,Term> res : new Query(q)) {
-            set.add(prologToString(res));
+            Map<String, String> temp = prologToString(res);
+            if(!temp.isEmpty())
+                set.add(prologToString(res));
         }
 
         return set;
@@ -59,8 +61,19 @@ public class KnowledgeBase {
 
         Set<String> keys = prolog.keySet();
         for(String k: keys) {
-            res.put(k, prolog.get(k).name());
-        }
+            String temp = "";
+            try{
+                temp = prolog.get(k).name();
+                if(!temp.matches("_[0-9]+")){
+                    res.put(k, temp);
+                }
+            }catch (Exception e){
+                temp = String.valueOf(prolog.get(k));
+                res.put(k, temp);
+                }
+            }
+
+
 
         return res;
     }

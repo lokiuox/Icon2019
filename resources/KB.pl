@@ -1,17 +1,27 @@
 :-dynamic(strada_corrente/2).
 :-dynamic(prossima_strada/2).
 
+
+
+
 partenza(k,l).
 destinazione(j,v).
 numerocivico(K,L):- partenza(K,L).  
 numerocivico(K,L):- destinazione(K,L).
 
+posizione(K,X,Y). %:- X > 0, Y > 0.
+
+coordinata(K,X,Y). %:- X > 0, Y > 0.
+
+mitrovo(K,X,Y). %:-X > 0, Y > 0.
+
+
 strada(z).
+coordinata(z,1,1).
 strada(d).
 strada(X):- lunghezza(X,Y).
 strada(X):- angolo(X,Z).
 strada(D):- collega(C,D,E).
-strada(X):- peso(X,Y).
 strada(K):- posizione(K,X,Y).
 strada(L):- coordinata(L,X,Y).
 
@@ -24,13 +34,12 @@ collega(ix, r3, i0).
 collega(i0, r1, i1).
 collega(i1, r2, iy).
 
-lunghezza(x,y).
+lunghezza(x,7).
 angolo(bs,180).
 angolo(ds,270).
 angolo(ps,0).
 angolo(ps,360).
 angolo(ls,90).
-peso(f,n).
 angolo(r0,270).
 angolo(r1,0).
 angolo(r1,360).
@@ -58,13 +67,20 @@ numerocivico(K,T):- mitrovo(K,L,T).
 macchina(S):- prima(S,D).
 macchina(D):- prima(S,D).
 
-/*velocitàmedia(L,D):-*/ 
+/*velocitàmedia(L,D):-*/
+peso(X,Y).
+strada(X):- peso(X,Y).
+peso(f,5).
 
-peso(L,X):- =(X,+(+(\(K,F),\(J,2)),costante),\(K,D)),
-	lunghezza(L,K),
-	temporosso(L,J),
-	velocitamedia(L,D),
-	velocitamax(L,F).
+%peso(L,X):- =(X,+(+(\(K,F),\(J,2)),costante),\(K,D)),
+%	lunghezza(L,K),
+%	temporosso(L,J),
+%	velocitamedia(L,D),
+%	velocitamax(L,F).
+
+
+
+
 
 count([],0).
 count([H|Tail], N) :- count(Tail, N1),N is N1 + 1.

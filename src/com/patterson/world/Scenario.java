@@ -13,13 +13,15 @@ public class Scenario implements IScenario {
     private Map<String, Intersection> intersections = new HashMap<>();
     private Map<String, Road> roads = new HashMap<>();
     private List<Car> cars = new LinkedList<>();
-    private String kb_path = "resources/KB.pl";
+    //private String kb_path = "resources/KB_final.pl";
+    private String kb_path = "resources/KB.pl"; //solo per test
 
     Scenario() {
         init();
     }
 
     Scenario(String json_file) {
+        init();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(json_file));
 
@@ -85,7 +87,7 @@ public class Scenario implements IScenario {
         } catch (FileNotFoundException e) {
             System.err.println("ERRORE: file non trovato");
         }
-        init();
+
     }
 
     private void init() {

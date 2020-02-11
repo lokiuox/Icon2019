@@ -34,6 +34,10 @@ public class Car implements IEntity {
         position.setLocation(x, y);
         direction = new Angle(d);
         loadImage();
+        Navigator nav = new Navigator();
+        ArrayList<String> pathSolver = nav.getFirstPath();
+//  per chiamate successive      ArrayList<String> pathSolver = nav.setNewEnd();
+
     }
 
     public Car(String id, float x, float y) {
