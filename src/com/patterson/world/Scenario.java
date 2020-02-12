@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.*;
 
 public class Scenario implements IScenario {
-    private String name;
+    private String name = "New Scenario";
     private Map<String, Intersection> intersections = new HashMap<>();
     private Map<String, Road> roads = new HashMap<>();
     private List<Car> cars = new LinkedList<>();
