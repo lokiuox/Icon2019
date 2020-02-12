@@ -1,52 +1,22 @@
-package com.patterson;
+package com.patterson.world;
 
-import com.patterson.entity.Car;
 import com.patterson.entity.Road;
 import com.patterson.utility.Angle;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.*;
 
-public class Editor extends JFrame {
-
-    public Editor() {
-
-        initUI();
-    }
-
-    private void initUI() {
-
-        add(new Surface());
-
-        setTitle("Editor");
-        setSize(1200, 800);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-    }
-
-    public static void main(String[] args) {
-
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                Editor ex = new Editor();
-                ex.setVisible(true);
-            }
-        });
-    }
-}
-
-class Surface extends JPanel {
+class Editor extends MapView {
 
     Pointer p = new Pointer(-16,-16);
     TempRoad t = new TempRoad(-16, -16, -16, -16);
     private Dictionary<String, Road> roads = new Hashtable<>();
 
 
-    public Surface() {
+    public Editor() {
         initUI();
     }
 
@@ -68,6 +38,11 @@ class Surface extends JPanel {
         while (e.hasMoreElements()) {
             e.nextElement().draw(g2d);
         }
+        // Make the mouse invisible inside editor area
+        this.setCursor(this.getToolkit().createCustomCursor(
+                new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB),
+                new Point(),
+                null ));
     }
 
     @Override
@@ -76,21 +51,22 @@ class Surface extends JPanel {
         doDrawing(g);
     }
 
-    public int toGrid(int x) {
-        return 8+16*(Math.round(x/16));
+    protected Point toGrid(int x, int y) {
+        return new Point(
+                32*(x/32),
+                32*(y/32)
+        );
     }
 
     class Pointer {
-        private int x;
-        private int y;
+        Point position = new Point();
 
         public Pointer(int x, int y) {
             setPosition(x,y);
         }
 
         public void setPosition(int x, int y) {
-            this.x = toGrid(x);
-            this.y = toGrid(y);
+            this.position = toGrid(x, y);
         }
 
         public void draw(Graphics2D g) {
@@ -99,45 +75,47 @@ class Surface extends JPanel {
 
             for (int i=0; i<4; i++) {
                 a.setAngle(i);
-                g.drawLine(x, y, x+16*a.cos(), y+16*a.sin());
+                g.drawLine(position.x, position.y, position.x+16*a.cos(), position.y+16*a.sin());
             }
         }
     }
 
     class TempRoad {
         boolean visible = false;
-        int xStart;
-        int yStart;
-        int xEnd;
-        int yEnd;
+        Point start;
+        Point end;
 
         public TempRoad(int xs, int ys, int xe , int ye) {
             set(xs, ys, xe, ye);
         }
 
         public void set(int xs, int ys, int xe , int ye) {
-            xStart = toGrid(xs);
-            yStart = toGrid(ys);
+            start = toGrid(xs, ys);
 
             if (Math.abs(xs-xe)>Math.abs(ys-ye)) {
-                xEnd = toGrid(xe);
-                yEnd = toGrid(ys);
+                end = toGrid(xe, ys);
             } else {
-                xEnd = toGrid(xs);
-                yEnd = toGrid(ye);
+                end = toGrid(xs, ye);
+            }
+            if (direction().isHorizontal()) {
+                start.x -= 16;
+                end.x += 16;
+            } else {
+                start.y -= 16;
+                end.y += 16;
             }
         }
 
         public Angle direction() {
             Angle a = new Angle(0);
 
-            if ( xEnd > xStart ) {
+            if ( end.x > start.x ) {
                 a.setAngle(0);
-            } else if ( yEnd < yStart ) {
+            } else if ( end.y < start.y ) {
                 a.setAngle(1);
-            } else if ( xEnd < xStart ) {
+            } else if ( end.x < start.x ) {
                 a.setAngle(2);
-            }else if ( yEnd > yStart ) {
+            }else if ( end.y > start.y ) {
                 a.setAngle(3);
             }
 
@@ -148,9 +126,9 @@ class Surface extends JPanel {
             int l = 0;
 
             if (direction().isHorizontal()) {
-                l = Math.abs(xEnd-xStart);
+                l = Math.abs(end.x-start.x);
             } else {
-                l = Math.abs(yEnd-yStart);
+                l = Math.abs(end.y-start.y);
             }
             return l;
         }
@@ -165,7 +143,7 @@ class Surface extends JPanel {
 
         public void draw(Graphics2D g) {
             if (visible) {
-                g.drawLine(xStart, yStart, xEnd, yEnd);
+                g.drawLine(start.x, start.y, end.x, end.y);
             }
         }
     }
@@ -226,7 +204,7 @@ class Surface extends JPanel {
             t.invisible();
 
             if (t.length()>0 && SwingUtilities.isLeftMouseButton(e)) {
-                r = new Road("r" + roads.size(), t.xStart, t.yStart, t.direction().getAngle(), t.length());
+                r = new Road("r" + roads.size(), t.start.x, t.start.y, t.direction().getAngle(), t.length());
                 roads.put("r" + roads.size(), r);
             }
 

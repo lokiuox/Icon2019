@@ -4,23 +4,38 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Surface extends JPanel implements ActionListener {
+public class MapView extends JPanel implements ActionListener {
 
     private Timer timer;
     private int counter = 0;
+    private Map<String, MapControls> controls = new HashMap<>();
 
     private Scenario scenario;
 
-    public Surface() {
-        scenario = new Scenario("resources/scenari/demo/scenario.json");
+    public MapView() {
+        scenario = new Scenario();
         timer = new Timer(30, this);
         timer.start();
+    }
+
+    public MapView(String json) {
+        scenario = new Scenario(json);
+        timer = new Timer(30, this);
+        timer.start();
+    }
+
+    public void setControls(String type, MapControls c) {
+        controls.put(type, c);
     }
 
     public String getSceneName() {
         return scenario.getName();
     }
+
+    public Scenario getScenario() { return scenario; }
 
     private void doDrawing(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
@@ -37,6 +52,15 @@ public class Surface extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         timer.stop();
         scenario.tick();
+        repaint();
+        timer.start();
+    }
+
+    public void pause() {
+        timer.stop();
+    }
+
+    public void resume() {
         repaint();
         timer.start();
     }
