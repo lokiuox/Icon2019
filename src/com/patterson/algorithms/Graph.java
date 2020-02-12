@@ -181,21 +181,29 @@ public class Graph<T extends Comparable<T>> {
     public static class Vertex<T extends Comparable<T>> implements Comparable<Vertex<T>> {
 
         private T value = null;
-        private int weight = 0;
+        private int weight = 0,x,y;
         private List<Edge<T>> edges = new ArrayList<Edge<T>>();
 
         public Vertex(T value) {
             this.value = value;
         }
 
-        public Vertex(T value, int weight) {
+        public Vertex(T value, int weight,int x, int y) {
             this(value);
             this.weight = weight;
+            if(x  < 0|| y < 0){
+                System.err.println("coordinate non valide");
+            }else{
+                this.x = x;
+                this.y = y;
+            }
+
+
         }
 
         /** Deep copies the edges along with the value and weight **/
         public Vertex(Vertex<T> vertex) {
-            this(vertex.value, vertex.weight);
+            this(vertex.value, vertex.weight,vertex.x,vertex.y);
 
             this.edges.addAll(vertex.edges);
         }
@@ -226,6 +234,14 @@ public class Graph<T extends Comparable<T>> {
                     return e;
             }
             return null;
+        }
+
+        public int getX(){
+            return x;
+        }
+
+        public int getY() {
+            return y;
         }
 
         public boolean pathTo(Vertex<T> v) {

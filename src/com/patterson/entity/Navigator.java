@@ -23,11 +23,11 @@ public class Navigator {
         randomStart();
     }
 
-    public ArrayList<String> getFirstPath(){
+    public LinkedList<String> getFirstPath(){
         return calculatePath();
     }
 
-    public ArrayList<String> setNewEnd(String streetName){
+    public LinkedList<String> setNewEnd(String streetName){
         startStreet = endStreet;
         if(v.containsKey(streetName)){
             endStreet = streetName;
@@ -47,7 +47,7 @@ public class Navigator {
         strade = nu.getNodes();
 
         for (Map<String, String> s : strade) {
-            Graph.Vertex<String> nuovo = new Graph.Vertex<>(s.get("id"), Integer.parseInt(s.get("lunghezza")));
+            Graph.Vertex<String> nuovo = new Graph.Vertex<>(s.get("id"), Integer.parseInt(s.get("lunghezza")),Integer.parseInt(s.get("x")),Integer.parseInt(s.get("y")));
             v.put(s.get("id"),nuovo);
 
         }
@@ -60,8 +60,6 @@ public class Navigator {
                 Graph.Edge<String> gEdge = new Graph.Edge<>(Integer.parseInt(sname.get("lunghezza")), v.get(sname.get("id")), v.get(to.get("id")));
                 v.get(sname.get("id")).addEdge(gEdge);
                 a.put(sname.get("id")+" "+to.get("id"),gEdge);
-
-                 
             }
         }
 
@@ -69,6 +67,7 @@ public class Navigator {
         HashSet<Graph.Edge<String>> a1 = new HashSet<>(a.values());
 
        g = new Graph<String>(DIRECTED,v1,a1);
+        //System.out.println(g);
        instance = new AStarGraph<>();
 
 
@@ -97,8 +96,8 @@ public class Navigator {
         endStreet = strade.get(end).get("id");
 
     }
-    private ArrayList<String> calculatePath(){
-        ArrayList<String> seqStreets = new ArrayList<>();
+    private LinkedList<String> calculatePath(){
+        LinkedList<String> seqStreets = new LinkedList<String>();
         seqStreets.add(startStreet);
         List<Graph.Edge<String>> path = instance.aStar(g,v.get(startStreet),v.get(endStreet));
         if(path != null){

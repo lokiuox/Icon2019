@@ -22,6 +22,8 @@ import java.util.Set;
  */
 public class AStarGraph<T extends Comparable<T>>  {
 
+    final int VMAX = 30;
+
     public AStarGraph() { }
 
     /**
@@ -114,9 +116,8 @@ public class AStarGraph<T extends Comparable<T>>  {
     /**
      * Default heuristic: cost to each vertex is 1.
      */
-    @SuppressWarnings("unused")
     protected int heuristicCostEstimate(Graph.Vertex<T> start, Graph.Vertex<T> goal) {
-        return 1;
+        return  (Math.abs(start.getX() - goal.getX()) + Math.abs(start.getY() - goal.getY()) )/ VMAX;
     }
 
     private List<Graph.Edge<T>> reconstructPath(Map<Graph.Vertex<T>,Graph.Vertex<T>> cameFrom, Graph.Vertex<T> current) {

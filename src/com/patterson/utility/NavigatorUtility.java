@@ -117,7 +117,9 @@ public class NavigatorUtility {
         Coords.forEach(
                 r -> {
                     for ( String s : r.values()){ //sempre un solo valore
-                        coords.addAll(getConnection(s));
+                        ArrayList<String> tmp = getConnection(s);
+                        tmp.remove(nomeStrada);
+                        coords.addAll(tmp);
                     }
                 }
         );

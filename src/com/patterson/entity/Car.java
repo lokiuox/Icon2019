@@ -35,8 +35,8 @@ public class Car implements IEntity {
         direction = new Angle(d);
         loadImage();
         Navigator nav = new Navigator();
-        ArrayList<String> pathSolver = nav.getFirstPath();
-//  per chiamate successive      ArrayList<String> pathSolver = nav.setNewEnd();
+        LinkedList<String> pathSolver = nav.getFirstPath();
+//  per chiamate successive      LinkedList<String> pathSolver = nav.setNewEnd();
 
     }
 
