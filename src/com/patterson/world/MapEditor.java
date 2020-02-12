@@ -13,7 +13,8 @@ class MapEditor extends MapView {
 
     private Pointer p = new Pointer(-16,-16);
     private TempRoad t = new TempRoad(-16, -16, -16, -16);
-    private Dictionary<String, Road> roads = new Hashtable<>();
+    private Map<String, Road> roads = new HashMap<>();
+
 
 
     public MapEditor() {
@@ -39,10 +40,8 @@ class MapEditor extends MapView {
         p.draw(g2d);
         t.draw(g2d);
 
-        Enumeration<Road> e = roads.elements();
-        while (e.hasMoreElements()) {
-            e.nextElement().draw(g2d);
-        }
+        for (Road r: roads.values())
+            r.draw(g2d);
     }
 
     @Override

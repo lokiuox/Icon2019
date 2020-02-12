@@ -15,7 +15,8 @@ public class AppMain extends JFrame {
     }
 
     private void initUI() {
-        MapWindow w = new EditorWindow("resources/scenari/demo/scenario.json");
+        //MapWindow w = new EditorWindow("resources/scenari/demo/scenario.json");
+        MapWindow w = new EditorWindow();
         add(w);
 
         pack();
