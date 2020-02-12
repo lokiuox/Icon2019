@@ -1,55 +1,72 @@
 package com.patterson.ui.editor;
 
 import com.patterson.entity.Road;
-import com.patterson.ui.MapView;
 import com.patterson.utility.Angle;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.Map;
 
-class MapEditor extends MapView {
+import static com.patterson.ui.editor.MapEditorView.toGrid;
 
+public class RoadDesignMode implements IEditorMode {
+    private MapEditorView editor;
     private Pointer p = new Pointer(-16,-16);
     private TempRoad t = new TempRoad(-16, -16, -16, -16);
-    private Map<String, Road> roads = new HashMap<>();
+    private MovingAdapter ma = new MovingAdapter();
+    private PressAdapter pa = new PressAdapter();
 
+    private Map<String, Road> roads;
 
-
-    public MapEditor() {
-        initUI();
+    public RoadDesignMode(MapEditorView m) {
+        this.editor = m;
+        this.roads = m.getRoadMap();
+        init();
     }
 
-    private void initUI() {
-        setFocusable(true);
-        addKeyListener(new PressAdapter());
-        MovingAdapter ma = new MovingAdapter();
-        addMouseMotionListener(ma);
-        addMouseListener(ma);
-        // Make the mouse invisible inside editor area
-        this.setCursor(this.getToolkit().createCustomCursor(
+    @Override
+    public void init() {
+
+    }
+
+    public void repaint() {
+        editor.repaint();
+    }
+
+    @Override
+    public void draw(Graphics2D g2d) {
+        p.draw(g2d);
+        t.draw(g2d);
+    }
+
+    @Override
+    public void setEditor(MapEditorView m) {
+        this.editor = m;
+        this.roads = m.getRoadMap();
+    }
+
+    @Override
+    public void activate() {
+        editor.addKeyListener(pa);
+        editor.addMouseListener(ma);
+        editor.addMouseMotionListener(ma);
+        editor.setCursor(editor.getToolkit().createCustomCursor(
                 new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB),
                 new Point(),
                 null ));
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        p.draw(g2d);
-        t.draw(g2d);
-        for (Road r: roads.values())
-            r.draw(g2d);
-    }
-
-    protected Point toGrid(int x, int y) {
-        return new Point(
-                32*(x/32),
-                32*(y/32)
-        );
+    public void deactivate() {
+        editor.removeKeyListener(pa);
+        editor.removeMouseListener(ma);
+        editor.removeMouseMotionListener(ma);
+        editor.setCursor(Cursor.getDefaultCursor());
     }
 
     class Pointer {
@@ -232,7 +249,6 @@ class MapEditor extends MapView {
                 r = new Road("r" + roads.size(), t.start.x, t.start.y, t.direction().getAngle(), t.length());
                 roads.put("r" + roads.size(), r);
             }
-
             repaint();
         }
     }
