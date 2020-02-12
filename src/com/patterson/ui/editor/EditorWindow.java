@@ -1,4 +1,7 @@
-package com.patterson.ui;
+package com.patterson.ui.editor;
+
+import com.patterson.ui.MapControls;
+import com.patterson.ui.MapWindow;
 
 import javax.swing.*;
 import java.awt.*;

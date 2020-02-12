@@ -1,6 +1,7 @@
-package com.patterson.ui;
+package com.patterson.ui.editor;
 
 import com.patterson.entity.Road;
+import com.patterson.ui.MapView;
 import com.patterson.utility.Angle;
 
 import javax.swing.*;

@@ -11,7 +11,7 @@ public class MapControls extends JPanel {
     MapView mapView;
     Map<String, JPanel> cards = new HashMap<>();
 
-    MapControls(MapView m) {
+    public MapControls(MapView m) {
         super(new CardLayout());
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         JPanel default_card = new JPanel();
@@ -20,7 +20,7 @@ public class MapControls extends JPanel {
         mapView = m;
     }
 
-    MapControls(MapView m, Dimension d) {
+    public MapControls(MapView m, Dimension d) {
         this(m);
         this.setPreferredSize(d);
     }
