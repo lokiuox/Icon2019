@@ -16,31 +16,39 @@ numerocivico(K,L):- destinazione(K,L).
 
 numerocivico(_civico,civico1).
 */
-partenza(_partenza,_partenza1).
-destinazione(_destinazione,_destinazione1).
-lunghezza(_lunghezza,_lunghezza1).
-angolo(_angolo,_angolo1).
-collega(_incrocio1,_strada,_incrocio2).
-coordinata(_strada,_x,_y).
-incrocio(_incrocio3).
-macchina(_macchina).
-prima(_macchina1,_macchina2).
-velocita(_macchina3,_velocita).
-velocitamedia(_strada2,_numero).
-velocitamax(_strada3,_numero1).
-stop(_strada4).
-semaforo(_strada5).
-prossima_strada(_macchina4,_strada6).
-strada_corrente(_macchina5,_strada7).
-strada(_strada6).
+partenza(partenza,partenza1).
+destinazione(destinazione,destinazione1).
+lunghezza(lunghezza,lunghezza1).
+angolo(angolo,angolo1).
+collega(incrocio1,strada,incrocio2).
+coordinata(strada,x,y).
+incrocio(incrocio3).
+macchina(macchina).
+prima(macchina1,macchina2).
+velocita(macchina3,velocita).
+velocitamedia(strada2,numero).
+velocitamax(strada3,numero1).
+stop(strada4).
+semaforo(strada5).
+peso(strada12,assai).
+strada_corrente(macchina5,strada7).
+prossima_strada(macchina4,strada6).
+strada(strada6).
+temporosso(strada5,9).
 
 
 strada_corrente(mac,stra).
 strada_corrente(mac1,stra).
 strada_corrente(mac2,stra).
 
+lunghezza(stra,10).
+velocitamax(stra,100).
+semaforo(stra).
+stop(stra).
+temporosso(stra,10).
+
 velocita(mac,50).
-velocita(ma1,60).
+velocita(mac1,60).
 velocita(mac2,70).
 
 
@@ -59,28 +67,27 @@ strada(L):- strada_corrente(K,L).
 macchina(S):- prima(S,D).
 macchina(D):- prima(S,D).
 */
-macchina(S):- velocita(S,F).
-/*
-velocitamedia(L,D):- =(D,/(somma(Z,T),N)),findall(X,mitrovo(X,L,T),Z),contamacchine(L,N).
+macchina(S):- velocita(S,_).
+
+velocitamedia(L,D):- findall(X,strada_corrente(X,L),Y),contamacchine(L,N),somma(Y,C),D is /(C,N).
 
 somma([],0).
-somma([X|Y],D):- =(D,+(F,G)),velocita(X,F),somma([Y],G).
+somma([X|Y],D):- somma(Y,G),velocita(X,F),D is F + G.
 
-
-
-peso(L,X):- =(X,+(+(+(/(K,F),/(J,2)),Costante),/(K,D))),
+peso(L,X):- 
 	lunghezza(L,K),
-	(semaforo(L) -> temporosso(L,J); 0 is J),
-	(contamacchine(L,N), \+(=(N,0)) -> velocitamedia(L,D);0 is D),
-	(stop(L) -> 3 is Costante;0 is Costante),
-	velocitamedia(L,D),
-	velocitamax(L,F).
+	contamacchine(L,N), 
+	(semaforo(L) -> temporosso(L,J); J is 0),
+	(N is 0 -> D is 1,W is 0 ; velocitamedia(L,D), W is 1),
+	(stop(L) -> Costante is 3 ; Costante is 0),
+	velocitamax(L,F),
+	X is +(+(+(/(K,F),/(J,2)),Costante),*(/(K,D),W)).
 
 conta([],0).
 conta([H|Coda], N) :- conta(Coda, N1),N is N1 + 1.
 
-contamacchine(L,N):- conta(Z,N),findall(X,mitrovo(X,L,T),Z).
-*/
+contamacchine(L,N):- findall(X,strada_corrente(X,L),Y),conta(Y,N).
+
 /* precedenza(A,B): A deve dare la precedenza a B */
 precedenza(A,B) :-
 	prossima_strada(A,Rn),
