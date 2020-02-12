@@ -1,4 +1,4 @@
-package com.patterson.world;
+package com.patterson.ui;
 
 import com.patterson.entity.Road;
 import com.patterson.utility.Angle;
@@ -34,20 +34,14 @@ class MapEditor extends MapView {
                 null ));
     }
 
-    private void doDrawing(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-
-        p.draw(g2d);
-        t.draw(g2d);
-
-        for (Road r: roads.values())
-            r.draw(g2d);
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        doDrawing(g);
+        Graphics2D g2d = (Graphics2D) g;
+        p.draw(g2d);
+        t.draw(g2d);
+        for (Road r: roads.values())
+            r.draw(g2d);
     }
 
     protected Point toGrid(int x, int y) {
@@ -231,7 +225,6 @@ class MapEditor extends MapView {
         @Override
         public void mouseReleased(MouseEvent e) {
             Road r;
-
             t.invisible();
 
             if (t.length()>0 && SwingUtilities.isLeftMouseButton(e)) {

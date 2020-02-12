@@ -1,7 +1,7 @@
 package com.patterson;
 
-import com.patterson.world.EditorWindow;
-import com.patterson.world.MapWindow;
+import com.patterson.ui.EditorWindow;
+import com.patterson.ui.MapWindow;
 
 import javax.swing.*;
 import java.awt.*;

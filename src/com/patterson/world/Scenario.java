@@ -15,11 +15,11 @@ public class Scenario implements IScenario {
     private List<Car> cars = new LinkedList<>();
     private String kb_path = "resources/KB.pl";
 
-    Scenario() {
+    public Scenario() {
         init();
     }
 
-    Scenario(String json_file) {
+    public Scenario(String json_file) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(json_file));
 

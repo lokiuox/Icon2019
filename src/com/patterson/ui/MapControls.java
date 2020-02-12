@@ -1,4 +1,4 @@
-package com.patterson.world;
+package com.patterson.ui;
 
 import java.util.HashMap;
 import java.util.Map;

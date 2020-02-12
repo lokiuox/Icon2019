@@ -1,4 +1,6 @@
-package com.patterson.world;
+package com.patterson.ui;
+
+import com.patterson.world.Scenario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +13,7 @@ public class MapView extends JPanel implements ActionListener {
 
     private Timer timer;
     private int counter = 0;
-    private Map<String, MapControls> controls = new HashMap<>();
+    private Map<String, MapControls> windowControls = new HashMap<>();
 
     private Scenario scenario;
 
@@ -27,8 +29,8 @@ public class MapView extends JPanel implements ActionListener {
         timer.start();
     }
 
-    public void setControls(String type, MapControls c) {
-        controls.put(type, c);
+    public void setControls(String id, MapControls c) {
+        windowControls.put(id, c);
     }
 
     public String getSceneName() {
