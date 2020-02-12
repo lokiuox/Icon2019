@@ -50,7 +50,7 @@ public class Intersection implements IEntity {
     @Override
     public void draw(Graphics2D g) {
         for (int i=0; i<=width; i+=16) {
-            for (int j=0; j<=width; j+=16) {
+            for (int j=0; j<=height; j+=16) {
                 g.drawImage(img, (int)position.getX()+i, (int)position.getY()+j, null);
             }
         }
