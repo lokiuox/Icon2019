@@ -7,7 +7,7 @@ public class EditorWindow extends MapWindow {
     public static Dimension BUTTON_SPACING = new Dimension(5, 0);
 
     public EditorWindow() {
-        super(new Editor());
+        super(new MapEditor());
     }
 
     public EditorWindow(String json) {
