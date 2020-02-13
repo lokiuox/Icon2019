@@ -54,7 +54,8 @@ public class Road implements IEntity {
             intersection.getRoads().remove(this);
 
         intersection = i;
-        i.getRoads().add(this);
+        if (intersection!=null)
+            intersection.getRoads().add(this);
     }
 
     public Intersection getIntersection() {
