@@ -11,10 +11,11 @@ public class EditorWindow extends MapWindow {
 
     public EditorWindow() {
         super(new MapEditorView());
+        init();
     }
 
     public EditorWindow(String json) {
-        super(json);
+        super(new MapEditorView(json));
         init();
     }
 
