@@ -148,9 +148,7 @@ public class MapMatrix {
         Road road = null;
         Intersection intersection = null;
 
-        Tile() {
-            type = TileType.EMPTY;
-        }
+        Tile() {}
 
         Tile(Road r) {
             type = (r.getDirection().isHorizontal() ? TileType.ROAD_H : TileType.ROAD_V);
@@ -160,6 +158,10 @@ public class MapMatrix {
         Tile(Intersection i) {
             type = TileType.INTERSECTION;
             intersection = i;
+        }
+
+        public boolean isEmpty() {
+            return type == TileType.EMPTY;
         }
     }
 }

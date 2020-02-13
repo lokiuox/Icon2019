@@ -199,7 +199,6 @@ class MapEditorView extends MapView {
 
     //Using matrix coords
     void placeIntersection(int x, int y) {
-        System.out.println("place called " + x + "," + y);
         if (matrix.getCoords(x, y).type != MapMatrix.TileType.EMPTY) {
             System.err.println("Can't put an intersection there, it's not an empty tile");
             return;
@@ -247,17 +246,12 @@ class MapEditorView extends MapView {
         }
     }
 
-    public boolean assertEmptyTile(int x, int y) {
-        return (matrix.get(x, y).type == EMPTY);
-    }
-
     private void expandIntersection(Intersection i, Point pos) {
-        System.out.println("expand called");
         int x = i.getPosition().x / 32;
         int y = i.getPosition().y / 32;
         int w = i.getSize().width / 32;
         int h = i.getSize().height / 32;
-        if (!assertEmptyTile(pos.x, pos.y))
+        if (!matrix.get(x, y).isEmpty())
             return;
         if (w == 1 && h == 1) {
             if (pos.x == x && pos.y == y+1) {
@@ -278,7 +272,7 @@ class MapEditorView extends MapView {
             for (Road r: getRoadsIncomingOnTile(pos.x, pos.y))
                 r.setIntersection(i);
         } else if (w == 2 && h == 1) {
-            if (!assertEmptyTile(x, pos.y) || !assertEmptyTile(x+1, pos.y))
+            if (!matrix.get(x, pos.y).isEmpty() || !matrix.get(x+1, pos.y).isEmpty())
                 return;
             if (pos.y == y+1 && (pos.x == x || pos.x == x+1)) {
                 i.setSize(new Dimension(w*32, (h+1)*32));
@@ -296,7 +290,7 @@ class MapEditorView extends MapView {
             for (Road r: getRoadsIncomingOnTile(x+1, pos.y))
                 r.setIntersection(i);
         } else if (w == 1 && h == 2) {
-            if (!assertEmptyTile(pos.x, y) || !assertEmptyTile(pos.x, y+1))
+            if (!matrix.get(pos.x, y).isEmpty() || !matrix.get(pos.x, y+1).isEmpty())
                 return;
             if (pos.x == x+1 && (pos.y == y || pos.y == y+1)) {
                 i.setSize(new Dimension((w+1)*32, h*32));
@@ -314,7 +308,7 @@ class MapEditorView extends MapView {
             for (Road r: getRoadsIncomingOnTile(pos.x, y+1))
                 r.setIntersection(i);
         } else {
-            System.err.println("Stop. You can't do that.");
+            System.err.println("This intersection is not expandable");
         }
     }
 
