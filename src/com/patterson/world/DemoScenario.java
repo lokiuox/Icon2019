@@ -16,7 +16,7 @@ public class DemoScenario {
         Intersection i1 = new Intersection("i1", 32 + 20 * 16, 4 * 16 + 32 + 20 * 16, 16, 16);
         s.addIntersection(i1);
 
-        Road r0 = new Road("r0", 32, 5 * 16, 0, 20 * 16);
+        Road r0 = new RoadStop("r0", 32, 5 * 16, 0, 20 * 16);
         r0.setIntersection(i0);
         s.addRoad(r0);
 

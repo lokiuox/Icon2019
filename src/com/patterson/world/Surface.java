@@ -13,7 +13,8 @@ public class Surface extends JPanel implements ActionListener {
     private Scenario scenario;
 
     public Surface() {
-        scenario = new Scenario("resources/scenari/demo/scenario.json");
+        //scenario = new Scenario("resources/scenari/demo/scenario.json");
+        scenario = DemoScenario.getScenario();
         timer = new Timer(30, this);
         timer.start();
     }
