@@ -11,7 +11,9 @@ class MapEditorView extends MapView {
     private Map<String, IEditorMode> modes = new HashMap<>();
     private IEditorMode currentMode = null;
 
-    private Map<String, Road> roads = new HashMap<>();
+    private Map<String, Road> roads;
+    private Map<String, Intersection> intersections;
+    private MapMatrix matrix;
 
     public MapEditorView() {
         initUI();
