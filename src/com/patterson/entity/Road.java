@@ -5,16 +5,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.ImageIcon;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.geom.Point2D;
+import java.awt.*;
 import java.util.*;
 import java.util.List;
 
 public class Road implements IEntity {
 
     String ID;
-    Point2D position = new Point2D.Float(0, 0);
+    Point position = new Point(0, 0);
     int length;
     Angle direction;
 
@@ -22,7 +20,7 @@ public class Road implements IEntity {
     List<Car> cars = new LinkedList<>();
     Intersection intersection;
 
-    public Road(String id, float x, float y, int d, int l) {
+    public Road(String id, int x, int y, int d, int l) {
         ID = id;
         position.setLocation(x,y);
         direction = new Angle(d);
@@ -41,8 +39,8 @@ public class Road implements IEntity {
 
     public Road(JSONObject jo_road) {
         this(jo_road.getString("id"),
-                jo_road.getFloat("posX"),
-                jo_road.getFloat("posY"),
+                jo_road.getInt("posX"),
+                jo_road.getInt("posY"),
                 jo_road.getInt("direction"),
                 jo_road.getInt("length"));
     }
@@ -63,7 +61,7 @@ public class Road implements IEntity {
         return intersection;
     }
 
-    public Point2D getPosition() {
+    public Point getPosition() {
         return position;
     }
 
@@ -75,8 +73,8 @@ public class Road implements IEntity {
         return length;
     }
 
-    public Point2D getEnd() {
-        return new Point2D.Float((float) position.getX()+length*direction.cos(), (float) position.getY()+length*direction.sin());
+    public Point getEnd() {
+        return new Point(position.x+length*direction.cos(),position.y+length*direction.sin());
     }
 
     public List<Car> getCars() {
@@ -87,19 +85,19 @@ public class Road implements IEntity {
     public void draw(Graphics2D g) {
         for (int i=8; i<=length-8; i+=16) {
             if (direction.isHorizontal()) {
-                g.drawImage(img[0], (int) position.getX() + i * direction.cos() - 8, (int) position.getY() + i * direction.sin(), null);
-                g.drawImage(img[1], (int) position.getX() + i * direction.cos() - 8, (int) position.getY() + i * direction.sin() - 16, null);
+                g.drawImage(img[0],  position.x + i * direction.cos() - 8,  position.y + i * direction.sin(), null);
+                g.drawImage(img[1],  position.x + i * direction.cos() - 8,  position.y + i * direction.sin() - 16, null);
 
             } else {
-                g.drawImage(img[2], (int) position.getX() + i * direction.cos(),      (int) position.getY() + i * direction.sin() - 8, null);
-                g.drawImage(img[3], (int) position.getX() + i * direction.cos() - 16, (int) position.getY() + i * direction.sin() - 8, null);
+                g.drawImage(img[2],  position.x + i * direction.cos(),       position.y + i * direction.sin() - 8, null);
+                g.drawImage(img[3],  position.x + i * direction.cos() - 16,  position.y + i * direction.sin() - 8, null);
             }
         }
 
         //debug
         /*g.setPaint(Color.blue);
-        g.drawLine((int) position.getX(), (int) position.getY(), (int) position.getX(), (int) position.getY());
-        g.drawLine((int) getEnd().getX(), (int) getEnd().getY(), (int) getEnd().getX(), (int) getEnd().getY());
+        g.drawLine( position.x,  position.y,  position.x,  position.y);
+        g.drawLine( getEnd().getX(),  getEnd().getY(),  getEnd().getX(),  getEnd().getY());
         */
     }
 
@@ -113,8 +111,8 @@ public class Road implements IEntity {
     public JSONObject toJSONObject() {
         JSONObject road = new JSONObject();
         road.put("id", ID);
-        road.put("posX", position.getX());
-        road.put("posY", position.getY());
+        road.put("posX", position.x);
+        road.put("posY", position.y);
         road.put("length", length);
         road.put("direction", direction.getAngle());
         if (intersection != null)
