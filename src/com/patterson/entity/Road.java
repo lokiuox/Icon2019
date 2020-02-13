@@ -11,14 +11,14 @@ import java.util.List;
 
 public class Road implements IEntity {
 
-    String ID;
-    Point position = new Point(0, 0);
-    int length;
+    private String ID;
+    private Point position = new Point(0, 0);
+    private int length;
     Angle direction;
 
-    protected Image[] img = new Image[4];
-    List<Car> cars = new LinkedList<>();
-    Intersection intersection;
+    private Image[] img = new Image[4];
+    private List<Car> cars = new LinkedList<>();
+    private Intersection intersection = null;
 
     public Road(String id, int x, int y, int d, int l) {
         ID = id;
