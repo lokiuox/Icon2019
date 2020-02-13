@@ -11,22 +11,31 @@ import java.util.Set;
 
 public class Intersection implements IEntity {
 
-    String ID;
-    Point position = new Point(0, 0);
-    int width = 0;
-    int height = 0;
-    Set<Road> roads = new HashSet<>();
-    Set<Car> passing = new HashSet<>();
-    KnowledgeBase kb = new KnowledgeBase(); //Not initialized?
+    private String ID;
+    private Point position = new Point(0, 0);
+
+    //Dimensions in tiles
+    private Dimension size = new Dimension(32, 32);
+
+    private Set<Road> roads = new HashSet<>();
+    private Set<Car> passing = new HashSet<>();
+    private KnowledgeBase kb = new KnowledgeBase(); //Not initialized?
 
     protected Image img;
 
     public Intersection(String id, int x, int y, int w, int h) {
         ID = id;
         position.setLocation(x,y);
-        width = w;
-        height = h;
+        size.setSize(w, h);
         loadImage();
+    }
+
+    public Dimension getSize() {
+        return new Dimension(size);
+    }
+
+    public void setSize(Dimension d) {
+        size = new Dimension(d);
     }
 
     public Intersection(JSONObject jo_intersection) {
@@ -39,6 +48,8 @@ public class Intersection implements IEntity {
 
     public Point getPosition() { return position; }
 
+    public void setPosition(Point p) { position = new Point(p); }
+
     public String getID() {
         return ID;
     }
@@ -49,8 +60,8 @@ public class Intersection implements IEntity {
 
     @Override
     public void draw(Graphics2D g) {
-        for (int i=0; i<=width; i+=16) {
-            for (int j=0; j<=height; j+=16) {
+        for (int i=0; i<size.width; i+=16) {
+            for (int j=0; j<size.height; j+=16) {
                 g.drawImage(img, position.x+i, position.y+j, null);
             }
         }
@@ -118,8 +129,8 @@ public class Intersection implements IEntity {
         intersection.put("id", ID);
         intersection.put("posX", position.x);
         intersection.put("posY", position.y);
-        intersection.put("width", width);
-        intersection.put("height", height);
+        intersection.put("width", size.width);
+        intersection.put("height", size.height);
         JSONArray ja_roads = new JSONArray();
         for (Road r: roads)
             ja_roads.put(r.getID());
