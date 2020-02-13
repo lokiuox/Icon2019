@@ -88,6 +88,45 @@ class MapEditorView extends MapView {
 
     MapMatrix getMatrix() { return matrix; }
 
+    void splitRoad(Road r, int tile_n) {
+        int first_lenght = (tile_n - 1) * 32;
+        matrix.removeRoad(r);
+        roads.remove(r);
+        Road fist_half = new Road(r.getID(), r.getPosition().x, r.getPosition().y, r.getDirection().getAngle(), first_lenght);
+        Intersection i = r.getIntersection();
+        addRoad(fist_half);
+
+        if (r.getLength()/32 > tile_n) {
+            int x = 0, y = 0, length;
+            length = r.getLength() - first_lenght - 32;
+
+            if (length <= 0)
+                return;
+
+            switch (r.getDirection().getAngle()) {
+                case 0:
+                    x = r.getPosition().x + first_lenght + 32;
+                    y = r.getPosition().y;
+                    break;
+                case 1:
+                    x = r.getPosition().x;
+                    y = r.getPosition().y - first_lenght - 32;
+                    break;
+                case 2:
+                    x = r.getPosition().x - first_lenght - 32;
+                    y = r.getPosition().y;
+                    break;
+                case 3:
+                    x = r.getPosition().x;
+                    y = r.getPosition().y + first_lenght + 32;
+                    break;
+            }
+            Road second_half = new Road(r.getID() + "bis", x, y, r.getDirection().getAngle(), length);
+            second_half.setIntersection(i);
+            addRoad(second_half);
+        }
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
