@@ -28,7 +28,7 @@ public class Road implements IEntity {
         loadImage();
     }
 
-    public Road(String id, float x, float y, int d, int l, Intersection i) {
+    public Road(String id, int x, int y, int d, int l, Intersection i) {
         ID = id;
         position.setLocation(x,y);
         direction = new Angle(d);
