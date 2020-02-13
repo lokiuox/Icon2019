@@ -7,6 +7,7 @@ import com.patterson.world.Scenario;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 class MapEditorView extends MapView {
 
@@ -88,20 +89,25 @@ class MapEditorView extends MapView {
 
     MapMatrix getMatrix() { return matrix; }
 
-    void splitRoad(Road r, int tile_n) {
+    List<Road> splitRoad(Road r, int tile_n) {
+        List<Road> splitted_road = new ArrayList<>(2);
         int first_lenght = (tile_n - 1) * 32;
-        matrix.removeRoad(r);
-        roads.remove(r);
+
+        if (first_lenght >= r.getLength()) {
+            splitted_road.add(r);
+            return splitted_road;
+        }
+
         Road fist_half = new Road(r.getID(), r.getPosition().x, r.getPosition().y, r.getDirection().getAngle(), first_lenght);
         Intersection i = r.getIntersection();
-        addRoad(fist_half);
+        splitted_road.add(fist_half);
 
         if (r.getLength()/32 > tile_n) {
             int x = 0, y = 0, length;
             length = r.getLength() - first_lenght - 32;
 
             if (length <= 0)
-                return;
+                return splitted_road;
 
             switch (r.getDirection().getAngle()) {
                 case 0:
@@ -123,8 +129,9 @@ class MapEditorView extends MapView {
             }
             Road second_half = new Road(r.getID() + "bis", x, y, r.getDirection().getAngle(), length);
             second_half.setIntersection(i);
-            addRoad(second_half);
+            splitted_road.add(second_half);
         }
+        return splitted_road;
     }
 
     @Override
