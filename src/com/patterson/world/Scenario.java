@@ -113,6 +113,14 @@ public class Scenario implements IScenario {
         return new ArrayList<Road>(roads.values());
     }
 
+    public Map<String, Road> getRoadMap() {
+        return roads;
+    }
+
+    public Map<String, Intersection> getIntersectionMap() {
+        return intersections;
+    }
+
     public Scenario addRoad(Road r) {
         roads.put(r.getID(), r);
         return this;
