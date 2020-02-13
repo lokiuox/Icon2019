@@ -56,8 +56,13 @@ class MapEditorView extends MapView {
     }
 
     protected void addRoad(Road r) {
-        roads.put(r.getID(), r);
-        matrix.addRoad(r);
+        Point p = checkOverlapping(r);
+        if (p==null) {
+            roads.put(r.getID(), r);
+            matrix.addRoad(r);
+        } else {
+            System.out.println("Overlaps in " + p.x + "," + p.y);
+        }
     }
 
     protected void addIntersection(Intersection i) {
@@ -68,6 +73,7 @@ class MapEditorView extends MapView {
     protected void removeRoad(Road r) {
         roads.remove(r.getID());
         matrix.removeRoad(r);
+        r.setIntersection(null);
     }
 
     protected void removeRoad(String id) {
@@ -134,12 +140,47 @@ class MapEditorView extends MapView {
         return splitted_road;
     }
 
+    Point checkOverlapping(Road r) {
+        int x = r.getPosition().x;
+        int y = r.getPosition().y;
+        int len = r.getLength();
+        switch (r.getDirection().getAngle()) {
+            case 0:
+                for (int k = x; k < x+len; k++) {
+                    MapMatrix.Tile t = matrix.getCoords(k, y);
+                    if (t.type != MapMatrix.TileType.EMPTY)
+                        return new Point(k, y);
+                }
+                break;
+            case 1:
+                for (int k = y-len; k < y; k++) {
+                    MapMatrix.Tile t = matrix.getCoords(x, k);
+                    if (t.type != MapMatrix.TileType.EMPTY)
+                        return new Point(x, k);
+                }
+                break;
+            case 2:
+                for (int k = x-len; k < x; k++) {
+                    MapMatrix.Tile t = matrix.getCoords(k, y);
+                    if (t.type != MapMatrix.TileType.EMPTY)
+                        return new Point(k, y);
+                }
+                break;
+            case 3:
+                for (int k = y; k < y+len; k++) {
+                    MapMatrix.Tile t = matrix.getCoords(x, k);
+                    if (t.type != MapMatrix.TileType.EMPTY)
+                        return new Point(x, k);
+                }
+                break;
+        }
+        return null;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        for (Road r: roads.values())
-            r.draw(g2d);
+        super.paintComponent(g);
         currentMode.draw(g2d);
     }
 
