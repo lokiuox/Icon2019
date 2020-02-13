@@ -1,5 +1,6 @@
 :-dynamic(strada_corrente/2).
 :-dynamic(prossima_strada/2).
+:-dynamic(rosso/1).
 
 
 

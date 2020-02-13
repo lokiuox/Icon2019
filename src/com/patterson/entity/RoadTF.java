@@ -1,5 +1,6 @@
 package com.patterson.entity;
 
+import com.patterson.utility.KnowledgeBase;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -7,15 +8,21 @@ import java.awt.*;
 
 public class RoadTF extends Road {
 
-    boolean light = false;
+    boolean light;
+    KnowledgeBase kb = new KnowledgeBase();
 
     public RoadTF(String id, float x, float y, int d, int l) {
         super(id, x, y, d, l);
         loadTFImage();
+        initTF();
     }
 
     public RoadTF(JSONObject jo_road) {
         super(jo_road);
+    }
+
+    private void initTF() {
+        kb.addAssertion("rosso("+this.getID()+")");
     }
 
     private void loadTFImage() {
@@ -38,10 +45,12 @@ public class RoadTF extends Road {
 
     public void setRed() {
         light = false;
+        kb.assertToKB();
     }
 
     public void setGreen() {
         light = true;
+        kb.retractFromKB();
     }
 
     public boolean isRed() {

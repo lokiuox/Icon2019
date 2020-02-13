@@ -35,7 +35,7 @@ public class KnowledgeBase {
         }
     }
 
-    public boolean boolQuery(String q) {
+    public static boolean boolQuery(String q) {
         return (new Query(q)).hasSolution();
     }
 
@@ -44,7 +44,7 @@ public class KnowledgeBase {
             System.out.println(s);
     }
 
-    public Set<Map<String, String>> stringQuery(String q) {
+    public static Set<Map<String, String>> stringQuery(String q) {
         Set<Map<String, String>> set = new HashSet<>();
 
         for (Map<String,Term> res : new Query(q)) {
@@ -56,7 +56,7 @@ public class KnowledgeBase {
         return set;
     }
 
-    private Map<String, String> prologToString (Map<String, Term> prolog) {
+    private static Map<String, String> prologToString (Map<String, Term> prolog) {
         Map<String,String> res = new HashMap<>();
 
         Set<String> keys = prolog.keySet();

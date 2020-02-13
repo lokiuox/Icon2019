@@ -9,6 +9,7 @@
 :-dynamic(velocita/2).
 :-dynamic(somma/2).
 :-dynamic(conta/2).
+:-dynamic(rosso/1).
 
 numerocivico(K,L):- partenza(K,L).
 numerocivico(K,L):- destinazione(K,L).

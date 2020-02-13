@@ -3,7 +3,7 @@ package com.patterson.entity;
 public class IntersectionTF extends Intersection {
 
     int countTick = 0;
-    int switchTime = 30;
+    int switchTime = 30*5;
 
     public IntersectionTF(String id, float x, float y, int w, int h) {
         super(id, x, y, w, h);
@@ -12,7 +12,7 @@ public class IntersectionTF extends Intersection {
     private void initTF() {
         for (Road r : roads) {
             if (r instanceof RoadTF) {
-                if (r.direction.isHorizontal())
+                if (r.direction.isVertical())
                     ((RoadTF) r).setGreen();
                 else
                     ((RoadTF) r).setRed();
