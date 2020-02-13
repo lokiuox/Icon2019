@@ -1,5 +1,6 @@
 package com.patterson.ui.editor;
 
+import com.patterson.entity.Intersection;
 import com.patterson.entity.Road;
 import com.patterson.utility.Angle;
 
@@ -22,10 +23,12 @@ public class RoadDesignMode implements IEditorMode {
     private PressAdapter pa = new PressAdapter();
 
     private Map<String, Road> roads;
+    private Map<String, Intersection> intersections;
 
     public RoadDesignMode(MapEditorView m) {
         this.editor = m;
-        this.roads = m.getRoadMap();
+        this.roads = m.getScenario().getRoadMap();
+        this.intersections = m.getScenario().getIntersectionMap();
         init();
     }
 
@@ -40,14 +43,63 @@ public class RoadDesignMode implements IEditorMode {
 
     @Override
     public void draw(Graphics2D g2d) {
-        p.draw(g2d);
         t.draw(g2d);
+        p.draw(g2d);
+        g2d.setColor(Color.WHITE);
+        for (Road r: roads.values()) {
+            Polygon p = createDirectionIndicator(r);
+            g2d.fillPolygon(p);
+        }
+        g2d.setColor(Color.BLACK);
+    }
+
+    private Polygon createDirectionIndicator(Road r) {
+        int[] points_x = new int[3];
+        int[] points_y = new int[3];
+        int x = r.getPosition().x;
+        int y = r.getPosition().y;
+        switch (r.getDirection().getAngle()) {
+            case 0:
+                points_x[0] = x+6;
+                points_x[1] = x+6;
+                points_x[2] = x+16;
+                points_y[0] = y-10;
+                points_y[1] = y+10;
+                points_y[2] = y;
+                break;
+            case 1:
+                points_x[0] = x-10;
+                points_x[1] = x+10;
+                points_x[2] = x;
+                points_y[0] = y-6;
+                points_y[1] = y-6;
+                points_y[2] = y-16;
+                break;
+            case 2:
+                points_x[0] = x-6;
+                points_x[1] = x-6;
+                points_x[2] = x-16;
+                points_y[0] = y-10;
+                points_y[1] = y+10;
+                points_y[2] = y;
+                break;
+            case 3:
+                points_x[0] = x-10;
+                points_x[1] = x+10;
+                points_x[2] = x;
+                points_y[0] = y+6;
+                points_y[1] = y+6;
+                points_y[2] = y+16;
+                break;
+        }
+        return new Polygon(points_x, points_y, 3);
     }
 
     @Override
     public void setEditor(MapEditorView m) {
         this.editor = m;
-        this.roads = m.getRoadMap();
+        this.roads = m.getScenario().getRoadMap();
+        this.intersections = m.getScenario().getIntersectionMap();
     }
 
     @Override
@@ -89,6 +141,7 @@ public class RoadDesignMode implements IEditorMode {
                 //g.drawLine(position.x, position.y, position.x+16*a.cos(), position.y+16*a.sin());
             }
             g.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL));
+            g.setColor(Color.RED);
             g.drawLine(position.x-16, position.y-16, position.x-16, position.y+16);
             g.drawLine(position.x-16, position.y+16, position.x+16, position.y+16);
         }
@@ -177,7 +230,6 @@ public class RoadDesignMode implements IEditorMode {
                     if (direction().isHorizontal()) {
                         g.drawImage(img[0], start.x + i * direction().cos() - 8,  start.y + i * direction().sin(), null);
                         g.drawImage(img[1], start.x + i * direction().cos() - 8,  start.y + i * direction().sin() - 16, null);
-
                     } else {
                         g.drawImage(img[2], start.x + i * direction().cos(),       start.y + i * direction().sin() - 8, null);
                         g.drawImage(img[3], start.x + i * direction().cos() - 16,  start.y + i * direction().sin() - 8, null);
@@ -222,10 +274,9 @@ public class RoadDesignMode implements IEditorMode {
             if (SwingUtilities.isLeftMouseButton(e)) {
                 t.set(x,y,x,y);
                 t.visible();
-            } else if (SwingUtilities.isRightMouseButton(e) && roads.size()>0) {
-                roads.remove("r"+(roads.size()-1));
+            } else if (SwingUtilities.isRightMouseButton(e) && editor.getRoadsSize()>0) {
+                editor.removeRoad("r"+(editor.getRoadsSize()-1));
             }
-
             repaint();
         }
 
@@ -246,8 +297,8 @@ public class RoadDesignMode implements IEditorMode {
             t.invisible();
 
             if (t.length()>0 && SwingUtilities.isLeftMouseButton(e)) {
-                r = new Road("r" + roads.size(), t.start.x, t.start.y, t.direction().getAngle(), t.length());
-                roads.put("r" + roads.size(), r);
+                r = new Road("r" + editor.getRoadsSize(), t.start.x, t.start.y, t.direction().getAngle(), t.length());
+                editor.addRoad(r);
             }
             repaint();
         }
