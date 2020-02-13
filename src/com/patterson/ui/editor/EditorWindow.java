@@ -34,8 +34,8 @@ public class EditorWindow extends MapWindow {
         JButton strade = new JButton("Strade");
         def_card.add(strade);
         def_card.add(Box.createRigidArea(BUTTON_SPACING));
-        JButton incroci = new JButton("Incroci");
-        def_card.add(incroci);
+        JButton tiles = new JButton("Tiles");
+        def_card.add(tiles);
         def_card.add(Box.createRigidArea(BUTTON_SPACING));
         JButton auto = new JButton("Auto");
         def_card.add(auto);
@@ -46,6 +46,15 @@ public class EditorWindow extends MapWindow {
         this.addControls("selector", bottom, BorderLayout.PAGE_END);
 
         play.addActionListener(e -> switchPlayPause(play));
+        strade.addActionListener(e -> {
+            MapEditorView editor = (MapEditorView) mapView;
+            editor.activateMode("RoadDesign");
+        });
+
+        tiles.addActionListener(e -> {
+            MapEditorView editor = (MapEditorView) mapView;
+            editor.activateMode("TileSelect");
+        });
     }
 
     private void switchPlayPause(JButton b) {

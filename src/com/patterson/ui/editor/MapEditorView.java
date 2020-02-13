@@ -18,9 +18,23 @@ class MapEditorView extends MapView {
     private MapMatrix matrix;
 
     public MapEditorView() {
+        scenario = new Scenario();
+        init();
+    }
+
+    public MapEditorView(String json) {
+        scenario = new Scenario(json);
+        init();
+    }
+
+    private void init() {
         initUI();
+        roads = scenario.getRoadMap();
+        intersections = scenario.getIntersectionMap();
+        matrix = new MapMatrix(this);
         modes.put("RoadDesign", new RoadDesignMode(this));
         this.activateMode("RoadDesign");
+        modes.put("TileSelect", new TileSelectMode(this));
     }
 
     private void initUI() {
