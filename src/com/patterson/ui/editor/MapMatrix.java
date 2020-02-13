@@ -3,9 +3,9 @@ package com.patterson.ui.editor;
 import com.patterson.entity.Intersection;
 import com.patterson.entity.Road;
 
+import java.util.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class MapMatrix {
     public enum TileType {EMPTY, ROAD_H, ROAD_V, INTERSECTION};
@@ -64,29 +64,67 @@ public class MapMatrix {
         int x = pos.x / TILESIZE;
         int y = pos.y / TILESIZE;
         int len = r.getLength() / TILESIZE;
-        if (r.getDirection().isHorizontal()) {
-            for (int k = x; k < x+len; k++) {
-                matrix.put(new Point(k, y), new Tile());
-            }
-        } else {
-            for (int k = y; k < y+len; k++) {
-                matrix.put(new Point(x, k), new Tile());
+        switch (r.getDirection().getAngle()) {
+            case 0:
+                for (int k = x; k < x+len; k++) {
+                    matrix.put(new Point(k, y), new Tile());
+                }
+                break;
+            case 1:
+                for (int k = y-len; k < y; k++) {
+                    matrix.put(new Point(x, k), new Tile());
+                }
+                break;
+            case 2:
+                for (int k = x-len; k < x; k++) {
+                    matrix.put(new Point(k, y), new Tile());
+                }
+                break;
+            case 3:
+                for (int k = y; k < y+len; k++) {
+                    matrix.put(new Point(x, k), new Tile());
+                }
+                break;
+        }
+    }
+
+    Tile[] getNeighboringTiles(int x, int y) {
+        Tile[] neighbors = new Tile[4];
+        // 0 = left
+        // 1 = down
+        // 2 = right
+        // 3 = up
+        neighbors[0] = this.get(x-1, y);
+        neighbors[1] = this.get(x, y+1);
+        neighbors[2] = this.get(x+1, y);
+        neighbors[3] = this.get(x, y-1);
+        return neighbors;
+    }
+
+    Tile[] getNeighboringTilesFromCoords(int x, int y) { return getNeighboringTiles(x/32, y/32); }
+
+    void removeIntersection(Intersection i) {
+        int x = i.getPosition().x / TILESIZE;
+        int y = i.getPosition().y / TILESIZE;
+        int w = i.getSize().width / TILESIZE;
+        int h = i.getSize().height / TILESIZE;
+        for (int j = 0; j < w; j++) {
+            for (int k = 0; k < h; k++) {
+                matrix.put(new Point(x+j, y+k), new Tile());
             }
         }
     }
 
-    void removeIntersection(Intersection i) {
-        Point pos = i.getPosition();
-        int x = pos.x / TILESIZE;
-        int y = pos.y / TILESIZE;
-        matrix.put(new Point(x, y), new Tile());
-    }
-
     void addIntersection(Intersection i) {
-        Point pos = i.getPosition();
-        int x = pos.x / TILESIZE;
-        int y = pos.y / TILESIZE;
-        matrix.put(new Point(x, y), new Tile(i));
+        int x = i.getPosition().x / TILESIZE;
+        int y = i.getPosition().y / TILESIZE;
+        int w = i.getSize().width / TILESIZE;
+        int h = i.getSize().height / TILESIZE;
+        for (int j = 0; j < w; j++) {
+            for (int k = 0; k < h; k++) {
+                matrix.put(new Point(x+j, y+k), new Tile(i));
+            }
+        }
     }
 
     Tile get(int x, int y) {

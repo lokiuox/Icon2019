@@ -9,6 +9,8 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import static com.patterson.ui.editor.MapMatrix.TileType.*;
+
 class MapEditorView extends MapView {
 
     private Map<String, IEditorMode> modes = new HashMap<>();
@@ -140,7 +142,7 @@ class MapEditorView extends MapView {
         return splitted_road;
     }
 
-    Point checkOverlapping(Road r) {
+    private Point checkOverlapping(Road r) {
         int x = r.getPosition().x;
         int y = r.getPosition().y;
         int len = r.getLength();
@@ -175,6 +177,145 @@ class MapEditorView extends MapView {
                 break;
         }
         return null;
+    }
+
+    private List<Road> getRoadsIncomingOnTile(int x, int y) {
+        List<Road> incoming_roads = new ArrayList<>();
+        MapMatrix.Tile[] neighbors = matrix.getNeighboringTilesFromCoords(x, y);
+        if (neighbors[0].type == ROAD_H && neighbors[0].road.getDirection().getAngle() == 0) {
+            incoming_roads.add(neighbors[0].road);
+        }
+        if (neighbors[1].type == ROAD_V && neighbors[1].road.getDirection().getAngle() == 1) {
+            incoming_roads.add(neighbors[1].road);
+        }
+        if (neighbors[2].type == ROAD_H && neighbors[2].road.getDirection().getAngle() == 2) {
+            incoming_roads.add(neighbors[2].road);
+        }
+        if (neighbors[3].type == ROAD_V && neighbors[3].road.getDirection().getAngle() == 3) {
+            incoming_roads.add(neighbors[3].road);
+        }
+        return incoming_roads;
+    }
+
+    //Using matrix coords
+    void placeIntersection(int x, int y) {
+        System.out.println("place called " + x + "," + y);
+        if (matrix.getCoords(x, y).type != MapMatrix.TileType.EMPTY) {
+            System.err.println("Can't put an intersection there, it's not an empty tile");
+            return;
+        }
+        Intersection existingIntersection = null;
+        MapMatrix.Tile[] neighbors = matrix.getNeighboringTiles(x, y);
+
+        //Check if there are already intersections in the area, so we can expand that one instead of creating a new one
+        if (neighbors[0].type == INTERSECTION) {
+            existingIntersection = neighbors[0].intersection;
+        }
+        if (neighbors[1].type == INTERSECTION) {
+            if (existingIntersection == null) {
+                existingIntersection = neighbors[1].intersection;
+            } else if (existingIntersection != neighbors[1].intersection) {
+                System.err.println("Trying to join different interceptions. Error.");
+                return;
+            }
+        }
+        if (neighbors[2].type == INTERSECTION) {
+            if (existingIntersection == null) {
+                existingIntersection = neighbors[2].intersection;
+            } else if (existingIntersection != neighbors[2].intersection) {
+                System.err.println("Trying to join different interceptions. Error.");
+                return;
+            }
+        }
+        if (neighbors[3].type == INTERSECTION) {
+            if (existingIntersection == null) {
+                existingIntersection = neighbors[3].intersection;
+            } else if (existingIntersection != neighbors[3].intersection) {
+                System.err.println("Trying to join different interceptions. Error.");
+                return;
+            }
+        }
+
+        if (existingIntersection == null) {
+            //No existing intersection is nearby, we have to create a new one
+            Intersection i = new Intersection("i" + intersections.size(), x*32, y*32, 32, 32);
+            addIntersection(i);
+            for (Road r: getRoadsIncomingOnTile(x, y))
+                r.setIntersection(i);
+        } else {
+            expandIntersection(existingIntersection, new Point(x, y));
+        }
+    }
+
+    public boolean assertEmptyTile(int x, int y) {
+        return (matrix.get(x, y).type == EMPTY);
+    }
+
+    private void expandIntersection(Intersection i, Point pos) {
+        System.out.println("expand called");
+        int x = i.getPosition().x / 32;
+        int y = i.getPosition().y / 32;
+        int w = i.getSize().width / 32;
+        int h = i.getSize().height / 32;
+        if (!assertEmptyTile(pos.x, pos.y))
+            return;
+        if (w == 1 && h == 1) {
+            if (pos.x == x && pos.y == y+1) {
+                i.setSize(new Dimension(w*32, (h+1)*32));
+            } else if (pos.x == x && pos.y == y-1) {
+                i.setSize(new Dimension(w*32, (h+1)*32));
+                i.setPosition(new Point(i.getPosition().x, i.getPosition().y-32));
+            } else if (pos.x == x+1 && pos.y == y) {
+                i.setSize(new Dimension((w+1)*32, h*32));
+            } else if (pos.x == x-1 && pos.y == y) {
+                i.setSize(new Dimension((w+1)*32, h*32));
+                i.setPosition(new Point(i.getPosition().x-32, i.getPosition().y));
+            } else {
+                System.err.println("Cannot expand intersections this way. Error.");
+                return;
+            }
+            matrix.set(pos.x, pos.y, matrix.new Tile(i));
+            for (Road r: getRoadsIncomingOnTile(pos.x, pos.y))
+                r.setIntersection(i);
+        } else if (w == 2 && h == 1) {
+            if (!assertEmptyTile(x, pos.y) || !assertEmptyTile(x+1, pos.y))
+                return;
+            if (pos.y == y+1 && (pos.x == x || pos.x == x+1)) {
+                i.setSize(new Dimension(w*32, (h+1)*32));
+            } else if (pos.y == y-1 && (pos.x == x || pos.x == x+1)) {
+                i.setPosition(new Point(i.getPosition().x, i.getPosition().y-32));
+                i.setSize(new Dimension(w*32, (h+1)*32));
+            } else {
+                System.err.println("Cannot expand intersections this way. Error.");
+                return;
+            }
+            matrix.set(x, pos.y, matrix.new Tile(i));
+            for (Road r: getRoadsIncomingOnTile(x, pos.y))
+                r.setIntersection(i);
+            matrix.set(x+1, pos.y, matrix.new Tile(i));
+            for (Road r: getRoadsIncomingOnTile(x+1, pos.y))
+                r.setIntersection(i);
+        } else if (w == 1 && h == 2) {
+            if (!assertEmptyTile(pos.x, y) || !assertEmptyTile(pos.x, y+1))
+                return;
+            if (pos.x == x+1 && (pos.y == y || pos.y == y+1)) {
+                i.setSize(new Dimension((w+1)*32, h*32));
+            } else if (pos.x == x-1 && (pos.y == y || pos.y == y+1)) {
+                i.setPosition(new Point(i.getPosition().x-32, i.getPosition().y));
+                i.setSize(new Dimension((w+1)*32, h*32));
+            } else {
+                System.err.println("Cannot expand intersections this way. Error.");
+                return;
+            }
+            matrix.set(pos.x, y, matrix.new Tile(i));
+            for (Road r: getRoadsIncomingOnTile(pos.x, y))
+                r.setIntersection(i);
+            matrix.set(pos.x, y+1, matrix.new Tile(i));
+            for (Road r: getRoadsIncomingOnTile(pos.x, y+1))
+                r.setIntersection(i);
+        } else {
+            System.err.println("Stop. You can't do that.");
+        }
     }
 
     @Override
