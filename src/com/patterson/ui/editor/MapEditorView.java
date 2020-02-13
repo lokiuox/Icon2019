@@ -89,7 +89,7 @@ class MapEditorView extends MapView {
 
     MapMatrix getMatrix() { return matrix; }
 
-    List<Road> splitRoad(Road r, int tile_n) {
+    List<Road> splitRoad(Road r, int tile_n, boolean keepSecondHalf) {
         List<Road> splitted_road = new ArrayList<>(2);
         int first_lenght = (tile_n - 1) * 32;
 
@@ -102,7 +102,7 @@ class MapEditorView extends MapView {
         Intersection i = r.getIntersection();
         splitted_road.add(fist_half);
 
-        if (r.getLength()/32 > tile_n) {
+        if (r.getLength()/32 > tile_n && keepSecondHalf) {
             int x = 0, y = 0, length;
             length = r.getLength() - first_lenght - 32;
 
