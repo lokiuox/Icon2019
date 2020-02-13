@@ -134,7 +134,7 @@ public class Car implements IEntity {
     }
 
     private void roadEnd() {
-        if (path.peek() != null && !isNearCar() && greenTF() ) {
+        if (path.peek() != null && !isNearCar() && greenTF() && !getNextRoad().isFull() ) {
             if (rightToPass || road.getIntersection()==null) {
                 rightToPass = false;
                 road.getIntersection().carPassing(this);

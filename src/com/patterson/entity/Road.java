@@ -83,6 +83,11 @@ public class Road implements IEntity {
         return cars;
     }
 
+    public boolean isFull() {
+        int carsize = direction.isHorizontal() ? 48 : 32;
+        return cars.size() > length/carsize - 1;
+    }
+
     @Override
     public void draw(Graphics2D g) {
         for (int i=8; i<=length-8; i+=16) {
