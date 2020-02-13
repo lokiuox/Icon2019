@@ -11,21 +11,19 @@ import java.util.Map;
 
 public class MapView extends JPanel implements ActionListener {
 
-    private Timer timer;
-    private int counter = 0;
-    private Map<String, MapControls> windowControls = new HashMap<>();
+    protected Timer timer = new Timer(30, this);
+    protected int counter = 0;
+    protected Map<String, MapControls> windowControls = new HashMap<>();
 
-    private Scenario scenario;
+    protected Scenario scenario;
 
     public MapView() {
         scenario = new Scenario();
-        timer = new Timer(30, this);
         timer.start();
     }
 
     public MapView(String json) {
         scenario = new Scenario(json);
-        timer = new Timer(30, this);
         timer.start();
     }
 
