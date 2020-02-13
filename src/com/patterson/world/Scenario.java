@@ -216,5 +216,8 @@ public class Scenario implements IScenario {
 
     public void tick() {
         for (Car c : cars) c.tick();
+        for (Intersection i : intersections.values())
+            if (i instanceof IntersectionTF)
+                ((IntersectionTF) i).tick();
     }
 }
