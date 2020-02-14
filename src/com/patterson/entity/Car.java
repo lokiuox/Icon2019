@@ -12,7 +12,9 @@ import java.util.*;
 
 public class Car implements IEntity {
 
-    String ID;
+    private static int counter = 0;
+
+    private String ID;
     private Point2D position = new Point2D.Float(0, 0);
     private Angle direction;
     private float speed;
@@ -21,15 +23,16 @@ public class Car implements IEntity {
 
     protected Image[] img = new Image[4];
 
-    Road road = null;
-    Road previousRoad = null;
+    private Road road = null;
+    private Road previousRoad = null;
 
-    boolean passing = false;
-    boolean rightToPass = false;
+    private boolean passing = false;
+    private boolean rightToPass = false;
 
-    Queue<Road> path = new LinkedList<>();
+    private Queue<Road> path = new LinkedList<>();
 
     public Car(String id, float x, float y, int d) {
+        updateCounter(id);
         ID = id;
         position.setLocation(x, y);
         direction = new Angle(d);
@@ -46,6 +49,12 @@ public class Car implements IEntity {
                 jo_car.getFloat("posY"),
                 jo_car.getInt("direction"));
     }
+
+    private static void updateCounter(String id) {
+        counter = Math.max(counter, Integer.parseInt(id.substring(1)));
+    }
+
+    public static String nextID() { return "c" + ++counter; }
 
     public String getType() { return "Car"; }
 

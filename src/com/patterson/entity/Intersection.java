@@ -11,6 +11,8 @@ import java.util.Set;
 
 public class Intersection implements IEntity {
 
+    private static int counter = 0;
+
     private String ID;
     private Point position = new Point(0, 0);
 
@@ -24,11 +26,18 @@ public class Intersection implements IEntity {
     protected Image img;
 
     public Intersection(String id, int x, int y, int w, int h) {
+        updateCounter(id);
         ID = id;
         position.setLocation(x,y);
         size.setSize(w, h);
         loadImage();
     }
+
+    private static void updateCounter(String id) {
+        counter = Math.max(counter, Integer.parseInt(id.substring(1)));
+    }
+
+    public static String nextID() { return "i" + ++counter; }
 
     public Dimension getSize() {
         return new Dimension(size);

@@ -11,6 +11,8 @@ import java.util.List;
 
 public class Road implements IEntity {
 
+    private static int counter = 0;
+
     private String ID;
     private Point position = new Point(0, 0);
     private int length;
@@ -21,6 +23,7 @@ public class Road implements IEntity {
     private Intersection intersection = null;
 
     public Road(String id, int x, int y, int d, int l) {
+        updateCounter(id);
         ID = id;
         position.setLocation(x,y);
         direction = new Angle(d);
@@ -29,6 +32,7 @@ public class Road implements IEntity {
     }
 
     public Road(String id, int x, int y, int d, int l, Intersection i) {
+        updateCounter(id);
         ID = id;
         position.setLocation(x,y);
         direction = new Angle(d);
@@ -44,6 +48,12 @@ public class Road implements IEntity {
                 jo_road.getInt("direction"),
                 jo_road.getInt("length"));
     }
+
+    private static void updateCounter(String id) {
+        counter = Math.max(counter, Integer.parseInt(id.substring(1)));
+    }
+
+    public static String nextID() { return "r" + ++counter; }
 
     public String getID() {
         return ID;
@@ -86,12 +96,11 @@ public class Road implements IEntity {
     public void draw(Graphics2D g) {
         for (int i=8; i<=length-8; i+=16) {
             if (direction.isHorizontal()) {
-                g.drawImage(img[0],  position.x + i * direction.cos() - 8,  position.y + i * direction.sin(), null);
-                g.drawImage(img[1],  position.x + i * direction.cos() - 8,  position.y + i * direction.sin() - 16, null);
-
+                g.drawImage(img[0],  position.x + i * direction.cos() - 8,  position.y, null);
+                g.drawImage(img[1],  position.x + i * direction.cos() - 8,  position.y - 16, null);
             } else {
-                g.drawImage(img[2],  position.x + i * direction.cos(),       position.y + i * direction.sin() - 8, null);
-                g.drawImage(img[3],  position.x + i * direction.cos() - 16,  position.y + i * direction.sin() - 8, null);
+                g.drawImage(img[2],  position.x,       position.y + i * direction.sin() - 8, null);
+                g.drawImage(img[3],  position.x - 16,  position.y + i * direction.sin() - 8, null);
             }
         }
 
