@@ -40,10 +40,6 @@ class MapEditorView extends MapView {
         modes.put("TileSelect", new TileSelectMode(this));
     }
 
-    //TODO:
-    //-Implementare aggiunta nuova strada ad incrocio su cui termina o su cui la sua ultima tile collide
-
-
     private void initUI() {
         setFocusable(true);
     }
@@ -76,8 +72,21 @@ class MapEditorView extends MapView {
     protected void placeRoad(Road r) {
         if (isPlaceable(r)) {
             addAndFixOverlappings(r);
+            linkIntersectionAtEndOfRoad(r);
         } else {
             //System.out.println("Overlaps in " + p.x + "," + p.y);
+        }
+    }
+
+    protected void linkIntersectionAtEndOfRoad(Road r) {
+        Point p = toGrid(r.getEnd().x, r.getEnd().y);
+        int x = p.x/32;
+        int y = p.y/32;
+        int next_x = x + Math.min(0, r.getDirection().cos());
+        int next_y = y + Math.min(0, r.getDirection().sin());
+        MapMatrix.Tile nextTile = matrix.get(next_x, next_y);
+        if (nextTile.type == INTERSECTION) {
+            r.setIntersection(nextTile.intersection);
         }
     }
 
