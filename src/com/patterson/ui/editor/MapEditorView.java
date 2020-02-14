@@ -40,6 +40,10 @@ class MapEditorView extends MapView {
         modes.put("TileSelect", new TileSelectMode(this));
     }
 
+    //TODO:
+    //-Implementare aggiunta nuova strada ad incrocio su cui termina o su cui la sua ultima tile collide
+
+
     private void initUI() {
         setFocusable(true);
     }
@@ -211,28 +215,28 @@ class MapEditorView extends MapView {
             case 0:
                 for (int k = x; k < x+len; k++) {
                     MapMatrix.Tile t = matrix.get(k, y);
-                    if (t.type == MapMatrix.TileType.ROAD_V || t.type == MapMatrix.TileType.ROAD_H)
+                    if (t.type != MapMatrix.TileType.EMPTY)
                         overlappings.add(new Point(k, y));
                 }
                 break;
             case 1:
                 for (int k = y-1; k >= y-len; k--) {
                     MapMatrix.Tile t = matrix.get(x, k);
-                    if (t.type == MapMatrix.TileType.ROAD_V || t.type == MapMatrix.TileType.ROAD_H)
+                    if (t.type != MapMatrix.TileType.EMPTY)
                         overlappings.add(new Point(x, k));
                 }
                 break;
             case 2:
                 for (int k = x-1; k >= x-len; k--) {
                     MapMatrix.Tile t = matrix.get(k, y);
-                    if (t.type == MapMatrix.TileType.ROAD_V || t.type == MapMatrix.TileType.ROAD_H)
+                    if (t.type != MapMatrix.TileType.EMPTY)
                         overlappings.add(new Point(k, y));
                 }
                 break;
             case 3:
                 for (int k = y; k < y+len; k++) {
                     MapMatrix.Tile t = matrix.get(x, k);
-                    if (t.type == MapMatrix.TileType.ROAD_V || t.type == MapMatrix.TileType.ROAD_H)
+                    if (t.type != MapMatrix.TileType.EMPTY)
                         overlappings.add(new Point(x, k));
                 }
                 break;
