@@ -275,7 +275,11 @@ public class RoadDesignMode implements IEditorMode {
                 t.set(x,y,x,y);
                 t.visible();
             } else if (SwingUtilities.isRightMouseButton(e) && editor.getRoadsSize()>0) {
-                editor.removeRoad("r"+(editor.getRoadsSize()-1));
+                Point pos = toGrid(e.getX(), e.getY());
+                MapMatrix.Tile t = editor.getMatrix().get(pos.x/32, pos.y/32);
+                if (t.type == MapMatrix.TileType.ROAD_V || t.type == MapMatrix.TileType.ROAD_H) {
+                    editor.removeRoad(t.road);
+                }
             }
             repaint();
         }
@@ -297,8 +301,8 @@ public class RoadDesignMode implements IEditorMode {
             t.invisible();
 
             if (t.length()>0 && SwingUtilities.isLeftMouseButton(e)) {
-                r = new Road("r" + editor.getRoadsSize(), t.start.x, t.start.y, t.direction().getAngle(), t.length());
-                editor.addRoad(r);
+                r = new Road(Road.nextID(), t.start.x, t.start.y, t.direction().getAngle(), t.length());
+                editor.placeRoad(r);
             }
             repaint();
         }
