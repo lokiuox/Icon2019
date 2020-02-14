@@ -1,5 +1,7 @@
 package com.patterson.world;
 
+import com.patterson.utility.ScenarioUtility;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +17,7 @@ public class Surface extends JPanel implements ActionListener {
     public Surface() {
         //scenario = new Scenario("resources/scenari/demo/scenario.json");
         scenario = DemoScenario.getScenario();
+        ScenarioUtility.setScenario(scenario);
         timer = new Timer(30, this);
         timer.start();
     }

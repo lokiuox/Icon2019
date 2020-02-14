@@ -1,6 +1,8 @@
 package com.patterson.entity;
 
 import com.patterson.utility.Angle;
+import com.patterson.utility.KnowledgeBase;
+import com.patterson.utility.ScenarioUtility;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,11 +20,13 @@ public class Car implements IEntity {
     private float speed;
     private final float maxSpeed = 8;
     private final float acceleration = 0.35f;
+    protected INavigator navigator;
 
     protected Image[] img = new Image[4];
 
     Road road = null;
     Road previousRoad = null;
+    String destination;
 
     boolean passing = false;
     boolean rightToPass = false;
@@ -34,10 +38,6 @@ public class Car implements IEntity {
         position.setLocation(x, y);
         direction = new Angle(d);
         loadImage();
-        Navigator nav = new Navigator();
-        LinkedList<String> pathSolver = nav.getFirstPath();
-//  per chiamate successive      LinkedList<String> pathSolver = nav.setNewEnd();
-
     }
 
     public Car(String id, float x, float y) {
@@ -84,6 +84,13 @@ public class Car implements IEntity {
         return path;
     }
 
+    public void setPath(List<String> l) {
+        path.clear();
+        for (String r:l) {
+            path.add(ScenarioUtility.getRoadByID(r));
+        }
+    }
+
     public Point2D getPosition() {
         return position;
     }
@@ -100,6 +107,9 @@ public class Car implements IEntity {
         return path.peek();
     }
 
+    public void setNavigator(INavigator n) {
+        navigator = n;
+    }
 
     // do stuff during the next frame
     public void tick() {
@@ -133,7 +143,15 @@ public class Car implements IEntity {
         }
     }
 
-    private void roadEnd() {
+    protected void roadEnd() {
+
+        // if the path has been completed, create a new path to a random destination
+        if (path.peek() == null && navigator != null) {
+            destination = randomDestination();
+            calculatePath();
+        }
+
+        // check right of way
         if (path.peek() != null && !isNearCar() && greenTF() && !getNextRoad().isFull() ) {
             if (rightToPass || road.getIntersection()==null) {
                 rightToPass = false;
@@ -146,7 +164,11 @@ public class Car implements IEntity {
         }
     }
 
-    private boolean greenTF() {
+    protected void calculatePath() {
+        setPath(navigator.calculatePath(road.getID(), destination));
+    }
+
+    protected boolean greenTF() {
         return !(road instanceof RoadTF) || ((RoadTF) road).isGreen();
     }
 
@@ -248,7 +270,7 @@ public class Car implements IEntity {
         return a;
     }
 
-    private boolean isNearCar() {
+    protected boolean isNearCar() {
         boolean a = false;
         if (road != null )
             for (Car c: road.getCars()) {
@@ -302,6 +324,21 @@ public class Car implements IEntity {
 
     public void addRoads(List<Road> list) {
         path.addAll(list);
+    }
+
+    public String randomDestination() {
+        Set<Map<String, String>> roadSet = KnowledgeBase.stringQuery("strada(X).");
+
+        int size = roadSet.size();
+        int item = new Random().nextInt(size);
+        int i = 0;
+        for(Map<String, String> r : roadSet)
+        {
+            if (i == item)
+                return r.get("X");
+            i++;
+        }
+        return null;
     }
 
     public JSONObject toJSONObject() {

@@ -8,7 +8,7 @@ import java.util.*;
 
 import static com.patterson.algorithms.Graph.TYPE.DIRECTED;
 
-public class Navigator {
+public class NavigatorAStar implements INavigator {
 
     Graph<String> g;
     AStarGraph<String> instance;
@@ -18,11 +18,11 @@ public class Navigator {
     int low = 0, high;
 
 
-    public Navigator (){
+    public NavigatorAStar(){
         makeGraph();
-        randomStart();
+        //randomStart();
     }
-
+    /*
     public LinkedList<String> getFirstPath(){
         return calculatePath();
     }
@@ -36,7 +36,7 @@ public class Navigator {
         }
         return calculatePath();
 
-    }
+    }*/
     private void makeGraph(){
         //conversione delle strade ed incroci per aStar
         v = new HashMap<>();
@@ -71,7 +71,7 @@ public class Navigator {
        instance = new AStarGraph<>();
 
 
-    }
+    }/*
     private void randomStart(){
         Random r = new Random();
         high = strade.size();
@@ -111,6 +111,20 @@ public class Navigator {
 
         return seqStreets;
 
+    }
+    */
+    public LinkedList<String> calculatePath(String startRoad, String endRoad){
+        LinkedList<String> seqStreets = new LinkedList<>();
+        //seqStreets.add(startRoad);
+        List<Graph.Edge<String>> path = instance.aStar(g,v.get(startRoad),v.get(endRoad));
+        if(path != null){
+            for (Graph.Edge<String> node : path) {
+                Graph.Vertex<String> v = node.getToVertex();
+                seqStreets.add(v.getValue());
+
+            }
+        }
+        return seqStreets;
     }
 
 }

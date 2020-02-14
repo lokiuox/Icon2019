@@ -8,6 +8,10 @@ public class Packet extends KnowledgeBase {
     }
 
     public Packet(int t) {
+       setTTL(t);
+    }
+
+    public void setTTL(int t) {
         ttl = t;
     }
 

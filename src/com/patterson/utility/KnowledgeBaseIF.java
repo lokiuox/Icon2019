@@ -1,11 +1,9 @@
 package com.patterson.utility;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-public class KnowledgeBaseExchange extends KnowledgeBase {
+public class KnowledgeBaseIF extends KnowledgeBase {
     private Set<Packet> packetSet = new HashSet<>();
     //private Map<KnowledgeBaseExchange, Integer> lastMerge = new HashMap<>();
     //private int minExchangeTime = 30;
@@ -21,7 +19,7 @@ public class KnowledgeBaseExchange extends KnowledgeBase {
         packetSet.add(pkg);
     }
 
-    public void addPackets(KnowledgeBaseExchange kb) {
+    public void addPackets(KnowledgeBaseIF kb) {
         packetSet.addAll(kb.getPacketSet());
     }
 
