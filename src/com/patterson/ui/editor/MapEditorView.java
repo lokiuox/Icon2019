@@ -58,12 +58,22 @@ class MapEditorView extends MapView {
     }
 
     protected void addRoad(Road r) {
-        Point p = checkOverlapping(r);
-        if (p==null) {
+        if (r != null) {
             roads.put(r.getID(), r);
             matrix.addRoad(r);
+        }
+    }
+
+    protected void addRoads(Road[] roadList) {
+        for (Road r: roadList)
+            addRoad(r);
+    }
+
+    protected void placeRoad(Road r) {
+        if (isPlaceable(r)) {
+            addAndFixOverlappings(r);
         } else {
-            System.out.println("Overlaps in " + p.x + "," + p.y);
+            //System.out.println("Overlaps in " + p.x + "," + p.y);
         }
     }
 
@@ -97,18 +107,29 @@ class MapEditorView extends MapView {
 
     MapMatrix getMatrix() { return matrix; }
 
-    List<Road> splitRoad(Road r, int tile_n, boolean keepSecondHalf) {
-        List<Road> splitted_road = new ArrayList<>(2);
+    Road[] splitRoad(Road r, Point pos, boolean keepSecondHalf) {
+        int tile_n;
+        if (r.getDirection().isHorizontal()) {
+            tile_n = (pos.x - r.getPosition().x/32)*r.getDirection().cos() + Math.max(r.getDirection().cos(), 0);
+        } else {
+            tile_n = (pos.y - r.getPosition().y/32)*r.getDirection().sin() + Math.max(r.getDirection().sin(), 0);
+        }
+        return splitRoad(r, tile_n, keepSecondHalf);
+    }
+
+    Road[] splitRoad(Road r, int tile_n, boolean keepSecondHalf) {
+        Road[] splitted_road = new Road[2];
+        splitted_road[0] = null;
+        splitted_road[1] = null;
         int first_lenght = (tile_n - 1) * 32;
 
         if (first_lenght >= r.getLength()) {
-            splitted_road.add(r);
-            return splitted_road;
+            return null;
+        } else if (first_lenght > 0) {
+            Road fist_half = new Road(r.getID(), r.getPosition().x, r.getPosition().y, r.getDirection().getAngle(), first_lenght);
+            splitted_road[0] = fist_half;
         }
-
-        Road fist_half = new Road(r.getID(), r.getPosition().x, r.getPosition().y, r.getDirection().getAngle(), first_lenght);
         Intersection i = r.getIntersection();
-        splitted_road.add(fist_half);
 
         if (r.getLength()/32 > tile_n && keepSecondHalf) {
             int x = 0, y = 0, length;
@@ -135,53 +156,93 @@ class MapEditorView extends MapView {
                     y = r.getPosition().y + first_lenght + 32;
                     break;
             }
-            Road second_half = new Road(r.getID() + "bis", x, y, r.getDirection().getAngle(), length);
+            Road second_half = new Road(Road.nextID(), x, y, r.getDirection().getAngle(), length);
+            r.setIntersection(null);
             second_half.setIntersection(i);
-            splitted_road.add(second_half);
+            splitted_road[1] = second_half;
         }
         return splitted_road;
     }
 
-    private Point checkOverlapping(Road r) {
-        int x = r.getPosition().x;
-        int y = r.getPosition().y;
-        int len = r.getLength();
+    private boolean isPlaceable(Road r) {
+        List<Point> overlappings = checkOverlappings(r);
+        for (Point p: overlappings) {
+            MapMatrix.TileType type = matrix.get(p.x, p.y).type;
+            if (!(type == ROAD_H && r.getDirection().isVertical()) && !(type == ROAD_V && r.getDirection().isHorizontal()))
+                return false;
+        }
+        return true;
+    }
+
+    private void addAndFixOverlappings(Road r) {
+        List<Road> road_segments = new ArrayList<>();
+        List<Point> overlappings = checkOverlappings(r);
+        Road current_segment = r;
+        for (Point p: overlappings) {
+            //Split already existing road
+            Road existing = matrix.get(p.x, p.y).road;
+            Road[] splitted_existing = splitRoad(existing, p, true);
+            removeRoad(existing);
+            addRoads(splitted_existing);
+
+            //Split the road we are trying to add
+            Road[] splitted_new = splitRoad(current_segment, p, true);
+            if (splitted_new[0] != null)
+                road_segments.add(splitted_new[0]);
+            current_segment = splitted_new[1];
+        }
+        if (current_segment != null)
+            road_segments.add(current_segment);
+        //Add segments to map
+        addRoads(road_segments.toArray(new Road[0]));
+
+        //Add intersections in the empty points
+        for (Point p: overlappings) {
+            placeIntersection(p.x, p.y);
+        }
+    }
+
+    private List<Point> checkOverlappings(Road r) {
+        int x = r.getPosition().x / 32;
+        int y = r.getPosition().y / 32;
+        int len = r.getLength() / 32;
+        List<Point> overlappings = new ArrayList<>();
         switch (r.getDirection().getAngle()) {
             case 0:
                 for (int k = x; k < x+len; k++) {
-                    MapMatrix.Tile t = matrix.getCoords(k, y);
-                    if (t.type != MapMatrix.TileType.EMPTY)
-                        return new Point(k, y);
+                    MapMatrix.Tile t = matrix.get(k, y);
+                    if (t.type == MapMatrix.TileType.ROAD_V || t.type == MapMatrix.TileType.ROAD_H)
+                        overlappings.add(new Point(k, y));
                 }
                 break;
             case 1:
-                for (int k = y-len; k < y; k++) {
-                    MapMatrix.Tile t = matrix.getCoords(x, k);
-                    if (t.type != MapMatrix.TileType.EMPTY)
-                        return new Point(x, k);
+                for (int k = y-1; k >= y-len; k--) {
+                    MapMatrix.Tile t = matrix.get(x, k);
+                    if (t.type == MapMatrix.TileType.ROAD_V || t.type == MapMatrix.TileType.ROAD_H)
+                        overlappings.add(new Point(x, k));
                 }
                 break;
             case 2:
-                for (int k = x-len; k < x; k++) {
-                    MapMatrix.Tile t = matrix.getCoords(k, y);
-                    if (t.type != MapMatrix.TileType.EMPTY)
-                        return new Point(k, y);
+                for (int k = x-1; k >= x-len; k--) {
+                    MapMatrix.Tile t = matrix.get(k, y);
+                    if (t.type == MapMatrix.TileType.ROAD_V || t.type == MapMatrix.TileType.ROAD_H)
+                        overlappings.add(new Point(k, y));
                 }
                 break;
             case 3:
                 for (int k = y; k < y+len; k++) {
-                    MapMatrix.Tile t = matrix.getCoords(x, k);
-                    if (t.type != MapMatrix.TileType.EMPTY)
-                        return new Point(x, k);
+                    MapMatrix.Tile t = matrix.get(x, k);
+                    if (t.type == MapMatrix.TileType.ROAD_V || t.type == MapMatrix.TileType.ROAD_H)
+                        overlappings.add(new Point(x, k));
                 }
                 break;
         }
-        return null;
+        return overlappings;
     }
 
     private List<Road> getRoadsIncomingOnTile(int x, int y) {
         List<Road> incoming_roads = new ArrayList<>();
-        MapMatrix.Tile[] neighbors = matrix.getNeighboringTilesFromCoords(x, y);
+        MapMatrix.Tile[] neighbors = matrix.getNeighboringTiles(x, y);
         if (neighbors[0].type == ROAD_H && neighbors[0].road.getDirection().getAngle() == 0) {
             incoming_roads.add(neighbors[0].road);
         }
@@ -199,7 +260,7 @@ class MapEditorView extends MapView {
 
     //Using matrix coords
     void placeIntersection(int x, int y) {
-        if (matrix.getCoords(x, y).type != MapMatrix.TileType.EMPTY) {
+        if (matrix.get(x, y).type != MapMatrix.TileType.EMPTY) {
             System.err.println("Can't put an intersection there, it's not an empty tile");
             return;
         }
@@ -237,7 +298,7 @@ class MapEditorView extends MapView {
 
         if (existingIntersection == null) {
             //No existing intersection is nearby, we have to create a new one
-            Intersection i = new Intersection("i" + intersections.size(), x*32, y*32, 32, 32);
+            Intersection i = new Intersection(Intersection.nextID(), x*32, y*32, 32, 32);
             addIntersection(i);
             for (Road r: getRoadsIncomingOnTile(x, y))
                 r.setIntersection(i);
@@ -251,7 +312,7 @@ class MapEditorView extends MapView {
         int y = i.getPosition().y / 32;
         int w = i.getSize().width / 32;
         int h = i.getSize().height / 32;
-        if (!matrix.get(x, y).isEmpty())
+        if (!matrix.get(pos.x, pos.y).isEmpty())
             return;
         if (w == 1 && h == 1) {
             if (pos.x == x && pos.y == y+1) {
