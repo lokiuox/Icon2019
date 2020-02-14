@@ -15,6 +15,7 @@ public class Scenario implements IScenario {
     private List<Car> cars = new LinkedList<>();
     //private String kb_path = "resources/KB_final.pl";
     private String kb_path = "resources/KB.pl"; //solo per test
+    private float IEdistance = 48;
 
     Scenario() {
         init();
@@ -208,6 +209,14 @@ public class Scenario implements IScenario {
         }
     }
 
+    private void exchangeInformation() {
+        for (Car c : cars)
+            if (c instanceof CarIE)
+                for (Car d : cars)
+                    if (d instanceof CarIE && c.getPosition().distance(d.getPosition())<IEdistance)
+                        ((CarIE) c).sendInformation((CarIE) d);
+    }
+
     public void draw(Graphics2D g) {
         for (Intersection i : intersections.values()) i.draw(g);
         for (Road r : roads.values()) r.draw(g);
@@ -215,6 +224,7 @@ public class Scenario implements IScenario {
     }
 
     public void tick() {
+        exchangeInformation();
         for (Car c : cars) c.tick();
         for (Intersection i : intersections.values())
             if (i instanceof IntersectionTF)

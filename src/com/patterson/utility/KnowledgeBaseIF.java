@@ -9,7 +9,7 @@ public class KnowledgeBaseIF extends KnowledgeBase {
     //private int minExchangeTime = 30;
 
 
-    int countTick = 0;
+    long countTick = 0;
 
     public Set<Packet> getPacketSet() {
         return packetSet;

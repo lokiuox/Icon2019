@@ -17,7 +17,7 @@ public class Car implements IEntity {
     String ID;
     private Point2D position = new Point2D.Float(0, 0);
     private Angle direction;
-    private float speed;
+    protected float speed;
     private final float maxSpeed = 8;
     private final float acceleration = 0.35f;
     protected INavigator navigator;
