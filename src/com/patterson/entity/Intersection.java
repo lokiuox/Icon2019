@@ -13,13 +13,13 @@ public class Intersection implements IEntity {
 
     private static int counter = 0;
 
-    private String ID;
-    private Point position = new Point(0, 0);
+    protected String ID;
+    protected Point position = new Point(0, 0);
 
     //Dimensions in tiles
-    private Dimension size = new Dimension(32, 32);
+    protected Dimension size = new Dimension(32, 32);
 
-    private Set<Road> roads = new HashSet<>();
+    protected Set<Road> roads = new HashSet<>();
     private Set<Car> passing = new HashSet<>();
     private KnowledgeBase kb = new KnowledgeBase(); //Not initialized?
 
@@ -31,6 +31,14 @@ public class Intersection implements IEntity {
         position.setLocation(x,y);
         size.setSize(w, h);
         loadImage();
+    }
+
+    public Intersection(JSONObject jo_intersection) {
+        this(jo_intersection.getString("id"),
+                jo_intersection.getInt("posX"),
+                jo_intersection.getInt("posY"),
+                jo_intersection.getInt("width"),
+                jo_intersection.getInt("height"));
     }
 
     private static void updateCounter(String id) {
@@ -47,13 +55,6 @@ public class Intersection implements IEntity {
         size = new Dimension(d);
     }
 
-    public Intersection(JSONObject jo_intersection) {
-        this(jo_intersection.getString("id"),
-                jo_intersection.getInt("posX"),
-                jo_intersection.getInt("posY"),
-                jo_intersection.getInt("width"),
-                jo_intersection.getInt("height"));
-    }
 
     public Point getPosition() { return position; }
 
