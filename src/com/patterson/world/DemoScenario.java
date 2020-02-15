@@ -10,10 +10,10 @@ public class DemoScenario {
     public static Scenario getScenario() {
         Scenario s = new Scenario();
 
-        Intersection i0 = new IntersectionTF("i0", 32 + 20 * 16, 4 * 16, 16, 16);
+        Intersection i0 = new IntersectionTF("i0", 32 + 20 * 16, 4 * 16, 32, 32);
         s.addIntersection(i0);
 
-        Intersection i1 = new Intersection("i1", 32 + 20 * 16, 4 * 16 + 32 + 20 * 16, 16, 16);
+        Intersection i1 = new Intersection("i1", 32 + 20 * 16, 4 * 16 + 32 + 20 * 16, 32, 32);
         s.addIntersection(i1);
 
         Road r0 = new RoadTF("r0", 32, 5 * 16, 0, 20 * 16);
