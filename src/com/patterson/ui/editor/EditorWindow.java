@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class EditorWindow extends MapWindow {
-    public static Dimension BUTTON_SPACING = new Dimension(5, 0);
+    private static Dimension BUTTON_SPACING = new Dimension(5, 0);
 
     public EditorWindow() {
         super(new MapEditorView());

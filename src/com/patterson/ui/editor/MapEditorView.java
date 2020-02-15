@@ -21,12 +21,12 @@ class MapEditorView extends MapView {
     private MapMatrix matrix;
     Highlighter highlighter = new Highlighter();
 
-    public MapEditorView() {
+    MapEditorView() {
         scenario = new Scenario();
         init();
     }
 
-    public MapEditorView(String json) {
+    MapEditorView(String json) {
         scenario = new Scenario(json);
         init();
     }
@@ -60,7 +60,7 @@ class MapEditorView extends MapView {
         currentMode.activate();
     }
 
-    public static Point toGrid(int x, int y) {
+    static Point toGrid(int x, int y) {
         return new Point(
                 16+32*(x/32),
                 16+32*(y/32)
@@ -73,25 +73,25 @@ class MapEditorView extends MapView {
 
     int getIntersectionsSize() { return intersections.size(); }
 
-    private void addRoad(Road r) {
+    void addRoad(Road r) {
         if (r != null) {
             roads.put(r.getID(), r);
             matrix.addRoad(r);
         }
     }
 
-    private void addRoads(Road[] roadList) {
+    void addRoads(Road[] roadList) {
         for (Road r: roadList)
             addRoad(r);
     }
 
-    protected void removeRoad(Road r) {
+    void removeRoad(Road r) {
         roads.remove(r.getID());
         matrix.removeRoad(r);
         r.setIntersection(null);
     }
 
-    protected void removeRoad(String id) {
+    void removeRoad(String id) {
         removeRoad(roads.get(id));
     }
 
@@ -114,12 +114,12 @@ class MapEditorView extends MapView {
         }
     }
 
-    protected void addIntersection(Intersection i) {
+    private void addIntersection(Intersection i) {
         intersections.put(i.getID(), i);
         matrix.addIntersection(i);
     }
 
-    protected void removeIntersection(Intersection i) {
+    void removeIntersection(Intersection i) {
         intersections.remove(i.getID());
         matrix.removeIntersection(i);
     }
@@ -364,7 +364,7 @@ class MapEditorView extends MapView {
         Intersection i = r.getIntersection();
 
         if (r.getLength()/32 > tile_n && keepSecondHalf) {
-            int x = 0, y = 0, length;
+            int x, y, length;
             length = r.getLength() - first_lenght - 32;
 
             if (length <= 0)
@@ -443,23 +443,7 @@ class MapEditorView extends MapView {
         Point start = new Point();
         Dimension dimensions = new Dimension();
 
-        public Highlighter() {
-
-        }
-
-        public Highlighter(int x, int y) {
-            set(x, y);
-        }
-
-        public Highlighter(int x, int y, int w, int h) {
-            set(x, y, w, h);
-        }
-
-        public Highlighter(Road r) {
-            set(r);
-        }
-
-        public void set(Road r) {
+        void set(Road r) {
             switch (r.getDirection().getAngle()) {
                 case 0:
                     set(r.getPosition().x, r.getPosition().y, r.getLength(), 32);

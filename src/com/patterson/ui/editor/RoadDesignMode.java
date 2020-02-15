@@ -17,12 +17,12 @@ public class RoadDesignMode implements IEditorMode {
     private MapEditorView editor;
     private Pointer p = new Pointer(-16,-16);
     private TempRoad tempRoad = new TempRoad(-16, -16, -16, -16);
-    MapEditorView.Highlighter highlighter;
+    private MapEditorView.Highlighter highlighter;
     private MovingAdapter ma = new MovingAdapter();
     private PressAdapter pa = new PressAdapter();
-    Road selectedRoad = null;
+    private Road selectedRoad = null;
 
-    public RoadDesignMode(MapEditorView m) {
+    RoadDesignMode(MapEditorView m) {
         this.editor = m;
         init();
     }
@@ -32,7 +32,7 @@ public class RoadDesignMode implements IEditorMode {
         this.highlighter = editor.highlighter;
     }
 
-    public void repaint() {
+    private void repaint() {
         editor.repaint();
     }
 
@@ -128,7 +128,7 @@ public class RoadDesignMode implements IEditorMode {
         }
 
         int length() {
-            int l = 0;
+            int l;
 
             if (direction().isHorizontal()) {
                 l = Math.abs(end.x-start.x);

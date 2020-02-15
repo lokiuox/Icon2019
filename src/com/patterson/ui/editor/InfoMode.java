@@ -22,7 +22,7 @@ public class InfoMode implements IEditorMode {
     private Road selectedRoad = null;
     private Intersection selectedIntersection = null;
 
-    public InfoMode(MapEditorView m) {
+    InfoMode(MapEditorView m) {
         this.editor = m;
         init();
     }
@@ -32,7 +32,7 @@ public class InfoMode implements IEditorMode {
         highlighter = editor.highlighter;
     }
 
-    public void repaint() {
+    private void repaint() {
         editor.repaint();
     }
 
@@ -63,11 +63,11 @@ public class InfoMode implements IEditorMode {
     class Pointer {
         Point position = new Point();
 
-        public Pointer(int x, int y) {
+        Pointer(int x, int y) {
             setPosition(x,y);
         }
 
-        public void setPosition(int x, int y) {
+        void setPosition(int x, int y) {
             this.position = toGrid(x, y);
         }
 
