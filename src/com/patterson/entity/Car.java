@@ -324,7 +324,7 @@ public class Car implements IEntity {
 
     // calculate how much space the car needs to completely stop
     private float brakeSpace() {
-        return (float) Math.pow( road.getMaxSpeed(),2) / (2 * acceleration);
+        return speed*speed / (2 * acceleration);
     }
 
     public void addRoad(Road r) {
