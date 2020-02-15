@@ -17,8 +17,9 @@ public class Road implements IEntity {
     private Point position = new Point(0, 0);
     private int length;
     Angle direction;
+    private float maxSpeed = 8;
 
-    private Image[] img = new Image[4];
+    private List<Image> img = new ArrayList<>();
     private List<Car> cars = new LinkedList<>();
     private Intersection intersection = null;
 
@@ -92,30 +93,37 @@ public class Road implements IEntity {
         return cars;
     }
 
+    public boolean isFull() {
+        int carsize = direction.isHorizontal() ? 48 : 32;
+        return cars.size() > length/carsize - 1;
+    }
+
+    public float getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(float s) {
+        maxSpeed = s/100*8;
+    }
+
     @Override
     public void draw(Graphics2D g) {
         for (int i=8; i<=length-8; i+=16) {
             if (direction.isHorizontal()) {
-                g.drawImage(img[0],  position.x + i * direction.cos() - 8,  position.y, null);
-                g.drawImage(img[1],  position.x + i * direction.cos() - 8,  position.y - 16, null);
+                g.drawImage(img.get(0),  position.x + i * direction.cos() - 8,  position.y, null);
+                g.drawImage(img.get(1),  position.x + i * direction.cos() - 8,  position.y - 16, null);
             } else {
-                g.drawImage(img[2],  position.x,       position.y + i * direction.sin() - 8, null);
-                g.drawImage(img[3],  position.x - 16,  position.y + i * direction.sin() - 8, null);
+                g.drawImage(img.get(2),  position.x,       position.y + i * direction.sin() - 8, null);
+                g.drawImage(img.get(3),  position.x - 16,  position.y + i * direction.sin() - 8, null);
             }
         }
-
-        //debug
-        /*g.setPaint(Color.blue);
-        g.drawLine( position.x,  position.y,  position.x,  position.y);
-        g.drawLine( getEnd().getX(),  getEnd().getY(),  getEnd().getX(),  getEnd().getY());
-        */
-    }
+}
 
     protected void loadImage() {
-        img[0] = new ImageIcon("resources/road/roadH_top.png").getImage();
-        img[1] = new ImageIcon("resources/road/roadH_bottom.png").getImage();
-        img[2] = new ImageIcon("resources/road/roadV_left.png").getImage();
-        img[3] = new ImageIcon("resources/road/roadV_right.png").getImage();
+        img.add(new ImageIcon("resources/road/roadH_top.png").getImage());
+        img.add(new ImageIcon("resources/road/roadH_bottom.png").getImage());
+        img.add(new ImageIcon("resources/road/roadV_left.png").getImage());
+        img.add(new ImageIcon("resources/road/roadV_right.png").getImage());
     }
 
     public JSONObject toJSONObject() {
