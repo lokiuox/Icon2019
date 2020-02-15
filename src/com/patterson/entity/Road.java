@@ -13,13 +13,13 @@ public class Road implements IEntity {
 
     private static int counter = 0;
 
-    private String ID;
-    private Point position = new Point(0, 0);
-    private int length;
-    Angle direction;
-    private float maxSpeed = 8;
+    protected String ID;
+    protected Point position = new Point(0, 0);
+    protected int length;
+    protected Angle direction;
+    protected float maxSpeed = 8;
 
-    private List<Image> img = new ArrayList<>();
+    protected List<Image> img = new ArrayList<>();
     private List<Car> cars = new LinkedList<>();
     private Intersection intersection = null;
 
@@ -29,16 +29,6 @@ public class Road implements IEntity {
         position.setLocation(x,y);
         direction = new Angle(d);
         length = l;
-        loadImage();
-    }
-
-    public Road(String id, int x, int y, int d, int l, Intersection i) {
-        updateCounter(id);
-        ID = id;
-        position.setLocation(x,y);
-        direction = new Angle(d);
-        length = l;
-        setIntersection(i);
         loadImage();
     }
 
