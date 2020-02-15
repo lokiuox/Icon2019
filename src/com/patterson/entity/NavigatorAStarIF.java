@@ -3,6 +3,7 @@ package com.patterson.entity;
 import com.patterson.algorithms.Graph;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class NavigatorAStarIF extends NavigatorAStar {
@@ -15,7 +16,7 @@ public class NavigatorAStarIF extends NavigatorAStar {
     }
 
     @Override
-    public LinkedList<String> calculatePath(String startRoad, String endRoad) {
+    public List<String> calculatePath(String startRoad, String endRoad) {
         updateWeights();
         return super.calculatePath(startRoad, endRoad);
     }

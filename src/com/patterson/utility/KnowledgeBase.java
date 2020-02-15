@@ -1,5 +1,6 @@
 package com.patterson.utility;
 
+import org.jpl7.Compound;
 import org.jpl7.Query;
 import org.jpl7.Term;
 
@@ -51,6 +52,29 @@ public class KnowledgeBase {
             Map<String, String> temp = prologToString(res);
             if(!temp.isEmpty())
                 set.add(prologToString(res));
+        }
+
+        return set;
+    }
+
+    public static Map<String,List<String>> listQuery(String q) {
+        Map<String,List<String>> set = new HashMap<>();
+
+        Map<String,Term> res = (new Query(q)).oneSolution();
+        Set<String> keys = res.keySet();
+        for (String k : keys) {
+            List<String> stringList = new ArrayList<>();
+            if (res.get(k).typeName().equals("Compound")) {
+                Term[] termList = res.get(k).toTermArray();
+                for (Term t : termList) {
+                    stringList.add(t.name());
+                }
+            } else if (res.get(k).typeName().equals("Atom")) {
+                stringList.add(res.get(k).name());
+            } else if (res.get(k).typeName().equals("Float") || res.get(k).typeName().equals("Integer")) {
+                stringList.add(String.valueOf(res.get(k)));
+            }
+            set.put(k,stringList);
         }
 
         return set;

@@ -13,18 +13,18 @@ public class NavigatorAStar implements INavigator {
     Graph<String> g;
     AStarGraph<String> instance;
     ArrayList<Map<String, String>> strade;
-    String startStreet,endStreet; //forse da cambiare in Map<String,Integer>
+    //String startStreet,endStreet; //forse da cambiare in Map<String,Integer>
     HashMap<String, Graph.Vertex<String>> v;
     NavigatorUtility nu = new NavigatorUtility();
 
-    int low = 0, high;
+    //int low = 0, high;
 
 
     public NavigatorAStar(){
         makeGraph();
         //randomStart();
     }
-
+    /*
     public void setStart(String name){
         startStreet = name;
     }
@@ -127,7 +127,7 @@ public class NavigatorAStar implements INavigator {
 
     }
     */
-    public LinkedList<String> calculatePath(String startRoad, String endRoad){
+    public List<String> calculatePath(String startRoad, String endRoad){
         LinkedList<String> seqStreets = new LinkedList<>();
         //seqStreets.add(startRoad);
         List<Graph.Edge<String>> path = instance.aStar(g,v.get(startRoad),v.get(endRoad));

@@ -1,7 +1,7 @@
 package com.patterson.entity;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public interface INavigator {
-    LinkedList<String> calculatePath(String startRoad, String endRoad);
+    List<String> calculatePath(String startRoad, String endRoad);
 }
