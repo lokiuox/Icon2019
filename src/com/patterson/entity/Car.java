@@ -1,6 +1,8 @@
 package com.patterson.entity;
 
 import com.patterson.utility.Angle;
+import com.patterson.utility.KnowledgeBase;
+import com.patterson.utility.ScenarioUtility;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,19 +19,21 @@ public class Car implements IEntity {
     private String ID;
     private Point2D position = new Point2D.Float(0, 0);
     private Angle direction;
-    private float speed;
-    private final float maxSpeed = 8;
+    protected float speed;
+    //private final float maxSpeed = 8;
     private final float acceleration = 0.35f;
+    protected INavigator navigator;
 
     protected Image[] img = new Image[4];
 
-    private Road road = null;
-    private Road previousRoad = null;
+    protected Road road = null;
+    protected Road previousRoad = null;
+    protected String destination;
 
-    private boolean passing = false;
-    private boolean rightToPass = false;
+    protected boolean passing = false;
+    protected boolean rightToPass = false;
 
-    private Queue<Road> path = new LinkedList<>();
+    protected Queue<Road> path = new LinkedList<>();
 
     public Car(String id, float x, float y, int d) {
         updateCounter(id);
@@ -89,6 +93,13 @@ public class Car implements IEntity {
         return path;
     }
 
+    public void setPath(List<String> l) {
+        path.clear();
+        for (String r:l) {
+            path.add(ScenarioUtility.getRoadByID(r));
+        }
+    }
+
     public Point2D getPosition() {
         return position;
     }
@@ -103,6 +114,10 @@ public class Car implements IEntity {
 
     public Road getNextRoad() {
         return path.peek();
+    }
+
+    public void setNavigator(INavigator n) {
+        navigator = n;
     }
 
 
@@ -138,8 +153,23 @@ public class Car implements IEntity {
         }
     }
 
-    private void roadEnd() {
-        if (path.peek() != null && !isNearCar()) {
+    protected void calculatePath() {
+        setPath(navigator.calculatePath(road.getID(), destination));
+    }
+
+    protected boolean greenTF() {
+        return !(road instanceof RoadTF) || ((RoadTF) road).isGreen();
+    }
+
+    protected void roadEnd() {
+        // if the path has been completed, create a new path to a random destination
+        if (path.peek() == null && navigator != null) {
+            destination = randomDestination();
+            calculatePath();
+        }
+
+        // check right of way
+        if (path.peek() != null && !isNearCar() && greenTF() && !getNextRoad().isFull() ) {
             if (rightToPass || road.getIntersection()==null) {
                 rightToPass = false;
                 road.getIntersection().carPassing(this);
@@ -166,8 +196,8 @@ public class Car implements IEntity {
     // accelerate
     private void go() {
         speed += acceleration;
-        if (speed > maxSpeed)
-            speed = maxSpeed;
+        if (speed > road.getMaxSpeed())
+            speed = road.getMaxSpeed();
         positionUpdate();
     }
 
@@ -249,7 +279,7 @@ public class Car implements IEntity {
         return a;
     }
 
-    private boolean isNearCar() {
+    protected boolean isNearCar() {
         boolean a = false;
         if (road != null )
             for (Car c: road.getCars()) {
@@ -294,7 +324,7 @@ public class Car implements IEntity {
 
     // calculate how much space the car needs to completely stop
     private float brakeSpace() {
-        return speed*speed / (2 * acceleration);
+        return (float) Math.pow( road.getMaxSpeed(),2) / (2 * acceleration);
     }
 
     public void addRoad(Road r) {
@@ -303,6 +333,21 @@ public class Car implements IEntity {
 
     public void addRoads(List<Road> list) {
         path.addAll(list);
+    }
+
+    public String randomDestination() {
+        Set<Map<String, String>> roadSet = KnowledgeBase.stringQuery("strada(X).");
+
+        int size = roadSet.size();
+        int item = new Random().nextInt(size);
+        int i = 0;
+        for(Map<String, String> r : roadSet)
+        {
+            if (i == item)
+                return r.get("X");
+            i++;
+        }
+        return null;
     }
 
     public JSONObject toJSONObject() {
