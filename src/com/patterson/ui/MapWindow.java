@@ -1,5 +1,7 @@
 package com.patterson.ui;
 
+import com.patterson.world.Scenario;
+
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
@@ -10,9 +12,9 @@ public class MapWindow extends JPanel {
     private Map<String, MapControls> controls = new HashMap<>();
     public Dimension mapSize = new Dimension(600, 500);
 
-    public MapWindow(String json) {
+    public MapWindow(MapView m) {
         super(new BorderLayout());
-        mapView = new MapView(json);
+        mapView = m;
         mapView.setPreferredSize(mapSize);
         mapView.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         add(mapView, BorderLayout.CENTER);
@@ -20,13 +22,12 @@ public class MapWindow extends JPanel {
         init();
     }
 
-    public MapWindow(MapView m) {
-        super(new BorderLayout());
-        mapView = m;
-        mapView.setPreferredSize(mapSize);
-        add(mapView, BorderLayout.CENTER);
-        this.setSize(mapSize);
-        init();
+    public MapWindow(String json) {
+        this(new MapView(json));
+    }
+
+    public MapWindow(Scenario s) {
+        this(new MapView(s));
     }
 
     public void addControls(String id, MapControls c, String position) {
