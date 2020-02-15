@@ -1,10 +1,16 @@
 package com.patterson.entity;
 
+import com.patterson.algorithms.Graph;
+
 import java.util.LinkedList;
+import java.util.Map;
 
 public class NavigatorAStarIF extends NavigatorAStar {
 
     private void updateWeights() {
+        for(Map.Entry<String, Graph.Vertex<String>> entry : v.entrySet()){
+            entry.getValue().setWeight(nu.getWeight(entry.getKey()));
+        }
 
     }
 
