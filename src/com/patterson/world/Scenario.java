@@ -8,7 +8,7 @@ import java.awt.Graphics2D;
 import java.io.*;
 import java.util.*;
 
-public class Scenario implements IScenario {
+public class Scenario {
     private String name = "New Scenario";
     private Map<String, Intersection> intersections = new HashMap<>();
     private Map<String, Road> roads = new HashMap<>();
@@ -201,7 +201,7 @@ public class Scenario implements IScenario {
         return sw.toString();
     }
 
-    public void save(String path) {
+    public void exportJSON(String path) {
         System.err.print("Esporto JSON...");
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(path));
