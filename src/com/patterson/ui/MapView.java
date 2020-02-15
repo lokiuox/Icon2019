@@ -1,6 +1,7 @@
 package com.patterson.ui;
 
 import com.patterson.world.Scenario;
+import com.patterson.utility.ScenarioUtility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,12 +19,16 @@ public class MapView extends JPanel implements ActionListener {
     protected Scenario scenario;
 
     public MapView() {
-        scenario = new Scenario();
-        timer.start();
+        this(new Scenario());
     }
 
     public MapView(String json) {
-        scenario = new Scenario(json);
+        this(new Scenario(json));
+    }
+
+    public MapView(Scenario s) {
+        scenario = s;
+        ScenarioUtility.setScenario(scenario);
         timer.start();
     }
 
