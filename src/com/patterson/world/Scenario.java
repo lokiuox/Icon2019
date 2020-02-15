@@ -13,13 +13,16 @@ public class Scenario {
     private Map<String, Intersection> intersections = new HashMap<>();
     private Map<String, Road> roads = new HashMap<>();
     private List<Car> cars = new LinkedList<>();
-    private String kb_path = "resources/KB.pl";
+    //private String kb_path = "resources/KB.pl";
+    private String kb_path = "resources/KB.pl"; //solo per test
+    private float IEdistance = 48;
 
     public Scenario() {
         init();
     }
 
     public Scenario(String json_file) {
+        init();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(json_file));
 
@@ -85,7 +88,6 @@ public class Scenario {
         } catch (FileNotFoundException e) {
             System.err.println("ERRORE: file non trovato");
         }
-        init();
     }
 
     private void init() {
@@ -172,6 +174,14 @@ public class Scenario {
         return this;
     }
 
+    private void exchangeInformation() {
+        for (Car c : cars)
+            if (c instanceof CarIE)
+                for (Car d : cars)
+                    if (d instanceof CarIE && c.getPosition().distance(d.getPosition())<IEdistance)
+                        ((CarIE) c).sendInformation((CarIE) d);
+    }
+
     public void toJSON(Writer writer) {
         JSONObject scenario = new JSONObject();
         scenario.put("name", name);
@@ -221,6 +231,10 @@ public class Scenario {
     }
 
     public void tick() {
+        exchangeInformation();
         for (Car c : cars) c.tick();
+        for (Intersection i : intersections.values())
+            if (i instanceof IntersectionTF)
+                ((IntersectionTF) i).tick();
     }
 }
