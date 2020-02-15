@@ -18,7 +18,7 @@ public class Car implements IEntity {
     private Point2D position = new Point2D.Float(0, 0);
     private Angle direction;
     protected float speed;
-    private final float maxSpeed = 8;
+    //private final float maxSpeed = 8;
     private final float acceleration = 0.35f;
     protected INavigator navigator;
 
@@ -187,8 +187,8 @@ public class Car implements IEntity {
     // accelerate
     private void go() {
         speed += acceleration;
-        if (speed > maxSpeed)
-            speed = maxSpeed;
+        if (speed > road.getMaxSpeed())
+            speed = road.getMaxSpeed();
         positionUpdate();
     }
 
@@ -315,7 +315,7 @@ public class Car implements IEntity {
 
     // calculate how much space the car needs to completely stop
     private float brakeSpace() {
-        return speed*speed / (2 * acceleration);
+        return (float) Math.pow( road.getMaxSpeed(),2) / (2 * acceleration);
     }
 
     public void addRoad(Road r) {

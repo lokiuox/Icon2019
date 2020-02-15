@@ -17,7 +17,7 @@ public class Road implements IEntity {
     Point2D position = new Point2D.Float(0, 0);
     int length;
     Angle direction;
-
+    private float maxSpeed = 8;
     List<Image> img = new ArrayList<>();
     List<Car> cars = new LinkedList<>();
     Intersection intersection;
@@ -86,6 +86,14 @@ public class Road implements IEntity {
     public boolean isFull() {
         int carsize = direction.isHorizontal() ? 48 : 32;
         return cars.size() > length/carsize - 1;
+    }
+
+    public float getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(float s) {
+        maxSpeed = s/100*8;
     }
 
     @Override
