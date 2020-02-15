@@ -5,7 +5,6 @@ import com.patterson.entity.Road;
 
 import java.util.*;
 import java.awt.*;
-import java.util.List;
 
 public class MapMatrix {
     public enum TileType {EMPTY, ROAD_H, ROAD_V, INTERSECTION};
@@ -163,5 +162,9 @@ public class MapMatrix {
         public boolean isEmpty() {
             return type == TileType.EMPTY;
         }
+
+        public boolean isRoad() { return type == TileType.ROAD_H || type == TileType.ROAD_V; }
+
+        public boolean isIntersection() { return type == TileType.INTERSECTION; }
     }
 }
