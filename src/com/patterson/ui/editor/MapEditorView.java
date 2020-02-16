@@ -2,10 +2,14 @@ package com.patterson.ui.editor;
 
 import com.patterson.entity.Intersection;
 import com.patterson.entity.Road;
+import com.patterson.entity.RoadStop;
 import com.patterson.ui.MapView;
 import com.patterson.world.Scenario;
 
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -352,6 +356,48 @@ class MapEditorView extends MapView {
         return incoming_roads;
     }
 
+    private List<Road> getRoadsOutgoingFromTile(int x, int y) {
+        List<Road> outgoing_roads = new ArrayList<>();
+        MapMatrix.Tile[] neighbors = matrix.getNeighboringTiles(x, y);
+        if (neighbors[0].type == ROAD_H && neighbors[0].road.getDirection().getAngle() == 2) {
+            outgoing_roads.add(neighbors[0].road);
+        }
+        if (neighbors[1].type == ROAD_V && neighbors[1].road.getDirection().getAngle() == 3) {
+            outgoing_roads.add(neighbors[1].road);
+        }
+        if (neighbors[2].type == ROAD_H && neighbors[2].road.getDirection().getAngle() == 0) {
+            outgoing_roads.add(neighbors[2].road);
+        }
+        if (neighbors[3].type == ROAD_V && neighbors[3].road.getDirection().getAngle() == 1) {
+            outgoing_roads.add(neighbors[3].road);
+        }
+        return outgoing_roads;
+    }
+
+    List<Road> getIntersectionOutgoingRoads(Intersection i) {
+        List<Road> outgoing = new ArrayList<>();
+        int x, y, w, h;
+        x = i.getPosition().x/32;
+        y = i.getPosition().y/32;
+        w = i.getSize().width/32;
+        h = i.getSize().height/32;
+        if (w==1 && h==1) {
+            outgoing.addAll(getRoadsOutgoingFromTile(x, y));
+        } else if (w==2 && h==1) {
+            outgoing.addAll(getRoadsOutgoingFromTile(x, y));
+            outgoing.addAll(getRoadsOutgoingFromTile(x+1, y));
+        } else if (w==1 && h==2) {
+            outgoing.addAll(getRoadsOutgoingFromTile(x, y));
+            outgoing.addAll(getRoadsOutgoingFromTile(x, y+1));
+        } else if (w==2 && h==2) {
+            outgoing.addAll(getRoadsOutgoingFromTile(x, y));
+            outgoing.addAll(getRoadsOutgoingFromTile(x+1, y));
+            outgoing.addAll(getRoadsOutgoingFromTile(x, y+1));
+            outgoing.addAll(getRoadsOutgoingFromTile(x+1, y+1));
+        }
+        return outgoing;
+    }
+
     private Road[] splitRoad(Road r, Point pos, boolean keepSecondHalf) {
         int tile_n;
         if (r.getDirection().isHorizontal()) {
@@ -392,6 +438,85 @@ class MapEditorView extends MapView {
             splitted_road[1] = second_half;
         }
         return splitted_road;
+    }
+
+    String generateKB() {
+        StringBuilder buffer = new StringBuilder();
+        for (Road r: roads.values()) {
+            buffer.append("strada(" + r.getID() + ").\n");
+        }
+
+        buffer.append("\n");
+
+        for (Road r: roads.values()) {
+            buffer.append("angolo(" + r.getID() + "," + r.getDirection().getAngle() + ").\n");
+        }
+
+        buffer.append("\n");
+
+        for (Road r: roads.values()) {
+            buffer.append("velocitamax(" + r.getID() + "," + r.getMaxSpeed() + ").\n");
+        }
+
+        buffer.append("\n");
+
+        for (Road r: roads.values()) {
+            buffer.append("lunghezza(" + r.getID() + "," + r.getLength() + ").\n");
+        }
+
+        buffer.append("\n");
+
+        for (Road r: roads.values()) {
+            buffer.append("coordinata(" + r.getID() + "," + r.getPosition().x + "," + r.getPosition().y + ").\n");
+        }
+
+        buffer.append("\n");
+
+        for (Road r: roads.values()) {
+            if (r.getType().equals("RoadStop")) {
+                buffer.append("stop(" + r.getID() + ").\n");
+            }
+        }
+
+        buffer.append("\n");
+
+        for (Road r: roads.values()) {
+            if (r.getType().equals("RoadTF")) {
+                buffer.append("semaforo(" + r.getID() + ").\n");
+            }
+        }
+
+        buffer.append("\n");
+
+        for (Intersection i: intersections.values()) {
+            buffer.append("incrocio(" + i.getID() + ").\n");
+        }
+
+        buffer.append("\n");
+
+        for (Intersection i: intersections.values()) {
+            for (Road r: getIntersectionOutgoingRoads(i)) {
+                Intersection i2 = r.getIntersection();
+                if (i2 != null) {
+                    buffer.append("collega(" + i.getID() + "," + r.getID() + "," + i2.getID() + ").\n");
+                }
+            }
+        }
+        return buffer.toString();
+    }
+
+    public void exportKB(String path) {
+        System.err.print("Esporto KB... ");
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+            String KB = this.generateKB();
+            writer.write(KB);
+            System.err.println("OK.");
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("Errore nella scrittura del file.");
+            e.printStackTrace();
+        }
     }
 
     //Draw direction indicators on roads

@@ -17,7 +17,7 @@ public class Road implements IEntity {
     protected Point position = new Point(0, 0);
     protected int length;
     protected Angle direction;
-    protected float maxSpeed = 8;
+    protected int maxSpeed = 8;
 
     protected List<Image> img = new ArrayList<>();
     private List<Car> cars = new LinkedList<>();
@@ -38,7 +38,7 @@ public class Road implements IEntity {
                 jo_road.getInt("posY"),
                 jo_road.getInt("direction"),
                 jo_road.getInt("length"));
-        this.setMaxSpeed(jo_road.getFloat("maxspeed"));
+        this.setMaxSpeed(jo_road.getInt("maxspeed"));
     }
 
     public String getType() { return "Road"; }
@@ -91,11 +91,11 @@ public class Road implements IEntity {
         return cars.size() > length/carsize - 1;
     }
 
-    public float getMaxSpeed() {
+    public int getMaxSpeed() {
         return maxSpeed;
     }
 
-    public void setMaxSpeed(float s) {
+    public void setMaxSpeed(int s) {
         maxSpeed = s;
     }
 

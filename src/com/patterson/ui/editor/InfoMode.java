@@ -131,6 +131,7 @@ public class InfoMode implements IEditorMode {
                     selectedRoad = r;
                     highlighter.set(r);
                     System.out.println("Road " + r.getID());
+                    System.out.println("Type: " + r.getType());
                     System.out.println("Pos in pixels: " + r.getPosition().x + "," + r.getPosition().y + "px = " + r.getPosition().x/32 + "," + r.getPosition().y/32 + " tiles");
                     System.out.println("Length: " + r.getLength() + "px = " + r.getLength()/32 + " tiles");
                     System.out.println((r.getDirection().isHorizontal() ? "Horizontal" : "Vertical"));
@@ -159,10 +160,14 @@ public class InfoMode implements IEditorMode {
                     selectedIntersection = i;
                     highlighter.set(i);
                     System.out.println("Intersection " + i.getID());
+                    System.out.println("Type: " + i.getType());
                     System.out.println("Pos in pixels: " + i.getPosition().x + "," + i.getPosition().y);
                     System.out.println("Dimensions: " + i.getSize().width/32 + "x" + i.getSize().height/32 + " tiles");
                     System.out.println("Incoming Roads:");
                     for (Road r: i.getRoads())
+                        System.out.println("- " + r.getID());
+                    System.out.println("Outgoing Roads:");
+                    for (Road r: editor.getIntersectionOutgoingRoads(i))
                         System.out.println("- " + r.getID());
                 }
                 System.out.println("=================================================================");

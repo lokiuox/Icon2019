@@ -232,7 +232,7 @@ public class Scenario {
     }
 
     public void exportJSON(String path) {
-        System.err.print("Esporto JSON...");
+        System.err.print("Esporto JSON... ");
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(path));
             this.toJSON(writer);

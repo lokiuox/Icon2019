@@ -171,8 +171,13 @@ public class EditorWindow extends MapWindow {
                 return;
             }
         }
+        MapEditorView editor = (MapEditorView) mapView;
+        File KBpath = new File(save_folder, "KB.pl");
+        editor.exportKB(KBpath.getPath());
+        String relative = "resources/" + new File("resources").toURI().relativize(KBpath.toURI()).getPath();
+        mapView.getScenario().setKB(relative);
         mapView.getScenario().exportJSON(new File(save_folder, "scenario.json").getPath());
-        //mapView.getScenario().exportKB(new File(save_folder, "KB.pl").getPath());
+
     }
 
     private class DirectoryFilter extends FileFilter {
