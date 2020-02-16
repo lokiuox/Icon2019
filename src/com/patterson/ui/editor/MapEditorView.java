@@ -157,7 +157,7 @@ class MapEditorView extends MapView {
 
     void changeIntersecionType(Intersection i) {
         Intersection new_intersection;
-        if (i.getType().equals("IntesectionTF")) {
+        if (i.getType().equals("IntersectionTF")) {
             new_intersection = new Intersection(i.getID(), i.getPosition().x, i.getPosition().y, i.getSize().width, i.getSize().height);
         } else {
             new_intersection = new IntersectionTF(i.getID(), i.getPosition().x, i.getPosition().y, i.getSize().width, i.getSize().height);
@@ -165,6 +165,22 @@ class MapEditorView extends MapView {
         new_intersection.getRoads().addAll(i.getRoads());
         removeIntersection(i);
         addIntersection(new_intersection);
+    }
+
+    void changeRoadType(Road r) {
+        Road new_road = null;
+        if (r.getType().equals("Road")) {
+            new_road = new RoadTF(r.getID(), r.getPosition().x, r.getPosition().y, r.getDirection().getAngle(), r.getLength());
+        } else if (r.getType().equals("RoadTF")) {
+            new_road = new RoadStop(r.getID(), r.getPosition().x, r.getPosition().y, r.getDirection().getAngle(), r.getLength());
+        } else if (r.getType().equals("RoadStop")) {
+            new_road = new Road(r.getID(), r.getPosition().x, r.getPosition().y, r.getDirection().getAngle(), r.getLength());
+        }
+        Intersection i = r.getIntersection();
+        r.setIntersection(null);
+        new_road.setIntersection(i);
+        removeRoad(r);
+        addRoad(new_road);
     }
 
     //Using matrix coords

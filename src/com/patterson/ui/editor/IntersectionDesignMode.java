@@ -100,6 +100,8 @@ public class IntersectionDesignMode implements IEditorMode {
                 case KeyEvent.VK_C:
                     if (selectedIntersection != null) {
                         editor.changeIntersecionType(selectedIntersection);
+                        selectedIntersection = null;
+                        highlighter.invisible();
                     } else {
                         System.err.println("No intersections selected");
                     }

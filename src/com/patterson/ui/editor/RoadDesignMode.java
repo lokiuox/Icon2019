@@ -185,6 +185,15 @@ public class RoadDesignMode implements IEditorMode {
                     selected_road_type = road_types[(selected_road_type.ordinal() + 1)%road_types.length];
                     System.out.println(selected_road_type + " selected.");
                     break;
+                case KeyEvent.VK_C:
+                    if (selectedRoad != null) {
+                        editor.changeRoadType(selectedRoad);
+                        selectedRoad = null;
+                        highlighter.invisible();
+                    } else {
+                        System.err.println("No roads selected");
+                    }
+                    break;
             }
             repaint();
         }
