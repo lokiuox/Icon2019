@@ -247,6 +247,10 @@ public class RoadDesignMode implements IEditorMode {
         public void mouseDragged(MouseEvent e) {
 
             tempRoad.set(x,y,e.getX(),e.getY());
+            if (tempRoad.length() > 10) {
+                selectedRoad = null;
+                highlighter.invisible();
+            }
             if (tempRoad.direction().isHorizontal())
                 p.setPosition(e.getX(), y);
             else
@@ -274,7 +278,8 @@ public class RoadDesignMode implements IEditorMode {
                         return;
                 }
                 editor.placeRoad(r);
-                selectedRoad = r;
+                selectedRoad = null;
+                highlighter.invisible();
             }
             repaint();
         }
