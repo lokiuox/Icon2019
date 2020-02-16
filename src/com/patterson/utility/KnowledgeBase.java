@@ -13,6 +13,7 @@ public class KnowledgeBase {
         Query q = new Query("consult('"+ file +"').");
         q.hasSolution();
         q.close();
+        System.out.println(file);
     }
 
     public void addAssertion(String s) {
