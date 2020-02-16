@@ -6,8 +6,11 @@ import com.patterson.world.Scenario;
 
 import java.awt.*;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.List;
 
@@ -487,7 +490,7 @@ class MapEditorView extends MapView {
     }
 
     String generateKB() {
-        StringBuilder buffer = new StringBuilder();
+        StringBuilder buffer = new StringBuilder("\n");
         for (Road r: roads.values()) {
             buffer.append("strada(" + r.getID() + ").\n");
         }
@@ -554,7 +557,10 @@ class MapEditorView extends MapView {
     public void exportKB(String path) {
         System.err.print("Esporto KB... ");
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+            File kb_rules = new File("resources/KB.pl");
+            File kb_scenario = new File(path);
+            Files.copy(kb_rules.toPath(), kb_scenario.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(path, true)); //append
             String KB = this.generateKB();
             writer.write(KB);
             System.err.println("OK.");
