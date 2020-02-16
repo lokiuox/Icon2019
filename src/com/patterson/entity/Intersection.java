@@ -41,6 +41,8 @@ public class Intersection implements IEntity {
                 jo_intersection.getInt("height"));
     }
 
+    public String getType() { return "Intersection"; }
+
     private static void updateCounter(String id) {
         counter = Math.max(counter, Integer.parseInt(id.substring(1)));
     }
@@ -54,7 +56,6 @@ public class Intersection implements IEntity {
     public void setSize(Dimension d) {
         size = new Dimension(d);
     }
-
 
     public Point getPosition() { return position; }
 
@@ -85,7 +86,7 @@ public class Intersection implements IEntity {
 
         System.out.println("Contest triggered");
 
-        String assertion = "";
+        String assertion;
         Set<Car> contenders = new HashSet<>();  // cars needing the right of way
 
         // delete outdated info about contenders
@@ -137,6 +138,7 @@ public class Intersection implements IEntity {
     public JSONObject toJSONObject() {
         JSONObject intersection = new JSONObject();
         intersection.put("id", ID);
+        intersection.put("type", getType());
         intersection.put("posX", position.x);
         intersection.put("posY", position.y);
         intersection.put("width", size.width);

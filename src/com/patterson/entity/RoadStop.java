@@ -17,6 +17,9 @@ public class RoadStop extends Road {
         loadStopImage();
     }
 
+    @Override
+    public String getType() { return "RoadStop"; }
+
     private void loadStopImage() {
         img.add(new ImageIcon("resources/stop/stop0_top.png").getImage());
         img.add(new ImageIcon("resources/stop/stop0_bottom.png").getImage());

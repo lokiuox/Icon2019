@@ -15,6 +15,9 @@ public class IntersectionTF extends Intersection {
         super(jo_intersection);
     }
 
+    @Override
+    public String getType() { return "IntersectionTF"; }
+
     private void initTF() {
         for (Road r : roads) {
             if (r instanceof RoadTF) {
@@ -27,7 +30,6 @@ public class IntersectionTF extends Intersection {
     }
 
     public void tick () {
-
         if (countTick == 0)
             initTF();
 

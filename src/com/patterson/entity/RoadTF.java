@@ -23,6 +23,9 @@ public class RoadTF extends Road {
         initTF();
     }
 
+    @Override
+    public String getType() { return "RoadTF"; }
+
     private void initTF() {
         kb.addAssertion("rosso("+this.getID()+")");
     }

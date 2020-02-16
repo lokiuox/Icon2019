@@ -38,7 +38,10 @@ public class Road implements IEntity {
                 jo_road.getInt("posY"),
                 jo_road.getInt("direction"),
                 jo_road.getInt("length"));
+        this.setMaxSpeed(jo_road.getFloat("maxspeed"));
     }
+
+    public String getType() { return "Road"; }
 
     private static void updateCounter(String id) {
         counter = Math.max(counter, Integer.parseInt(id.substring(1)));
@@ -93,7 +96,7 @@ public class Road implements IEntity {
     }
 
     public void setMaxSpeed(float s) {
-        maxSpeed = s/100*8;
+        maxSpeed = s;
     }
 
     @Override
@@ -119,9 +122,11 @@ public class Road implements IEntity {
     public JSONObject toJSONObject() {
         JSONObject road = new JSONObject();
         road.put("id", ID);
+        road.put("type", getType());
         road.put("posX", position.x);
         road.put("posY", position.y);
         road.put("length", length);
+        road.put("maxspeed", getMaxSpeed());
         road.put("direction", direction.getAngle());
         if (intersection != null)
             road.put("intersection", intersection.getID());
