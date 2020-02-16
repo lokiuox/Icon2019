@@ -179,14 +179,15 @@ public class Graph<T extends Comparable<T>> {
     public static class Vertex<T extends Comparable<T>> implements Comparable<Vertex<T>> {
 
         private T value;
-        private int weight = 0,x,y;
+        private float weight = 0;
+        private int x,y;
         private List<Edge<T>> edges = new ArrayList<>();
 
         public Vertex(T value) {
             this.value = value;
         }
 
-        public Vertex(T value, int weight,int x, int y) {
+        public Vertex(T value, float weight,int x, int y) {
             this(value);
             this.weight = weight;
             if(x  < 0|| y < 0){
@@ -207,11 +208,11 @@ public class Graph<T extends Comparable<T>> {
             return value;
         }
 
-        public int getWeight() {
+        public float getWeight() {
             return weight;
         }
 
-        public void setWeight(int weight) {
+        public void setWeight(float weight) {
             this.weight = weight;
         }
 
@@ -252,7 +253,7 @@ public class Graph<T extends Comparable<T>> {
          */
         @Override
         public int hashCode() {
-            final int code = this.value.hashCode() + this.weight + this.edges.size();
+            final int code = this.value.hashCode() + Math.round(this.weight) + this.edges.size();
             return 31 * code;
         }
 
@@ -342,9 +343,9 @@ public class Graph<T extends Comparable<T>> {
 
         private Vertex<T> from = null;
         private Vertex<T> to = null;
-        private int cost = 0;
+        private float cost = 0;
 
-        public Edge(int cost, Vertex<T> from, Vertex<T> to) {
+        public Edge(float cost, Vertex<T> from, Vertex<T> to) {
             if (from == null || to == null)
                 throw (new NullPointerException("Both 'to' and 'from' vertices need to be non-NULL."));
 
@@ -357,7 +358,7 @@ public class Graph<T extends Comparable<T>> {
             this(e.cost, e.from, e.to);
         }
 
-        public int getCost() {
+        public float getCost() {
             return cost;
         }
 
@@ -378,7 +379,7 @@ public class Graph<T extends Comparable<T>> {
          */
         @Override
         public int hashCode() {
-            final int cost = (this.cost * (this.getFromVertex().hashCode() * this.getToVertex().hashCode()));
+            final int cost = (Math.round(this.cost) * (this.getFromVertex().hashCode() * this.getToVertex().hashCode()));
             return 31 * cost;
         }
 

@@ -93,13 +93,13 @@ public class NavigatorUtility {
         return temp.get();
     }
 
-    public Integer getWeight(String nomeStrada){
+    public Float getWeight(String nomeStrada){
         Set<Map<String, String>> Coords = k.stringQuery("peso("+nomeStrada+",V).");
-        AtomicReference<Integer> temp = new AtomicReference<>(0);
+        AtomicReference<Float> temp = new AtomicReference<>(0.0f);
         Coords.forEach(
                 r -> {
                     for ( String s : r.values()){ //sempre un solo valore
-                        temp.set(Integer.valueOf(s));
+                        temp.set(Float.valueOf(s));
                     }
                 }
         );

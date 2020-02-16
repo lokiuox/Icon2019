@@ -61,7 +61,7 @@ public class NavigatorAStar implements INavigator {
         strade = nu.getNodes();
 
         for (Map<String, String> s : strade) {
-            Graph.Vertex<String> nuovo = new Graph.Vertex<>(s.get("id"), Integer.parseInt(s.get("peso")),Integer.parseInt(s.get("x")),Integer.parseInt(s.get("y")));
+            Graph.Vertex<String> nuovo = new Graph.Vertex<>(s.get("id"), Float.parseFloat(s.get("peso")),Integer.parseInt(s.get("x")),Integer.parseInt(s.get("y")));
             v.put(s.get("id"),nuovo);
 
         }
@@ -71,7 +71,7 @@ public class NavigatorAStar implements INavigator {
             ArrayList<String> nomiStrade = nu.getConnectionStreet(sname.get("id"));
             for (String s: nomiStrade ) {
                 Map<String, String> to = nu.getStreet(s);
-                Graph.Edge<String> gEdge = new Graph.Edge<>(Integer.parseInt(sname.get("peso")), v.get(sname.get("id")), v.get(to.get("id")));
+                Graph.Edge<String> gEdge = new Graph.Edge<>(Float.parseFloat(sname.get("peso")), v.get(sname.get("id")), v.get(to.get("id")));
                 v.get(sname.get("id")).addEdge(gEdge);
                 a.put(sname.get("id")+" "+to.get("id"),gEdge);
             }
