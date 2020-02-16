@@ -140,8 +140,8 @@ public class Car implements IEntity {
             }
 
             if (passing && hasReachedRoad()) {
-                passing = false;
                 previousRoad.getIntersection().carPassed(this);
+                passing = false;
             }
 
             // if near the end of the road stop, otherwise go straight on
@@ -164,8 +164,10 @@ public class Car implements IEntity {
     protected void roadEnd() {
         // if the path has been completed, create a new path to a random destination
         if (path.peek() == null && navigator != null) {
-            //destination = randomDestination();
-            //calculatePath();
+            do {
+                destination = randomDestination();
+            } while (destination.equals(road.getID()));
+            calculatePath();
         }
 
         // check right of way
@@ -173,8 +175,8 @@ public class Car implements IEntity {
             if (rightToPass || road.getIntersection()==null) {
                 rightToPass = false;
                 road.getIntersection().carPassing(this);
-                setRoad(path.poll());
                 passing = true;
+                setRoad(path.poll());
             } else {
                 road.getIntersection().giveRightToPass();
             }
@@ -239,29 +241,7 @@ public class Car implements IEntity {
 
     // check if the car has reached his road
     private boolean hasReachedRoad() {
-        /*boolean a = false;
-
-        switch (road.getDirection().getAngle()) {
-            case 0:
-                if (position.getX() >= road.getPosition().getX() )
-                    a = true;
-                break;
-            case 1:
-                if (position.getY() <= road.getPosition().getY() )
-                    a = true;
-                break;
-            case 2:
-                if (position.getX() <= road.getPosition().getX() )
-                    a = true;
-                break;
-            case 3:
-                if (position.getY() >= road.getPosition().getY() )
-                    a = true;
-                break;
-        }
-
-        return a && hasRoadDir();*/
-        return isNear(road.getPosition(),0,0) && hasRoadDir();
+        return /*isNear(road.getPosition(),0,0) &&*/ hasRoadDir();
     }
 
     // check if the car is orthogonal to the road

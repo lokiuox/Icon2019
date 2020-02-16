@@ -14,29 +14,9 @@
 :-dynamic(somma/2).
 :-dynamic(conta/2).
 
-/*
-numerocivico(K,L):- partenza(K,L).
-numerocivico(K,L):- destinazione(K,L).
-
-numerocivico(_civico,civico1).
-*/
-
-partenza(partenza,partenza1).
-destinazione(destinazione,destinazione1).
-angolo(angolo,90).
-collega(incrocio1,strada,incrocio2).
-coordinata(strada33,0,0).
-/* prima(macchina1,macchina2). */
-prossima_strada(macchina4,strada6).
-strada_corrente(macchina5,strada7).
-lunghezza(lunghezza1,1).
-velocitamax(strada3,1).
-temporosso(strada5,9).
-velocita(macchina3,velocitas,stradas).
-strada(strada6).
-semaforo(strada5).
-stop(strada4).
-
+semaforo(r6).
+stop(r6).
+temporosso(r6,1).
 
 strada(X):- lunghezza(X,_Y).
 strada(X):- angolo(X,_Z).
@@ -61,14 +41,12 @@ macchina(S):- prima(S,D).
 macchina(D):- prima(S,D).
 */
 
-velocitamedia(strada3,qualcosa).
 
 velocitamedia(L,D):- findall(X,strada_corrente(X,L),Y),contamacchine(L,N),somma(Y,C),D is /(C,N).
 
 somma([],0).
 somma([X|Y],D):- somma(Y,G),velocita(X,F,_L),D is F + G.
 
-peso(strada12,12).
 
 peso(L,X):-
 	lunghezza(L,K),
@@ -398,11 +376,13 @@ incrocio(i8).
 incrocio(i9).
 incrocio(i19).
 
+collega(i20,r132,i4).
 collega(i1,r6,i7).
 collega(i1,r8,i14).
 collega(i11,r69,i13).
 collega(i11,r71,i10).
 collega(i11,r65,i8).
+collega(i22,r141,i6).
 collega(i22,r140,i21).
 collega(i2,r15,i5).
 collega(i2,r13,i9).
@@ -443,4 +423,5 @@ collega(i8,r137,i21).
 collega(i9,r75,i2).
 collega(i9,r60,i10).
 collega(i9,r57,i3).
+collega(i19,r136,i3).
 collega(i19,r135,i22).

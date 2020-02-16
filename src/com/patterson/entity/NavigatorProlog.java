@@ -14,7 +14,7 @@ public class NavigatorProlog implements INavigator {
         List<String> path = new LinkedList<>();
 
         startIntersection = KnowledgeBase.stringQuery("collega(S,"+ startRoad +",E).").iterator().next().get("E");
-        endIntersection = KnowledgeBase.stringQuery("collega(S"+ endRoad +",E).").iterator().next().get("S");
+        endIntersection = KnowledgeBase.stringQuery("collega(S,"+ endRoad +",E).").iterator().next().get("S");
 
         List<String> intersectionPath = KnowledgeBase.listQuery("piubreve("+startIntersection+","+endIntersection+",P,L).").get("P");
 
