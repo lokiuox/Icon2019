@@ -1,6 +1,7 @@
 package com.patterson;
 
 import com.patterson.ui.MapWindow;
+import com.patterson.ui.editor.EditorWindow;
 import com.patterson.world.DemoScenario;
 
 import javax.swing.*;
@@ -17,7 +18,8 @@ public class AppMain extends JFrame {
     private void initUI() {
         //MapWindow w = new EditorWindow("resources/scenari/demo/scenario.json");
         //MapWindow w = new EditorWindow();
-        MapWindow w = new MapWindow(DemoScenario.getScenario());
+        //MapWindow w = new MapWindow(DemoScenario.getScenario());
+        MapWindow w = new MapWindow("resources/scenari/partial/scenario.json");
         add(w);
 
         pack();

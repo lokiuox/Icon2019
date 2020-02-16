@@ -107,6 +107,7 @@ public class Scenario {
 
     private void init() {
         KnowledgeBase.init(kb_path);
+        //KnowledgeBase.init("resources/KB_final.pl");
     }
 
     public void setName(String s) {

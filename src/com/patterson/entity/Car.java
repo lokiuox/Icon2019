@@ -22,7 +22,7 @@ public class Car implements IEntity {
     protected float speed;
     //private final float maxSpeed = 8;
     private final float acceleration = 0.35f;
-    protected INavigator navigator;
+    protected INavigator navigator = new NavigatorAStar();
 
     protected Image[] img = new Image[4];
 
@@ -164,8 +164,8 @@ public class Car implements IEntity {
     protected void roadEnd() {
         // if the path has been completed, create a new path to a random destination
         if (path.peek() == null && navigator != null) {
-            destination = randomDestination();
-            calculatePath();
+            //destination = randomDestination();
+            //calculatePath();
         }
 
         // check right of way
