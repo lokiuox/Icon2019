@@ -23,7 +23,6 @@ public class Scenario {
     }
 
     public Scenario(String json) {
-        init();
         try {
             json_path = json;
             BufferedReader reader = new BufferedReader(new FileReader(json));
@@ -35,8 +34,7 @@ public class Scenario {
             JSONArray ja_intersections = jo_scenario.getJSONArray("intersections");
             JSONArray ja_cars = jo_scenario.getJSONArray("cars");
             String name = jo_scenario.getString("name");
-            String kb_path = jo_scenario.getString("kb");
-            this.kb_path = kb_path;
+            kb_path = jo_scenario.getString("kb");
 
             //Creating containing structures
             Map<String, Road> roads = new HashMap<>();
@@ -104,6 +102,7 @@ public class Scenario {
         } catch (FileNotFoundException e) {
             System.err.println("ERRORE: file non trovato");
         }
+        init();
     }
 
     private void init() {
