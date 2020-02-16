@@ -1,11 +1,23 @@
+# Simulazione del traffico stradale
+
+## Repository: [Icon2019](https://github.com/lokiuox/Icon2019)
+
+### Gruppo: Saracino,Nanna,Quatraro,Sisco  
+
+
+
+
+
+### Intro 
 Il sistema è una semplice simulazione di traffico stradale scritta in Java.
 
-Ogni automobile nella simulazione è in grado di calcolare e di seguire percorsi verso la propria destinazione sottomettendo query ad una base di conoscenza definita in Prolog. Le automobili sono in grado di scambiare informazioni tra loro allo scopo di migliorare il pathfinding.
+Ogni automobile nella simulazione è in grado di calcolare e di seguire percorsi verso la propria destinazione sottomettendo query ad una base di conoscenza definita in Prolog. Le automobili sono in grado di scambiare informazioni tra loro allo scopo di migliorare il percorso definito dal navigatore.
 
 ### Idea di base
 Si immaginino le strade di una città percorse da automobilisti ognuno con una destinazione (assunta casuale). Ogni automobilista è interessato a seguire il percorso più veloce che viene calcolato con l’ausilio di un navigatore che conosce la topologia delle strade.
 
 Alcuni automobilisti dispongono di un tipo diverso navigatore, in grado di calcolare percorsi tenendo anche conto di informazioni sul traffico. Ognuno di questi navigatori ottiene tali informazioni scambiandole con le automobili vicine che dispongono dello stesso navigatore.
+Ovvero quando le auto si incrociano effettuano uno scambio di conoscenza (ritenuta valida attraverso un Time to Live).
 
 ### Scenario
 La simulazione opera su uno scenario (classe `com.patterson.world.Scenario`) che definisce:
@@ -215,15 +227,17 @@ min([_|R],M,Min) :- min(R,M,Min).
 ```
 Passo ricorsivo: se L è minore di M allora calcolo min tra il [P,L] e il resto della lista R altrimenti esegue la seconda regole sottostante e non considero l’elemento di che precede R e continua calcolare min direttamente da R risparmiando in termini di computazione.
 # KnowledgeBase
-La KB scritta in prolog è interrogata attraverso la libreria swi-prolog la quale ci permette di eseguire le query all'interno del java. Questa classe è l'unico punto di comunicazione con la KB.
+La KB (`resources/KB_final.pl`) scritta in prolog è interrogata attraverso la libreria swi-prolog la quale ci permette di eseguire le query all'interno di java. Questa classe (`com.patterson.KnowledgeBase`) è l'unico punto di comunicazione con la KB.
 
-La classe KnoledgeBase si occupa appunto di effettuare la query all'interno della KB consultata e interpretare i risultati sia per rispote booleane che per dati (stringhe e numeri). Le query possono essere scritte come nell'inteprete o attraverso classi opportune che definiscono atomi o variabili.
+La classe KnowledgeBase si occupa appunto di effettuare la query all'interno della KB consultata e interpretare i risultati sia per rispote booleane che per dati (stringhe e numeri). Le query possono essere scritte come nell'inteprete o attraverso classi opportune che definiscono atomi o variabili.
 
-Questa classe risulta di elevata importanza dato l'utilizzo massiccio fatto da parte della classe NavigatorUtility, capace di recuperare e organizzare le informazioni acquisite dalla KB e passarle al Navigator.
+Questa classe risulta di elevata importanza dato l'utilizzo massiccio fatto da parte della classe NavigatorUtility, capace di recuperare e organizzare le informazioni acquisite dalla KB e passarle al Navigator a riguardo strade ed incroci.
 Anche la classe Car utilizza questa classe per informare la KB della posizione dell'auto dopo lo spostamento effettuato.
 
 Si è fatto utilizzo anche dei metodi di asserzione ed eliminazione di fatti per rendere la KB dinamica.
-Per sfruttare la dinamicità del programma è stato necessario definire le procedure in maniera dinamica.# Navigator
+Per sfruttare la dinamicità del programma è stato necessario definire le procedure in maniera dinamica.
+
+# Navigator
 L'implementazione di A* è utilizzata dal navigator elemento fondamentale per guidare l'auto all'interno del mondo.
 
 Si è pensato di sviluppare due tipologie di navigatori, con e senza scambio di conoscenza fra le auto.
@@ -234,7 +248,7 @@ Una macchina (Classe Car) quando viene inizializzata all'interno contiene un Nav
 È compito della macchina informare la KB del raggiungimento di un incrocio e quindi interrogare nuovamente il Navigator il quale aggiorna i pesi dei vertici e ricalcola dal nuovo punto di partenza il percorso per la meta.
 
 # A*
-L'algoritmo **A*** combina gli algoritmi di ricerca su grafo LCF e BFS, dove per ogni percorso p considera la stima f(p) del suo costo totale (dal nodo di partenza fino al goal), con f(p) = cost(p) + h(p).
+L'algoritmo **A*** (`com.patterson.algorithms.AStarGraph`)combina gli algoritmi di ricerca su grafo LCF e BFS, dove per ogni percorso p considera la stima f(p) del suo costo totale (dal nodo di partenza fino al goal), con f(p) = cost(p) + h(p).
 Dove h(p) è una stima del costo minimale dall’ultimo nodo di p fino a un goal.
 
 Si è pensato di utilizzare **A*** perchè i fattori di ammissibilità sono rispettati ovvero:
