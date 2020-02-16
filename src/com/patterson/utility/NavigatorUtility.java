@@ -111,10 +111,14 @@ public class NavigatorUtility {
         ArrayList<String> coords = new ArrayList<>();
         Coords.forEach(
                 r -> {
-                    for ( String s : r.values()){ //sempre un solo valore
-                        ArrayList<String> tmp = getConnection(s);
-                        tmp.remove(nomeStrada);
-                        coords.addAll(tmp);
+                    for ( Map.Entry<String,String> entry : r.entrySet()){ //sempre un solo valore
+                        if(entry.getKey().equals("V")){
+
+                            ArrayList<String> tmp = getConnection(entry.getValue());
+                            tmp.remove(nomeStrada);
+                            coords.addAll(tmp);
+                        }
+
                     }
                 }
         );
