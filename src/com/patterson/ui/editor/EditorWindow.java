@@ -45,6 +45,9 @@ public class EditorWindow extends MapWindow {
         JButton incroci = new JButton("Incroci");
         def_card.add(incroci);
         def_card.add(Box.createRigidArea(BUTTON_SPACING));
+        JButton auto = new JButton("Auto");
+        def_card.add(auto);
+        def_card.add(Box.createRigidArea(BUTTON_SPACING));
         JButton info = new JButton("Info");
         def_card.add(info);
         def_card.add(Box.createHorizontalGlue());
@@ -67,6 +70,11 @@ public class EditorWindow extends MapWindow {
         incroci.addActionListener(e -> {
             MapEditorView editor = (MapEditorView) mapView;
             editor.activateMode("IntersectionDesign");
+        });
+
+        auto.addActionListener(e -> {
+            MapEditorView editor = (MapEditorView) mapView;
+            editor.activateMode("CarPlacing");
         });
 
         info.addActionListener(e -> {
