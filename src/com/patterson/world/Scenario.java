@@ -36,6 +36,9 @@ public class Scenario {
             String name = jo_scenario.getString("name");
             kb_path = jo_scenario.getString("kb");
 
+            KnowledgeBase.init(kb_path);
+
+
             //Creating containing structures
             Map<String, Road> roads = new HashMap<>();
             Map<String, Intersection> intersections = new HashMap<>();
@@ -106,7 +109,7 @@ public class Scenario {
         } catch (FileNotFoundException e) {
             System.err.println("ERRORE: file non trovato");
         }
-        init();
+        //init();
     }
 
     private void init() {

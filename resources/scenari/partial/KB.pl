@@ -20,21 +20,23 @@ numerocivico(K,L):- destinazione(K,L).
 
 numerocivico(_civico,civico1).
 */
+
 partenza(partenza,partenza1).
 destinazione(destinazione,destinazione1).
-angolo(angolo,angolo1).
+angolo(angolo,90).
 collega(incrocio1,strada,incrocio2).
-coordinata(strada33,x,y).
+coordinata(strada33,0,0).
 /* prima(macchina1,macchina2). */
 prossima_strada(macchina4,strada6).
 strada_corrente(macchina5,strada7).
-lunghezza(lunghezza1,lunghezza2).
-velocitamax(strada3,numero1).
-semaforo(strada5).
-stop(strada4).
+lunghezza(lunghezza1,1).
+velocitamax(strada3,1).
 temporosso(strada5,9).
 velocita(macchina3,velocitas,stradas).
 strada(strada6).
+semaforo(strada5).
+stop(strada4).
+
 
 strada(X):- lunghezza(X,_Y).
 strada(X):- angolo(X,_Z).
@@ -66,7 +68,7 @@ velocitamedia(L,D):- findall(X,strada_corrente(X,L),Y),contamacchine(L,N),somma(
 somma([],0).
 somma([X|Y],D):- somma(Y,G),velocita(X,F,_L),D is F + G.
 
-peso(strada12,assai).
+peso(strada12,12).
 
 peso(L,X):-
 	lunghezza(L,K),
