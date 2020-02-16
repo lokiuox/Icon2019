@@ -91,6 +91,15 @@ public class EditorWindow extends MapWindow {
     }
 
     private void reset(JButton play_button) {
+        int choice = JOptionPane.showConfirmDialog(this,
+                "Resettando lo scenario, tutte le modifiche non salvate andranno perse.\n" +
+                "Continuare?",
+                "Conferma Reset Scenario",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+        if (choice == JOptionPane.NO_OPTION) {
+            return;
+        }
         String json = mapView.getScenario().getJSONPath();
         if (json == null) {
             mapView.setScenario(new Scenario());
@@ -135,8 +144,17 @@ public class EditorWindow extends MapWindow {
 
     private void saveScenario() {
         String json = mapView.getScenario().getJSONPath();
-        File save_folder = null;
+        File save_folder;
         if (json == null) {
+            String name = (String) JOptionPane.showInputDialog(this,
+                    "Inserisci un nome per il nuovo scenario:",
+                    "Nome Scenario",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    null,
+                    "NuovoScenario");
+            if (name == null) return; //User cancelled the action
+            mapView.getScenario().setName(name);
             save_folder = chooseFolder("resources/scenari");
         } else {
             save_folder = new File(json).getParentFile();
