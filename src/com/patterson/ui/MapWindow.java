@@ -7,18 +7,26 @@ import java.util.Map;
 import javax.swing.*;
 import java.awt.*;
 
-public class MapWindow extends JPanel {
+public class MapWindow extends JFrame {
     protected MapView mapView;
     private Map<String, MapControls> controls = new HashMap<>();
     public Dimension mapSize = new Dimension(600, 500);
+    private JPanel main;
 
     public MapWindow(MapView m) {
-        super(new BorderLayout());
+        //super(new BorderLayout());
+        main = new JPanel(new BorderLayout());
+        this.setContentPane(main);
         mapView = m;
         mapView.setPreferredSize(mapSize);
         mapView.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        add(mapView, BorderLayout.CENTER);
-        this.setSize(mapSize);
+        main.add(mapView, BorderLayout.CENTER);
+        main.setSize(mapSize);
+        pack();
+        setTitle("Traffic2D: " + mapView.getSceneName());
+        //setSize(600,500);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         init();
     }
 
@@ -40,9 +48,9 @@ public class MapWindow extends JPanel {
             else if (pair.getKey().equals(BorderLayout.LINE_START) || pair.getKey().equals(BorderLayout.LINE_END))
                 w += pair.getValue().getSize().width;
         }
-        this.add(c, position);
+        main.add(c, position);
         mapView.setControls(id, c);
-        this.setSize(new Dimension(w, h));
+        main.setSize(new Dimension(w, h));
     }
 
     public void setMapSize(Dimension d) {

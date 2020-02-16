@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class AppMain extends JFrame {
+public class AppMain{
 
     public AppMain() {
         initUI();
@@ -20,13 +20,7 @@ public class AppMain extends JFrame {
         //MapWindow w = new EditorWindow();
         //MapWindow w = new MapWindow(DemoScenario.getScenario());
         MapWindow w = new MapWindow("resources/scenari/partial/scenario.json");
-        add(w);
-
-        pack();
-        setTitle("Traffic2D: " + w.getMapView().getSceneName());
-        //setSize(600,500);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        w.setVisible(true);
     }
 
     public static void main(String[] args) {
@@ -34,7 +28,6 @@ public class AppMain extends JFrame {
             @Override
             public void run() {
                 AppMain app = new AppMain();
-                app.setVisible(true);
             }
         });
     }
