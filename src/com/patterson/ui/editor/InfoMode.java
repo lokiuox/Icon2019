@@ -155,6 +155,10 @@ public class InfoMode implements IEditorMode {
                     }
                     System.out.println("Direction: " + r.getDirection().getAngle() + ": " + direction);
                     System.out.println("Insersection: " + (r.getIntersection() == null ? "null" : r.getIntersection().getID()));
+                    System.out.println("End: " + r.getEnd().x/32 + "," + r.getEnd().y/32);
+                    int next_x = r.getEnd().x/32 + Math.min(0, r.getDirection().cos());
+                    int next_y = r.getEnd().y/32 + Math.min(0, r.getDirection().sin());
+                    System.out.println("Next: " + next_x + "," + next_y);
                 } else if (t.isIntersection()) {
                     Intersection i = t.intersection;
                     selectedIntersection = i;

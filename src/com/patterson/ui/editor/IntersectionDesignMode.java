@@ -1,6 +1,7 @@
 package com.patterson.ui.editor;
 
 import com.patterson.entity.Intersection;
+import com.patterson.entity.Road;
 import com.patterson.utility.Angle;
 
 import javax.swing.*;
@@ -106,6 +107,9 @@ public class IntersectionDesignMode implements IEditorMode {
                         System.err.println("No intersections selected");
                     }
                     break;
+                case KeyEvent.VK_R:
+                    for (Road r: editor.getScenario().getRoads())
+                        editor.linkIntersectionAtEndOfRoad(r);
             }
             repaint();
         }

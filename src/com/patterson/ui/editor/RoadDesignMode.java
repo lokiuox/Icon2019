@@ -194,6 +194,14 @@ public class RoadDesignMode implements IEditorMode {
                         System.err.println("No roads selected");
                     }
                     break;
+                case KeyEvent.VK_L:
+                    if (selectedRoad != null) {
+                        editor.linkIntersectionAtEndOfRoad(selectedRoad);
+                        selectedRoad = null;
+                        highlighter.invisible();
+                    } else {
+                        System.err.println("No roads selected");
+                    }
             }
             repaint();
         }

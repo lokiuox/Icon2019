@@ -134,8 +134,9 @@ class MapEditorView extends MapView {
 
     void placeRoad(Road r) {
         if (isPlaceable(r)) {
-            addAndFixOverlappings(r);
-            linkIntersectionAtEndOfRoad(r);
+            List<Road> generated_roads = addAndFixOverlappings(r);
+            for (Road road: generated_roads)
+                linkIntersectionAtEndOfRoad(road);
         } else {
             System.err.println("Road not placeable here");
         }
@@ -303,7 +304,7 @@ class MapEditorView extends MapView {
         }
     }
 
-    private void linkIntersectionAtEndOfRoad(Road r) {
+    void linkIntersectionAtEndOfRoad(Road r) {
         Point p = toGrid(r.getEnd().x, r.getEnd().y);
         int x = p.x/32;
         int y = p.y/32;
@@ -315,7 +316,7 @@ class MapEditorView extends MapView {
         }
     }
 
-    private void addAndFixOverlappings(Road r) {
+    private List<Road> addAndFixOverlappings(Road r) {
         List<Road> road_segments = new ArrayList<>();
         List<Point> overlappings = checkOverlappings(r);
         Road current_segment = r;
@@ -341,6 +342,8 @@ class MapEditorView extends MapView {
         for (Point p: overlappings) {
             placeIntersection(p.x, p.y, false);
         }
+
+        return road_segments;
     }
 
     private List<Point> checkOverlappings(Road r) {
