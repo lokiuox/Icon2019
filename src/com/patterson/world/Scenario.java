@@ -88,6 +88,10 @@ public class Scenario {
                         break;
                     case "CarRed":
                         car = new Car_red(obj);
+                        break;
+                    case "CarIE":
+                        car = new CarIE(obj);
+                        break;
                 }
                 JSONArray ja_path = obj.getJSONArray("path");
                 for (int j = 0; j < ja_path.length(); j++) {
