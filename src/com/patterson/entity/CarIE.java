@@ -13,6 +13,7 @@ public class CarIE extends Car {
     private Map<CarIE, Long> lastSent = new HashMap<>();
     private int minSendTime = 30*5;
     private long countTick;
+    private long logTime = 30;
 
     public CarIE(String id, float x, float y, int d) {
         super(id, x, y, d);
@@ -44,7 +45,19 @@ public class CarIE extends Car {
     public void tick() {
         super.tick();
         kb.tick();
+
+        if (countTick%logTime == 0) {
+            updateLog();
+        }
+
         countTick++;
+    }
+
+    private void updateLog() {
+        Packet p = new Packet();
+        p.addAssertion("velocita("+ getID() + "," + speed +"," + road.getID() + ")");
+
+        kb.addPacket(p);     // aggiunge velocità e posizioni correnti
     }
 
     public void sendInformation(CarIE c) {
@@ -53,11 +66,6 @@ public class CarIE extends Car {
         if (!lastSent.containsKey(c) || (lastSent.containsKey(c) && countTick-lastSent.get(c)>minSendTime)) {
             lastSent.put(c,countTick);
 
-            Packet p = new Packet();
-            p.addAssertion("strada_corrente("+ getID() + "," + road.getID() +")");
-            p.addAssertion("velocita("+ getID() + "," + speed +")");
-
-            c.getKB().addPacket(p);     // invia posizione e velocità correnti
             c.getKB().addPackets(kb);   // invia tutti i paccketti nella KB
         }
     }
