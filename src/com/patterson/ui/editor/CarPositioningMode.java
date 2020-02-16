@@ -1,6 +1,9 @@
 package com.patterson.ui.editor;
 
-import com.patterson.entity.Intersection;
+import com.patterson.entity.Car;
+import com.patterson.entity.CarIE;
+import com.patterson.entity.Car_green;
+import com.patterson.entity.Car_red;
 import com.patterson.utility.Angle;
 
 import javax.swing.*;
@@ -12,24 +15,23 @@ import java.awt.event.MouseEvent;
 
 import static com.patterson.ui.editor.MapEditorView.toGrid;
 
-public class IntersectionDesignMode implements IEditorMode {
-    private boolean createWithTrafficLights = false;
+public class CarPositioningMode implements IEditorMode {
+    private enum CarType {CAR, CAR_GREEN, CAR_RED, CAR_IE}
+    private static CarType[] car_types = CarType.values();
     private MapEditorView editor;
     private Pointer pointer = new Pointer(-16,-16);
-    private MapEditorView.Highlighter highlighter;
     private MovingAdapter ma = new MovingAdapter();
     private PressAdapter pa = new PressAdapter();
-    private Intersection selectedIntersection = null;
+    private CarType selected_car_type = CarType.CAR;
+    private Car selectedCar = null;
 
-    IntersectionDesignMode(MapEditorView m) {
+    CarPositioningMode(MapEditorView m) {
         this.editor = m;
         init();
     }
 
     @Override
-    public void init() {
-        highlighter = editor.highlighter;
-    }
+    public void init() {}
 
     private void repaint() {
         editor.repaint();
@@ -90,21 +92,13 @@ public class IntersectionDesignMode implements IEditorMode {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    createWithTrafficLights = !createWithTrafficLights;
-                    System.out.println("Create with Traffic Lights: " + createWithTrafficLights);
+                    int index = (selected_car_type.ordinal() == 0 ? car_types.length-1 : selected_car_type.ordinal() - 1);
+                    selected_car_type = car_types[index];
+                    System.out.println(selected_car_type + " selected.");
                     break;
                 case KeyEvent.VK_RIGHT:
-                    createWithTrafficLights = !createWithTrafficLights;
-                    System.out.println("Create with Traffic Lights: " + createWithTrafficLights);
-                    break;
-                case KeyEvent.VK_C:
-                    if (selectedIntersection != null) {
-                        editor.changeIntersecionType(selectedIntersection);
-                        selectedIntersection = null;
-                        highlighter.invisible();
-                    } else {
-                        System.err.println("No intersections selected");
-                    }
+                    selected_car_type = car_types[(selected_car_type.ordinal() + 1)%car_types.length];
+                    System.out.println(selected_car_type + " selected.");
                     break;
             }
             repaint();
@@ -128,26 +122,40 @@ public class IntersectionDesignMode implements IEditorMode {
             y = e.getY();
 
             MapMatrix.Tile t = editor.getMatrix().getCoords(x, y);
-
             if (SwingUtilities.isLeftMouseButton(e)) {
-                if (t.isIntersection()) {
-                    highlighter.set(t.intersection);
-                    selectedIntersection = t.intersection;
-                    highlighter.visible();
-                } else if (t.isEmpty()) {
-                    selectedIntersection = null;
-                    Point coords = toGrid(x, y);
-                    editor.placeIntersection(coords.x/32, coords.y/32, createWithTrafficLights);
-                    highlighter.invisible();
+                if (t.isRoad()) {
+                    if (t.hasCar()) {
+                        System.err.println("There's already a car here.");
+                    } else {
+                        Car c;
+                        Point pos = toGrid(x, y);
+                        switch (selected_car_type) {
+                            case CAR:
+                                c = new Car(Car.nextID(), pos.x, pos.y, t.road.getDirection().getAngle());
+                                break;
+                            case CAR_GREEN:
+                                c = new Car_green(Car.nextID(), pos.x, pos.y, t.road.getDirection().getAngle());
+                                break;
+                            case CAR_RED:
+                                c = new Car_red(Car.nextID(), pos.x, pos.y, t.road.getDirection().getAngle());
+                                break;
+                            case CAR_IE:
+                                c = new CarIE(Car.nextID(), pos.x, pos.y, t.road.getDirection().getAngle());
+                                break;
+                            default:
+                                System.err.println("Car type not recognized.");
+                                return;
+                        }
+                        c.addRoad(t.road);
+                        editor.addCar(c);
+                    }
                 } else {
-                    highlighter.invisible();
-                    selectedIntersection = null;
+                    System.err.println("Cannot put a car there.");
                 }
             } else if (SwingUtilities.isRightMouseButton(e)) {
-                if (selectedIntersection != null) {
-                    editor.removeIntersection(selectedIntersection);
-                    selectedIntersection = null;
-                    highlighter.invisible();
+                if (selectedCar != null) {
+                    editor.removeCar(selectedCar);
+                    selectedCar = null;
                 }
             }
             repaint();

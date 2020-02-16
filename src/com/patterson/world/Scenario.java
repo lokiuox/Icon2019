@@ -10,9 +10,9 @@ import java.util.*;
 
 public class Scenario {
     private String name = "New Scenario";
-    private Map<String, Intersection> intersections = new HashMap<>();
-    private Map<String, Road> roads = new HashMap<>();
-    private List<Car> cars = new LinkedList<>();
+    private Map<String, Intersection> intersections = new LinkedHashMap<>();
+    private Map<String, Road> roads = new LinkedHashMap<>();
+    private Map<String, Car> cars = new LinkedHashMap();
     //private String kb_path = "resources/KB.pl";
     private String kb_path = "resources/KB.pl"; //solo per test
     private String json_path = null;
@@ -37,7 +37,6 @@ public class Scenario {
             kb_path = jo_scenario.getString("kb");
 
             KnowledgeBase.init(kb_path);
-
 
             //Creating containing structures
             Map<String, Road> roads = new HashMap<>();
@@ -109,12 +108,11 @@ public class Scenario {
         } catch (FileNotFoundException e) {
             System.err.println("ERRORE: file non trovato");
         }
-        //init();
+        init();
     }
 
     private void init() {
-        KnowledgeBase.init(kb_path);
-        //KnowledgeBase.init("resources/KB_final.pl");
+
     }
 
     public void setName(String s) {
@@ -181,30 +179,24 @@ public class Scenario {
     }
 
     public Car getCarByID(String id) {
-        for (Car c: cars)
-            if (c.getID().equals(id))
-                return c;
-        return null;
+        return cars.get(id);
     }
 
+    public Map<String, Car> getCarsMap() { return cars; }
+
     public List<Car> getCars() {
-        return cars;
+        return new ArrayList<>(cars.values());
     }
 
     public Scenario addCar(Car c) {
-        cars.add(c);
-        return this;
-    }
-
-    public Scenario addCars(Collection<Car> list) {
-        cars.addAll(list);
+        cars.put(c.getID(), c);
         return this;
     }
 
     private void exchangeInformation() {
-        for (Car c : cars)
+        for (Car c : cars.values())
             if (c instanceof CarIE)
-                for (Car d : cars)
+                for (Car d : cars.values())
                     if (d instanceof CarIE && c.getPosition().distance(d.getPosition())<IEdistance)
                         ((CarIE) c).sendInformation((CarIE) d);
     }
@@ -223,7 +215,7 @@ public class Scenario {
             ja_intersections.put(i.toJSONObject());
 
         JSONArray ja_cars = new JSONArray();
-        for (Car c: cars)
+        for (Car c: cars.values())
             ja_cars.put(c.toJSONObject());
 
         scenario.put("roads", ja_roads);
@@ -254,12 +246,12 @@ public class Scenario {
     public void draw(Graphics2D g) {
         for (Intersection i : intersections.values()) i.draw(g);
         for (Road r : roads.values()) r.draw(g);
-        for (Car c : cars) c.draw(g);
+        for (Car c : cars.values()) c.draw(g);
     }
 
     public void tick() {
         exchangeInformation();
-        for (Car c : cars) c.tick();
+        for (Car c : cars.values()) c.tick();
         for (Intersection i : intersections.values())
             if (i instanceof IntersectionTF)
                 ((IntersectionTF) i).tick();

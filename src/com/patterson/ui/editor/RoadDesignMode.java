@@ -1,6 +1,8 @@
 package com.patterson.ui.editor;
 
 import com.patterson.entity.Road;
+import com.patterson.entity.RoadStop;
+import com.patterson.entity.RoadTF;
 import com.patterson.utility.Angle;
 
 import javax.swing.*;
@@ -14,6 +16,9 @@ import java.awt.image.BufferedImage;
 import static com.patterson.ui.editor.MapEditorView.toGrid;
 
 public class RoadDesignMode implements IEditorMode {
+    private enum RoadType { ROAD, ROAD_STOP, ROAD_TF }
+    private static RoadType[] road_types = RoadType.values();
+    private RoadType selected_road_type = RoadType.ROAD;
     private MapEditorView editor;
     private Pointer p = new Pointer(-16,-16);
     private TempRoad tempRoad = new TempRoad(-16, -16, -16, -16);
@@ -172,10 +177,22 @@ public class RoadDesignMode implements IEditorMode {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    System.out.println("left");
+                    int index = (selected_road_type.ordinal() == 0 ? road_types.length-1 : selected_road_type.ordinal() - 1);
+                    selected_road_type = road_types[index];
+                    System.out.println(selected_road_type + " selected.");
                     break;
                 case KeyEvent.VK_RIGHT:
-                    System.out.println("right");
+                    selected_road_type = road_types[(selected_road_type.ordinal() + 1)%road_types.length];
+                    System.out.println(selected_road_type + " selected.");
+                    break;
+                case KeyEvent.VK_C:
+                    if (selectedRoad != null) {
+                        editor.changeRoadType(selectedRoad);
+                        selectedRoad = null;
+                        highlighter.invisible();
+                    } else {
+                        System.err.println("No roads selected");
+                    }
                     break;
             }
             repaint();
@@ -233,7 +250,21 @@ public class RoadDesignMode implements IEditorMode {
         public void mouseReleased(MouseEvent e) {
             if (tempRoad.length()>0 && SwingUtilities.isLeftMouseButton(e)) {
                 tempRoad.invisible();
-                Road r = new Road(Road.nextID(), tempRoad.start.x, tempRoad.start.y, tempRoad.direction().getAngle(), tempRoad.length());
+                Road r;
+                switch (selected_road_type) {
+                    case ROAD:
+                        r = new Road(Road.nextID(), tempRoad.start.x, tempRoad.start.y, tempRoad.direction().getAngle(), tempRoad.length());
+                        break;
+                    case ROAD_STOP:
+                        r = new RoadStop(Road.nextID(), tempRoad.start.x, tempRoad.start.y, tempRoad.direction().getAngle(), tempRoad.length());
+                        break;
+                    case ROAD_TF:
+                        r = new RoadTF(Road.nextID(), tempRoad.start.x, tempRoad.start.y, tempRoad.direction().getAngle(), tempRoad.length());
+                        break;
+                    default:
+                        System.err.println("Road Type not recognized.");
+                        return;
+                }
                 editor.placeRoad(r);
                 selectedRoad = r;
             }

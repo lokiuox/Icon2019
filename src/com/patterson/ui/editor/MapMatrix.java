@@ -1,5 +1,6 @@
 package com.patterson.ui.editor;
 
+import com.patterson.entity.Car;
 import com.patterson.entity.Intersection;
 import com.patterson.entity.Road;
 
@@ -146,6 +147,7 @@ class MapMatrix {
         TileType type = TileType.EMPTY;
         Road road = null;
         Intersection intersection = null;
+        Car c = null;
 
         Tile() {}
 
@@ -166,5 +168,13 @@ class MapMatrix {
         public boolean isRoad() { return type == TileType.ROAD_H || type == TileType.ROAD_V; }
 
         boolean isIntersection() { return type == TileType.INTERSECTION; }
+
+        boolean hasCar() {
+            return c != null;
+        }
+
+        void setCar(Car c) {
+            this.c = c;
+        }
     }
 }

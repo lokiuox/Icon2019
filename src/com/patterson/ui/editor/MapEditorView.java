@@ -1,8 +1,6 @@
 package com.patterson.ui.editor;
 
-import com.patterson.entity.Intersection;
-import com.patterson.entity.Road;
-import com.patterson.entity.RoadStop;
+import com.patterson.entity.*;
 import com.patterson.ui.MapView;
 import com.patterson.world.Scenario;
 
@@ -22,6 +20,7 @@ class MapEditorView extends MapView {
 
     private Map<String, Road> roads;
     private Map<String, Intersection> intersections;
+    private Map<String, Car> cars;
     private MapMatrix matrix;
     Highlighter highlighter = new Highlighter();
 
@@ -46,6 +45,7 @@ class MapEditorView extends MapView {
     private void init() {
         roads = scenario.getRoadMap();
         intersections = scenario.getIntersectionMap();
+        cars = scenario.getCarsMap();
         matrix = new MapMatrix(this);
     }
 
@@ -60,6 +60,7 @@ class MapEditorView extends MapView {
         modes.put("RoadDesign", new RoadDesignMode(this));
         modes.put("TileSelect", new InfoMode(this));
         modes.put("IntersectionDesign", new IntersectionDesignMode(this));
+        modes.put("CarPlacing", new CarPositioningMode(this));
         modes.put("InfoMode", new InfoMode(this));
         this.activateMode("RoadDesign");
     }
@@ -75,6 +76,7 @@ class MapEditorView extends MapView {
         }
         currentMode = mode;
         currentMode.activate();
+        this.requestFocus();
     }
 
     static Point toGrid(int x, int y) {
@@ -122,6 +124,14 @@ class MapEditorView extends MapView {
         return true;
     }
 
+    void addCar(Car c) {
+        cars.put(c.getID(), c);
+    }
+
+    void removeCar(Car c) {
+        cars.remove(c.getID());
+    }
+
     void placeRoad(Road r) {
         if (isPlaceable(r)) {
             addAndFixOverlappings(r);
@@ -145,8 +155,36 @@ class MapEditorView extends MapView {
         removeIntersection(intersections.get(id));
     }
 
+    void changeIntersecionType(Intersection i) {
+        Intersection new_intersection;
+        if (i.getType().equals("IntersectionTF")) {
+            new_intersection = new Intersection(i.getID(), i.getPosition().x, i.getPosition().y, i.getSize().width, i.getSize().height);
+        } else {
+            new_intersection = new IntersectionTF(i.getID(), i.getPosition().x, i.getPosition().y, i.getSize().width, i.getSize().height);
+        }
+        new_intersection.getRoads().addAll(i.getRoads());
+        removeIntersection(i);
+        addIntersection(new_intersection);
+    }
+
+    void changeRoadType(Road r) {
+        Road new_road = null;
+        if (r.getType().equals("Road")) {
+            new_road = new RoadTF(r.getID(), r.getPosition().x, r.getPosition().y, r.getDirection().getAngle(), r.getLength());
+        } else if (r.getType().equals("RoadTF")) {
+            new_road = new RoadStop(r.getID(), r.getPosition().x, r.getPosition().y, r.getDirection().getAngle(), r.getLength());
+        } else if (r.getType().equals("RoadStop")) {
+            new_road = new Road(r.getID(), r.getPosition().x, r.getPosition().y, r.getDirection().getAngle(), r.getLength());
+        }
+        Intersection i = r.getIntersection();
+        r.setIntersection(null);
+        new_road.setIntersection(i);
+        removeRoad(r);
+        addRoad(new_road);
+    }
+
     //Using matrix coords
-    void placeIntersection(int x, int y) {
+    void placeIntersection(int x, int y, boolean hasTrafficLights) {
         if (!matrix.get(x, y).isEmpty()) {
             System.err.println("Can't put an intersection there, it's not an empty tile");
             return;
@@ -185,7 +223,12 @@ class MapEditorView extends MapView {
 
         if (existingIntersection == null) {
             //No existing intersection is nearby, we have to create a new one
-            Intersection i = new Intersection(Intersection.nextID(), x*32, y*32, 32, 32);
+            Intersection i;
+            if (hasTrafficLights) {
+                i = new IntersectionTF(Intersection.nextID(), x*32, y*32, 32, 32);
+            } else {
+                i = new Intersection(Intersection.nextID(), x*32, y*32, 32, 32);
+            }
             addIntersection(i);
             for (Road r: getRoadsIncomingOnTile(x, y))
                 r.setIntersection(i);
@@ -296,7 +339,7 @@ class MapEditorView extends MapView {
 
         //Add intersections in the empty points
         for (Point p: overlappings) {
-            placeIntersection(p.x, p.y);
+            placeIntersection(p.x, p.y, false);
         }
     }
 
