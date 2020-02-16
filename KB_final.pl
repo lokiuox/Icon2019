@@ -22,14 +22,14 @@ numerocivico(_civico,civico1).
 */
 partenza(partenza,partenza1).
 destinazione(destinazione,destinazione1).
-angolo(angolo,angolo1).
+angolo(angolo,90).
 collega(incrocio1,strada,incrocio2).
-coordinata(strada33,x,y).
+coordinata(strada33,0,0).
 /* prima(macchina1,macchina2). */
 prossima_strada(macchina4,strada6).
 strada_corrente(macchina5,strada7).
-lunghezza(lunghezza1,lunghezza2).
-velocitamax(strada3,numero1).
+lunghezza(lunghezza1,1).
+velocitamax(strada3,1).
 semaforo(strada5).
 stop(strada4).
 temporosso(strada5,9).
@@ -49,7 +49,7 @@ incrocio(incrocio3).
 incrocio(C):- collega(C,_D,_E).
 incrocio(E):- collega(_C,_D,E).
 
-macchina(macchina).
+macchina(macchinas).
 
 macchina(K):- strada_corrente(K,_L).
 macchina(S):- velocita(S,_E,_L).
