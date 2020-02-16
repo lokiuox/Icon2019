@@ -27,9 +27,7 @@ public class MapView extends JPanel implements ActionListener {
     }
 
     public MapView(Scenario s) {
-        scenario = s;
-        ScenarioUtility.setScenario(scenario);
-        timer.start();
+        this.setScenario(s);
     }
 
     public void setControls(String id, MapControls c) {
@@ -41,6 +39,12 @@ public class MapView extends JPanel implements ActionListener {
     }
 
     public Scenario getScenario() { return scenario; }
+
+    public void setScenario(Scenario s) {
+        scenario = s;
+        ScenarioUtility.setScenario(s);
+        timer.restart();
+    }
 
     private void doDrawing(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;

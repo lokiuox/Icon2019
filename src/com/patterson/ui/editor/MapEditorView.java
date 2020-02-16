@@ -22,29 +22,42 @@ class MapEditorView extends MapView {
     Highlighter highlighter = new Highlighter();
 
     MapEditorView() {
-        scenario = new Scenario();
+        super();
         init();
+        initUI();
     }
 
     MapEditorView(String json) {
-        scenario = new Scenario(json);
+        super(json);
         init();
+        initUI();
+    }
+
+    MapEditorView(Scenario s) {
+        super(s);
+        init();
+        initUI();
     }
 
     private void init() {
-        initUI();
         roads = scenario.getRoadMap();
         intersections = scenario.getIntersectionMap();
         matrix = new MapMatrix(this);
+    }
+
+    @Override
+    public void setScenario(Scenario s) {
+        super.setScenario(s);
+        init();
+    }
+
+    private void initUI() {
+        setFocusable(true);
         modes.put("RoadDesign", new RoadDesignMode(this));
         modes.put("TileSelect", new InfoMode(this));
         modes.put("IntersectionDesign", new IntersectionDesignMode(this));
         modes.put("InfoMode", new InfoMode(this));
         this.activateMode("RoadDesign");
-    }
-
-    private void initUI() {
-        setFocusable(true);
     }
 
     void activateMode(String id) {

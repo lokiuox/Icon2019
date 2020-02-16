@@ -15,16 +15,18 @@ public class Scenario {
     private List<Car> cars = new LinkedList<>();
     //private String kb_path = "resources/KB.pl";
     private String kb_path = "resources/KB.pl"; //solo per test
-    private float IEdistance = 48;
+    private String json_path = null;
+    private static float IEdistance = 48;
 
     public Scenario() {
         init();
     }
 
-    public Scenario(String json_file) {
+    public Scenario(String json) {
         init();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(json_file));
+            json_path = json;
+            BufferedReader reader = new BufferedReader(new FileReader(json));
 
             //Getting base contents
             JSONTokener jsonTokener = new JSONTokener(reader);
@@ -45,14 +47,28 @@ public class Scenario {
             //Creating entities
             for (int i = 0; i < ja_intersections.length(); i++) {
                 JSONObject obj = ja_intersections.getJSONObject(i);
-                Intersection intersection = new Intersection(obj);
+                String intersectionType = obj.getString("type");
+                Intersection intersection;
+                if (intersectionType.equals("IntersectionTF")) {
+                    intersection = new IntersectionTF(obj);
+                } else {
+                    intersection = new Intersection(obj);
+                }
                 intersections.put(obj.getString("id"), intersection);
                 this.addIntersection(intersection);
             }
 
             for (int i = 0; i < ja_roads.length(); i++) {
                 JSONObject obj = ja_roads.getJSONObject(i);
-                Road r = new Road(obj);
+                String roadType = obj.getString("type");
+                Road r;
+                if (roadType.equals("RoadStop")) {
+                    r = new RoadStop(obj);
+                } else if (roadType.equals("RoadTF")) {
+                    r = new RoadTF(obj);
+                } else {
+                    r = new Road(obj);
+                }
                 String intersection_id = obj.getString("intersection");
                 if (intersection_id!=null && !intersection_id.equals("null")) {
                     Intersection intersection = intersections.get(intersection_id);
@@ -101,6 +117,10 @@ public class Scenario {
     public String getName() {
         return this.name;
     }
+
+    public String getJSONPath() { return json_path; }
+
+    public String getKBPath() { return kb_path; }
 
     public void setKB(String s) {
         if (s != null && !s.equals("null"))
