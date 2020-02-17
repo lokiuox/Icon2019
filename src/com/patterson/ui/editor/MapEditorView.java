@@ -166,7 +166,9 @@ class MapEditorView extends MapView {
         } else {
             new_intersection = new IntersectionTF(i.getID(), i.getPosition().x, i.getPosition().y, i.getSize().width, i.getSize().height);
         }
-        new_intersection.getRoads().addAll(i.getRoads());
+        for (Road r: i.getRoads()) {
+            r.setIntersection(new_intersection);
+        }
         removeIntersection(i);
         addIntersection(new_intersection);
     }
@@ -228,6 +230,9 @@ class MapEditorView extends MapView {
         if (existingIntersection == null) {
             //No existing intersection is nearby, we have to create a new one
             Intersection i;
+            List<Road> incoming_roads = getRoadsIncomingOnTile(x, y);
+            for (Road r: getRoadsIncomingOnTile(x, y))
+                hasTrafficLights |= r.getType().equals("RoadTF");
             if (hasTrafficLights) {
                 i = new IntersectionTF(Intersection.nextID(), x*32, y*32, 32, 32);
             } else {
@@ -248,6 +253,7 @@ class MapEditorView extends MapView {
         int h = i.getSize().height / 32;
         if (!matrix.get(pos.x, pos.y).isEmpty())
             return;
+        boolean hasTrafficLights = i.getType().equals("IntersectionTF");
         if (w == 1 && h == 1) {
             if (pos.x == x && pos.y == y+1) {
                 i.setSize(new Dimension(w*32, (h+1)*32));
@@ -264,8 +270,10 @@ class MapEditorView extends MapView {
                 return;
             }
             matrix.set(pos.x, pos.y, matrix.new Tile(i));
-            for (Road r: getRoadsIncomingOnTile(pos.x, pos.y))
+            for (Road r: getRoadsIncomingOnTile(pos.x, pos.y)) {
                 r.setIntersection(i);
+                hasTrafficLights |= r.getType().equals("RoadTF");
+            }
         } else if (w == 2 && h == 1) {
             if (!matrix.get(x, pos.y).isEmpty() || !matrix.get(x+1, pos.y).isEmpty())
                 return;
@@ -279,11 +287,15 @@ class MapEditorView extends MapView {
                 return;
             }
             matrix.set(x, pos.y, matrix.new Tile(i));
-            for (Road r: getRoadsIncomingOnTile(x, pos.y))
+            for (Road r: getRoadsIncomingOnTile(x, pos.y)) {
                 r.setIntersection(i);
+                hasTrafficLights |= r.getType().equals("RoadTF");
+            }
             matrix.set(x+1, pos.y, matrix.new Tile(i));
-            for (Road r: getRoadsIncomingOnTile(x+1, pos.y))
+            for (Road r: getRoadsIncomingOnTile(x+1, pos.y)) {
                 r.setIntersection(i);
+                hasTrafficLights |= r.getType().equals("RoadTF");
+            }
         } else if (w == 1 && h == 2) {
             if (!matrix.get(pos.x, y).isEmpty() || !matrix.get(pos.x, y+1).isEmpty())
                 return;
@@ -297,13 +309,21 @@ class MapEditorView extends MapView {
                 return;
             }
             matrix.set(pos.x, y, matrix.new Tile(i));
-            for (Road r: getRoadsIncomingOnTile(pos.x, y))
+            for (Road r: getRoadsIncomingOnTile(pos.x, y)) {
                 r.setIntersection(i);
+                hasTrafficLights |= r.getType().equals("RoadTF");
+            }
             matrix.set(pos.x, y+1, matrix.new Tile(i));
-            for (Road r: getRoadsIncomingOnTile(pos.x, y+1))
+            for (Road r: getRoadsIncomingOnTile(pos.x, y+1)) {
                 r.setIntersection(i);
+                hasTrafficLights |= r.getType().equals("RoadTF");
+            }
         } else {
             System.err.println("This intersection is not expandable");
+            return;
+        }
+        if (hasTrafficLights && !i.getType().equals("IntersectionTF")) {
+            this.changeIntersecionType(i);
         }
     }
 
@@ -315,6 +335,8 @@ class MapEditorView extends MapView {
         int next_y = y + Math.min(0, r.getDirection().sin());
         MapMatrix.Tile nextTile = matrix.get(next_x, next_y);
         if (nextTile.isIntersection()) {
+            if (r.getType().equals("RoadTF") && !nextTile.intersection.getType().equals("IntersectionRF"))
+                this.changeIntersecionType(nextTile.intersection);
             r.setIntersection(nextTile.intersection);
         }
     }
