@@ -7,10 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.ImageIcon;
-import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.List;
 
 public class Car implements IEntity {
 
@@ -83,6 +83,9 @@ public class Car implements IEntity {
 
         g.drawLine((int) (position.getX() + (brakeSpace()+24)*direction.cos()), (int) (position.getY() + (brakeSpace()+16)*direction.sin()), (int) position.getX()+24*direction.cos(), (int) position.getY()+16*direction.sin());
         */
+        // debug
+        g.setColor(Color.WHITE);
+        g.drawString(getID(), (int) position.getX(), (int) position.getY());
     }
 
     public String getID() {

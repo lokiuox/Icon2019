@@ -20,7 +20,7 @@ public class Road implements IEntity {
     protected int maxSpeed = 8;
 
     protected List<Image> img = new ArrayList<>();
-    private List<Car> cars = new LinkedList<>();
+    private Set<Car> cars = new HashSet<>();
     private Intersection intersection = null;
 
     public Road(String id, int x, int y, int d, int l) {
@@ -82,7 +82,7 @@ public class Road implements IEntity {
         return new Point(position.x+length*direction.cos(),position.y+length*direction.sin());
     }
 
-    public List<Car> getCars() {
+    public Set<Car> getCars() {
         return cars;
     }
 
@@ -146,5 +146,18 @@ public class Road implements IEntity {
     public String toJSON() {
         JSONObject json_object = this.toJSONObject();
         return json_object.toString();
+    }
+
+    public Car firstCar() {
+        Car current = cars.iterator().next();
+
+        for (Car c : cars) {
+            if (direction.isHorizontal() && c.getPosition().getX()*direction.cos()>current.getPosition().getX()*direction.cos())
+                current = c;
+            if (direction.isVertical() && c.getPosition().getY()*direction.sin()>current.getPosition().getY()*direction.sin())
+                current = c;
+        }
+
+        return current;
     }
 }
