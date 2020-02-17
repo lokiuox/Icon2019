@@ -26,7 +26,7 @@ public class MapWindow extends JFrame {
         setTitle("Traffic2D: " + mapView.getSceneName());
         //setSize(600,500);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         init();
     }
 
