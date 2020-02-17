@@ -107,4 +107,10 @@ public class KnowledgeBase {
         q.hasSolution();
         q.close();
     }
+
+    public void print() {
+        for (String s : assertions) {
+            System.out.println(s);
+        }
+    }
 }

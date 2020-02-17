@@ -22,4 +22,10 @@ public class Packet extends KnowledgeBase {
     public boolean isValid() {
         return ttl > 0;
     }
+
+    @Override
+    public void print() {
+        super.print();
+        System.out.println("TTL: "+ ttl);
+    }
 }

@@ -17,13 +17,14 @@ public class CarIE extends Car {
 
     public CarIE(String id, float x, float y, int d) {
         super(id, x, y, d);
+        navigator = new NavigatorAStarIF();
     }
 
     public CarIE(JSONObject jo_car) {super(jo_car);}
 
     @Override
     public String getType() { return "CarIE"; }
-
+/*
     @Override
     protected void roadEnd() {
 
@@ -36,7 +37,7 @@ public class CarIE extends Car {
 
         super.roadEnd();
     }
-
+*/
     @Override
     protected void calculatePath() {
         kb.assertToKB();
@@ -71,6 +72,10 @@ public class CarIE extends Car {
 
             c.getKB().addPackets(kb);   // invia tutti i paccketti nella KB
         }
+
+        System.out.println(getID() + "KB: ");
+        kb.print();
+        System.out.println("");
     }
 
     public KnowledgeBaseIF getKB() {

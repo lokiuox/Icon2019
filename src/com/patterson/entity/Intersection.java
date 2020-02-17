@@ -84,7 +84,7 @@ public class Intersection implements IEntity {
 
     public void giveRightToPass() {
 
-        System.out.println("Contest triggered");
+        //System.out.println("Contest triggered");
 
         String assertion;
         Set<Car> contenders = new HashSet<>();  // cars needing the right of way
@@ -104,12 +104,12 @@ public class Intersection implements IEntity {
         // define facts about contenders
         for (Car c: contenders) {
             assertion = "strada_corrente(" + c.getID() + "," + c.getCurrentRoad().getID() + ")";
-            System.out.println(assertion);
+            //System.out.println(assertion);
             kb.addAssertion(assertion);
             if (c.getNextRoad()!=null)
                 assertion = "prossima_strada(" + c.getID() + "," + c.getNextRoad().getID() + ")";
             kb.addAssertion(assertion);
-            System.out.println(assertion);
+            //System.out.println(assertion);
         }
 
         // add contenders facts to KB
@@ -118,7 +118,7 @@ public class Intersection implements IEntity {
         // give the right of way to the right car
         for (Car c: contenders) {
             boolean right = kb.boolQuery("precedenza("+c.getID()+").");
-            System.out.println( "precedenza("+c.getID()+"): "  + right );
+            //System.out.println( "precedenza("+c.getID()+"): "  + right );
             if (right)
                 c.setRightToPass();
         }

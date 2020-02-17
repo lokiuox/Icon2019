@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class MapView extends JPanel implements ActionListener {
 
-    protected Timer timer = new Timer(30, this);
+    protected Timer timer = new Timer(20, this);
     protected int counter = 0;
     protected Map<String, MapControls> windowControls = new HashMap<>();
 

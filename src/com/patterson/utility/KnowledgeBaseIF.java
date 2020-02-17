@@ -39,10 +39,20 @@ public class KnowledgeBaseIF extends KnowledgeBase {
     public void tick() {
         countTick++;
 
-        for (Packet p: packetSet) {
+        HashSet<Packet> tSet = new HashSet<>(packetSet);
+
+        for (Packet p: tSet) {
             p.tick();
             if (!p.isValid())
                 packetSet.remove(p);
+        }
+    }
+
+    @Override
+    public void print() {
+        super.print();
+        for (Packet p: packetSet) {
+            p.print();
         }
     }
 }

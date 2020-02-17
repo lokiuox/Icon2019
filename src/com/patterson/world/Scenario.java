@@ -197,7 +197,7 @@ public class Scenario {
         for (Car c : cars.values())
             if (c instanceof CarIE)
                 for (Car d : cars.values())
-                    if (d instanceof CarIE && c.getPosition().distance(d.getPosition())<IEdistance)
+                    if (d instanceof CarIE && c.getPosition().distance(d.getPosition())<IEdistance && c!=d)
                         ((CarIE) c).sendInformation((CarIE) d);
     }
 
