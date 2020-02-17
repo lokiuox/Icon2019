@@ -175,7 +175,12 @@ precedenza(A,B) :-
 	angolo(Rn, An),
 	angolo(Ra, Aa),
 	angolo(Rb, Ab),
-	(-1 is -(Aa,Ab) ; 1 is -(An,Ab)).
+	(1 is -(Aa,An) -> fail; 
+	( (0 is -(Aa,An), -1 is -(An,Ab)) -> true; 
+	(-1 is -(Aa,An),(0 is -(An,Ab) ; -1 is -(An,Ab))) -> true ;
+	((-2 is -(Aa,An),
+	(1 is -(An,Ab) ; 0 is -(An,Ab) ; -1 is -(An,Ab))) -> true ;
+	fail))).
 ```
 Calcolo del percorso minimo
 Il calcolo del percorso minimo viene effettuato innanzitutto realizzando un predicato in grado di garantire la costruzione di un percorso sotto forma di lista
