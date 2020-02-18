@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class CarIE extends Car {
 
@@ -18,27 +19,16 @@ public class CarIE extends Car {
 
     public CarIE(String id, float x, float y, int d) {
         super(id, x, y, d);
+        navigator = new NavigatorProlog();
+    }
+
+    public CarIE(JSONObject jo_car) {
+        super(jo_car);
         navigator = new NavigatorAStarIF();
     }
 
-    public CarIE(JSONObject jo_car) {super(jo_car);}
-
     @Override
     public String getType() { return "CarIE"; }
-/*
-    @Override
-    protected void roadEnd() {
-
-        // recalculate path before each intersection
-        if (path.peek() != null && navigator != null && !isNearCar() && greenTF() && rightToPass && !passing) {
-            destination = randomDestination();
-            calculatePath();
-            rightToPass = false;
-        }
-
-        super.roadEnd();
-    }
-*/
 
     @Override
     protected void loadImage() {
@@ -51,7 +41,8 @@ public class CarIE extends Car {
     @Override
     protected void calculatePath() {
         kb.assertToKB();
-        super.calculatePath();
+        //super.calculatePath();
+        setPath(navigator.calculatePath(road.getID(), destination));
         kb.retractFromKB();
     }
 
@@ -80,12 +71,13 @@ public class CarIE extends Car {
         if (!lastSent.containsKey(c) || (lastSent.containsKey(c) && countTick-lastSent.get(c)>minSendTime)) {
             lastSent.put(c,countTick);
 
-            c.getKB().addPackets(kb);   // invia tutti i paccketti nella KB
-        }
+            c.getKB().addPackets(kb.getPacketSet());   // invia tutti i paccketti nella KB
 
-        //System.out.println(getID() + "KB: ");
-        //kb.print();
-        //System.out.println("");
+            // stampa contenuto kb
+            System.out.println(getID() + " KB: ");
+            kb.print();
+            System.out.println();
+        }
     }
 
     public KnowledgeBaseIF getKB() {

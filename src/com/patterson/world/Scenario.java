@@ -3,6 +3,7 @@ package com.patterson.world;
 import com.patterson.entity.*;
 import com.patterson.utility.KnowledgeBase;
 
+import com.patterson.utility.Packet;
 import org.json.*;
 import java.awt.Graphics2D;
 import java.io.*;
@@ -195,6 +196,17 @@ public class Scenario {
                         ((CarIE) c).sendInformation((CarIE) d);
     }
 
+    private void updateTTL() {
+        Set<Packet> packets = new HashSet<>();
+        for (Car c : cars.values()) {
+            if (c instanceof CarIE)
+                packets.addAll(((CarIE) c).getKB().getPacketSet());
+        }
+        for (Packet p: packets) {
+            p.tick();
+        }
+    }
+
     public void toJSON(Writer writer) {
         JSONObject scenario = new JSONObject();
         scenario.put("name", name);
@@ -244,6 +256,7 @@ public class Scenario {
     }
 
     public void tick() {
+        updateTTL();
         exchangeInformation();
         for (Car c : cars.values()) c.tick();
         for (Intersection i : intersections.values())

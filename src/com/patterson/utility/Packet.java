@@ -25,7 +25,7 @@ public class Packet extends KnowledgeBase {
 
     @Override
     public void print() {
-        super.print();
-        System.out.println("TTL: "+ ttl);
+        for (String s : assertions)
+            System.out.println("packet: "+s+", ttl: "+ttl);
     }
 }
