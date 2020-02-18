@@ -80,7 +80,6 @@ lunghezza(lunghezza1,lunghezza2).
 velocitamax(strada3,numero1).
 semaforo(strada5).
 stop(strada4).
-temporosso(strada5,9).
 velocita(macchina3,velocitas,stradas).
 strada(strada6).
 incrocio(incrocio3).
@@ -132,7 +131,7 @@ Il predicato velocitamedia calcola la media aritmetica delle velocita delle macc
 peso(L,X):- 
 	lunghezza(L,K),
 	contamacchine(L,N), 
-	(semaforo(L) -> temporosso(L,J); J is 0),
+	(semaforo(L) -> J is 5; J is 0),
 	(N is 0 -> D is 1,W is 0 ; velocitamedia(L,D), W is 1),
 	(stop(L) -> Costante is 3 ; Costante is 0),
 	velocitamax(L,F),
@@ -157,6 +156,7 @@ Il programma di simulazione,nel dover gestire un incrocio dunque domanderà alla
 precedenza(A) :- \+(precedenza(A,_B)),strada_corrente(A,L),\+(rosso(L)).
 ```
 Per determinare se la macchina A debba dare precedenza alla macchina B occorrerà dunque considerare la prossima strada di A e la strada corrente di entrambe,così da poterne confrontare gli angoli associati per determinare quella che nella figura è la destra,evidenziata in giallo, della macchina A.
+
 Ulteriori controlli sono necessari nel caso in cui la strada dI B abbia un semaforo rosso o ci sia uno stop poichè in quel caso A non deve dare precedenza.
 Infine è necessario verificare se A stesso si trovi ad uno stop o ad un semaforo rosso per determinare,a seconda dello stato di B, se occorre dare precedenza o meno.
 ```
