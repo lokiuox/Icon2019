@@ -1,4 +1,4 @@
-package com.patterson.ui.editor;
+package com.patterson.ui;
 
 import com.patterson.ui.MapView;
 
