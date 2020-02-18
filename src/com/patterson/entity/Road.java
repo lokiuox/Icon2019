@@ -67,7 +67,7 @@ public class Road implements IEntity {
     }
 
     public Point getPosition() {
-        return position;
+        return new Point(position);
     }
 
     public Angle getDirection() {

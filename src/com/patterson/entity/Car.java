@@ -63,6 +63,8 @@ public class Car implements IEntity {
 
     public String getType() { return "Car"; }
 
+    public Angle getDirection() { return direction; }
+
     protected void loadImage() {
         img[0] = new ImageIcon("resources/car/car0_green.png").getImage();
         img[1] = new ImageIcon("resources/car/car1_green.png").getImage();
