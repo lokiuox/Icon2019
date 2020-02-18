@@ -127,7 +127,7 @@ public class CarPathPlugin implements IMapPlugin {
         }
 
         g.setColor(Color.RED);
-        g.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.drawPolyline(x_points.stream().mapToInt(i->i).toArray(), y_points.stream().mapToInt(i->i).toArray(), x_points.size());
         drawMapMarker(g);
     }
@@ -191,11 +191,11 @@ public class CarPathPlugin implements IMapPlugin {
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
-                case KeyEvent.VK_LEFT:
+                case KeyEvent.VK_UP:
                     int index = (selectedCarIndex == 0 ? cars.size()-1 : --selectedCarIndex);
                     selectedCar = cars.get(index);
                     break;
-                case KeyEvent.VK_RIGHT:
+                case KeyEvent.VK_DOWN:
                     selectedCarIndex = (selectedCarIndex+1) % cars.size();
                     selectedCar = cars.get(selectedCarIndex);
                     break;
