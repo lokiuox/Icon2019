@@ -79,16 +79,16 @@ public class Car implements IEntity {
             g.drawImage(img[direction.getAngle()], (int) position.getX() - 16, (int) position.getY() - 16, null);
         }
 
-        // debug
         /*
+        // debug
         g.setPaint(Color.blue);
         g.drawLine((int) position.getX(), (int) position.getY(), (int) position.getX(), (int) position.getY());
-
         g.drawLine((int) (position.getX() + (brakeSpace()+24)*direction.cos()), (int) (position.getY() + (brakeSpace()+16)*direction.sin()), (int) position.getX()+24*direction.cos(), (int) position.getY()+16*direction.sin());
-        */
+
         // debug
         g.setColor(Color.WHITE);
         g.drawString(getID(), (int) position.getX(), (int) position.getY());
+         */
     }
 
     public String getID() {

@@ -111,9 +111,11 @@ public class Road implements IEntity {
             }
         }
 
+        /*
         // debug
         g.setColor(Color.WHITE);
         g.drawString(getID(), position.x, position.y);
+         */
 }
 
     protected void loadImage() {

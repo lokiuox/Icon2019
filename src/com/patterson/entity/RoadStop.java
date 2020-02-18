@@ -64,8 +64,10 @@ public class RoadStop extends Road {
                 break;
         }
 
+        /*
         // debug
         g.setColor(Color.WHITE);
         g.drawString(getID(), position.x, position.y);
+         */
     }
 }
