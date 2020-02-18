@@ -2,7 +2,7 @@
 
 ## Repository: [Icon2019](https://github.com/lokiuox/Icon2019)
 
-### Gruppo: Saracino, Nanna, Quatraro, Sisco  
+### Gruppo: Giuseppe Nanna, Flavio Quatraro, Arcangelo Saracino, Savino Sisco  
 
 ![](demo.gif)
 
