@@ -13,7 +13,6 @@ import java.util.List;
 
 public class MainMenu extends JFrame {
     private static MainMenu menu;
-    private FrameClosingInterceptor frameCloseInterceptor = new FrameClosingInterceptor();
     private JPanel main;
     MainMenu() {
         menu = this;
@@ -61,7 +60,6 @@ public class MainMenu extends JFrame {
         start_simulation.addActionListener(e -> {
             String json_path = "resources/scenari/" + (String) scenari_selector.getSelectedItem() + "/scenario.json";
             MapWindow m = new MapWindow(json_path);
-            m.addWindowListener(frameCloseInterceptor);
             m.setVisible(true);
             this.setVisible(false);
         });
@@ -69,14 +67,12 @@ public class MainMenu extends JFrame {
         start_editor.addActionListener(e -> {
             String json_path = "resources/scenari/" + (String) scenari_selector.getSelectedItem() + "/scenario.json";
             MapWindow m = new EditorWindow(json_path);
-            m.addWindowListener(frameCloseInterceptor);
             m.setVisible(true);
             this.setVisible(false);
         });
 
         new_scenario.addActionListener(e -> {
             MapWindow m = new EditorWindow();
-            m.addWindowListener(frameCloseInterceptor);
             m.setVisible(true);
             this.setVisible(false);
         });
@@ -99,14 +95,12 @@ public class MainMenu extends JFrame {
     }
 
     public static void showMenu() {
-        menu.setVisible(true);
+        if (menu != null)
+            menu.setVisible(true);
     }
 
-    private class FrameClosingInterceptor extends WindowAdapter {
-        @Override
-        public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-            showMenu();
-        }
+    public static MainMenu getMenu() {
+        return menu;
     }
 
     public static void main(String[] args) {

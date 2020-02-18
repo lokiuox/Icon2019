@@ -12,7 +12,7 @@ public class Scenario {
     private String name = "New Scenario";
     private Map<String, Intersection> intersections = new LinkedHashMap<>();
     private Map<String, Road> roads = new LinkedHashMap<>();
-    private Map<String, Car> cars = new LinkedHashMap();
+    private Map<String, Car> cars = new LinkedHashMap<>();
     //private String kb_path = "resources/KB.pl";
     private String kb_path = "resources/KB.pl"; //solo per test
     private String json_path = null;
@@ -249,5 +249,11 @@ public class Scenario {
         for (Intersection i : intersections.values())
             if (i instanceof IntersectionTF)
                 ((IntersectionTF) i).tick();
+    }
+
+    public void destroy() {
+        this.intersections.clear();
+        this.roads.clear();
+        this.cars.clear();
     }
 }
