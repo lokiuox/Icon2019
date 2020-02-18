@@ -16,10 +16,10 @@ public class AppMain{
     }
 
     private void initUI() {
-        //MapWindow w = new EditorWindow("resources/scenari/demo/scenario.json");
+        MapWindow w = new EditorWindow("resources/scenari/partial/scenario.json");
         //MapWindow w = new EditorWindow();
         //MapWindow w = new MapWindow(DemoScenario.getScenario());
-        MapWindow w = new MapWindow("resources/scenari/partial/scenario.json");
+        //MapWindow w = new MapWindow("resources/scenari/partial/scenario.json");
         w.setVisible(true);
     }
 

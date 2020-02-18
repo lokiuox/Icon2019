@@ -85,12 +85,6 @@ public class Scenario {
                     case "Car":
                         car = new Car(obj);
                         break;
-                    case "CarGreen":
-                        car = new Car_green(obj);
-                        break;
-                    case "CarRed":
-                        car = new Car_red(obj);
-                        break;
                     case "CarIE":
                         car = new CarIE(obj);
                         break;
@@ -137,7 +131,7 @@ public class Scenario {
     }
 
     public List<Road> getRoads() {
-        return new ArrayList<Road>(roads.values());
+        return new ArrayList<>(roads.values());
     }
 
     public Map<String, Road> getRoadMap() {
@@ -164,7 +158,7 @@ public class Scenario {
     }
 
     public List<Intersection> getIntersections() {
-        return new ArrayList<Intersection>(intersections.values());
+        return new ArrayList<>(intersections.values());
     }
 
     public Scenario addIntersection(Intersection i) {

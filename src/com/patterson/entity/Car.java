@@ -64,10 +64,10 @@ public class Car implements IEntity {
     public String getType() { return "Car"; }
 
     protected void loadImage() {
-        img[0] = new ImageIcon("resources/car/car0_grey.png").getImage();
-        img[1] = new ImageIcon("resources/car/car1_grey.png").getImage();
-        img[2] = new ImageIcon("resources/car/car2_grey.png").getImage();
-        img[3] = new ImageIcon("resources/car/car3_grey.png").getImage();
+        img[0] = new ImageIcon("resources/car/car0_green.png").getImage();
+        img[1] = new ImageIcon("resources/car/car1_green.png").getImage();
+        img[2] = new ImageIcon("resources/car/car2_green.png").getImage();
+        img[3] = new ImageIcon("resources/car/car3_green.png").getImage();
     }
 
     public void draw(Graphics2D g) {
@@ -394,7 +394,7 @@ public class Car implements IEntity {
         car.put("direction", direction.getAngle());
         car.put("type", getType());
         JSONArray ja_path = new JSONArray();
-        for (Road r: new ArrayList<Road>(path))
+        for (Road r: new ArrayList<>(path))
             ja_path.put(r.getID());
         car.put("path", ja_path);
         return car;
