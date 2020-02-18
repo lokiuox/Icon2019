@@ -10,12 +10,13 @@ import java.util.List;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Map;
 
 
 public class CarPathPlugin implements IMapPlugin {
     private static Image marker_img = new ImageIcon("resources/car/marker.png").getImage();
     private MapView map;
-    List<Car> cars;
+    Map<String, Car> cars;
     private Car selectedCar = null;
     private int selectedCarIndex = 0;
     private PressAdapter pa = new PressAdapter();
@@ -33,7 +34,7 @@ public class CarPathPlugin implements IMapPlugin {
 
     @Override
     public void init() {
-        cars = map.getScenario().getCars();
+        cars = map.getScenario().getCarsMap();
     }
 
     @Override
@@ -193,11 +194,11 @@ public class CarPathPlugin implements IMapPlugin {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:
                     int index = (selectedCarIndex == 0 ? cars.size()-1 : --selectedCarIndex);
-                    selectedCar = cars.get(index);
+                    selectedCar = new LinkedList<>(cars.values()).get(index);
                     break;
                 case KeyEvent.VK_DOWN:
                     selectedCarIndex = (selectedCarIndex+1) % cars.size();
-                    selectedCar = cars.get(selectedCarIndex);
+                    selectedCar = new LinkedList<>(cars.values()).get(selectedCarIndex);
                     break;
                 case KeyEvent.VK_D:
                     selectedCar = null;
