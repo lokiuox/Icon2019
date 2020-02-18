@@ -157,6 +157,8 @@ precedenza(A) :- \+(precedenza(A,_B)),strada_corrente(A,L),\+(rosso(L)).
 ```
 Per determinare se la macchina A debba dare precedenza alla macchina B occorrerà dunque considerare la prossima strada di A e la strada corrente di entrambe,così da poterne confrontare gli angoli associati per determinare quella che nella figura è la destra,evidenziata in giallo, della macchina A.
 
+![](docs/incrocio.png)
+
 Ulteriori controlli sono necessari nel caso in cui la strada dI B abbia un semaforo rosso o ci sia uno stop poichè in quel caso A non deve dare precedenza.
 Infine è necessario verificare se A stesso si trovi ad uno stop o ad un semaforo rosso per determinare,a seconda dello stato di B, se occorre dare precedenza o meno.
 ```
