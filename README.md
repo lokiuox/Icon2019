@@ -106,7 +106,6 @@ macchina(S):- velocita(S,_E,_L).
 ```
 
 Definizione delle conseguenze logiche di ogni predicato,ovvero viene specificato per ogni argomento quale predicato ne consegue.
-Le parti commentate fungono da eventuali miglioramenti futuri.
 
 ```
 somma([],0).
