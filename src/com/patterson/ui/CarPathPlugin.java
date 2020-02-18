@@ -199,11 +199,8 @@ public class CarPathPlugin implements IMapPlugin {
                     selectedCarIndex = (selectedCarIndex+1) % cars.size();
                     selectedCar = cars.get(selectedCarIndex);
                     break;
-                case KeyEvent.VK_SPACE:
-                    map.pause();
-                    break;
-                case KeyEvent.VK_ENTER:
-                    map.resume();
+                case KeyEvent.VK_D:
+                    selectedCar = null;
                     break;
             }
             repaint();
