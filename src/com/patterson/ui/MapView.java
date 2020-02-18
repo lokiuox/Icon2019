@@ -73,4 +73,9 @@ public class MapView extends JPanel implements ActionListener {
         repaint();
         timer.start();
     }
+
+    public void destroy() {
+        timer.stop();
+        scenario.destroy();
+    }
 }

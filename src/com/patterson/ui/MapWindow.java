@@ -2,6 +2,7 @@ package com.patterson.ui;
 
 import com.patterson.world.Scenario;
 
+import java.awt.event.WindowAdapter;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
@@ -26,7 +27,8 @@ public class MapWindow extends JFrame {
         setTitle("Traffic2D: " + mapView.getSceneName());
         //setSize(600,500);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new FrameClosingInterceptor());
         init();
     }
 
@@ -67,6 +69,20 @@ public class MapWindow extends JFrame {
 
     protected void init() {
         //Put your code here
+    }
+
+    private class FrameClosingInterceptor extends WindowAdapter {
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            if (MainMenu.getMenu() == null) {
+                windowEvent.getWindow().dispose();
+                System.exit(0);
+            } else {
+                windowEvent.getWindow().dispose();
+                mapView.getScenario().destroy();
+                MainMenu.showMenu();
+            }
+        }
     }
 
 }
