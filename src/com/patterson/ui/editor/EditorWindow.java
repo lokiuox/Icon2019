@@ -79,7 +79,7 @@ public class EditorWindow extends MapWindow {
 
         info.addActionListener(e -> {
             MapEditorView editor = (MapEditorView) mapView;
-            editor.activateMode("InfoMode");
+            editor.activateMode("InfoPlugin");
         });
 
         reset.addActionListener(e -> reset(play));

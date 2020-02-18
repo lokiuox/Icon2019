@@ -18,8 +18,8 @@ import static com.patterson.ui.editor.MapMatrix.TileType.*;
 
 class MapEditorView extends MapView {
 
-    private Map<String, IEditorMode> modes = new HashMap<>();
-    private IEditorMode currentMode = null;
+    private Map<String, IEditorPlugin> modes = new HashMap<>();
+    private IEditorPlugin currentMode = null;
 
     private Map<String, Road> roads;
     private Map<String, Intersection> intersections;
@@ -60,25 +60,25 @@ class MapEditorView extends MapView {
 
     private void initUI() {
         setFocusable(true);
-        modes.put("RoadDesign", new RoadDesignMode(this));
-        modes.put("TileSelect", new InfoMode(this));
-        modes.put("IntersectionDesign", new IntersectionDesignMode(this));
-        modes.put("CarPlacing", new CarPositioningMode(this));
-        modes.put("InfoMode", new InfoMode(this));
+        modes.put("RoadDesign", new RoadDesignPlugin(this));
+        modes.put("TileSelect", new InfoPlugin(this));
+        modes.put("IntersectionDesign", new IntersectionDesignPlugin(this));
+        modes.put("CarPlacing", new CarPositioningPlugin(this));
+        modes.put("InfoPlugin", new InfoPlugin(this));
         this.activateMode("RoadDesign");
     }
 
     void activateMode(String id) {
-        IEditorMode mode = modes.get(id);
+        IEditorPlugin mode = modes.get(id);
         if (mode == null || mode == currentMode)
             return;
 
         if (currentMode != null) {
-            currentMode.deactivate();
+            currentMode.disable();
             currentMode = null;
         }
         currentMode = mode;
-        currentMode.activate();
+        currentMode.enable();
         this.requestFocus();
     }
 

@@ -4,6 +4,7 @@ import com.patterson.entity.Car;
 import com.patterson.entity.CarIE;
 import com.patterson.entity.Car_green;
 import com.patterson.entity.Car_red;
+import com.patterson.ui.MapView;
 import com.patterson.utility.Angle;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ import java.awt.event.MouseEvent;
 
 import static com.patterson.ui.editor.MapEditorView.toGrid;
 
-public class CarPositioningMode implements IEditorMode {
+public class CarPositioningPlugin implements IEditorPlugin {
     private enum CarType {CAR, CAR_GREEN, CAR_RED, CAR_IE}
     private static CarType[] car_types = CarType.values();
     private MapEditorView editor;
@@ -25,7 +26,7 @@ public class CarPositioningMode implements IEditorMode {
     private CarType selected_car_type = CarType.CAR;
     private Car selectedCar = null;
 
-    CarPositioningMode(MapEditorView m) {
+    CarPositioningPlugin(MapEditorView m) {
         this.editor = m;
         init();
     }
@@ -43,19 +44,24 @@ public class CarPositioningMode implements IEditorMode {
     }
 
     @Override
+    public void setMapView(MapView m) {
+        setEditor((MapEditorView) m);
+    }
+
+    @Override
     public void setEditor(MapEditorView m) {
         this.editor = m;
     }
 
     @Override
-    public void activate() {
+    public void enable() {
         editor.addKeyListener(pa);
         editor.addMouseListener(ma);
         editor.addMouseMotionListener(ma);
     }
 
     @Override
-    public void deactivate() {
+    public void disable() {
         editor.removeKeyListener(pa);
         editor.removeMouseListener(ma);
         editor.removeMouseMotionListener(ma);

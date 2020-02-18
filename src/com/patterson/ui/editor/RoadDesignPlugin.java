@@ -3,6 +3,7 @@ package com.patterson.ui.editor;
 import com.patterson.entity.Road;
 import com.patterson.entity.RoadStop;
 import com.patterson.entity.RoadTF;
+import com.patterson.ui.MapView;
 import com.patterson.utility.Angle;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ import java.awt.image.BufferedImage;
 
 import static com.patterson.ui.editor.MapEditorView.toGrid;
 
-public class RoadDesignMode implements IEditorMode {
+public class RoadDesignPlugin implements IEditorPlugin {
     private enum RoadType { ROAD, ROAD_STOP, ROAD_TF }
     private static RoadType[] road_types = RoadType.values();
     private RoadType selected_road_type = RoadType.ROAD;
@@ -27,7 +28,7 @@ public class RoadDesignMode implements IEditorMode {
     private PressAdapter pa = new PressAdapter();
     private Road selectedRoad = null;
 
-    RoadDesignMode(MapEditorView m) {
+    RoadDesignPlugin(MapEditorView m) {
         this.editor = m;
         init();
     }
@@ -48,12 +49,17 @@ public class RoadDesignMode implements IEditorMode {
     }
 
     @Override
+    public void setMapView(MapView m) {
+        setEditor((MapEditorView) m);
+    }
+
+    @Override
     public void setEditor(MapEditorView m) {
         this.editor = m;
     }
 
     @Override
-    public void activate() {
+    public void enable() {
         editor.addKeyListener(pa);
         editor.addMouseListener(ma);
         editor.addMouseMotionListener(ma);
@@ -64,7 +70,7 @@ public class RoadDesignMode implements IEditorMode {
     }
 
     @Override
-    public void deactivate() {
+    public void disable() {
         editor.removeKeyListener(pa);
         editor.removeMouseListener(ma);
         editor.removeMouseMotionListener(ma);

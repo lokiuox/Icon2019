@@ -2,6 +2,7 @@ package com.patterson.ui.editor;
 
 import com.patterson.entity.Intersection;
 import com.patterson.entity.Road;
+import com.patterson.ui.MapView;
 import com.patterson.utility.Angle;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ import java.awt.event.MouseEvent;
 
 import static com.patterson.ui.editor.MapEditorView.toGrid;
 
-public class IntersectionDesignMode implements IEditorMode {
+public class IntersectionDesignPlugin implements IEditorPlugin {
     private boolean createWithTrafficLights = false;
     private MapEditorView editor;
     private Pointer pointer = new Pointer(-16,-16);
@@ -22,7 +23,7 @@ public class IntersectionDesignMode implements IEditorMode {
     private PressAdapter pa = new PressAdapter();
     private Intersection selectedIntersection = null;
 
-    IntersectionDesignMode(MapEditorView m) {
+    IntersectionDesignPlugin(MapEditorView m) {
         this.editor = m;
         init();
     }
@@ -42,19 +43,24 @@ public class IntersectionDesignMode implements IEditorMode {
     }
 
     @Override
+    public void setMapView(MapView m) {
+        setEditor((MapEditorView) m);
+    }
+
+    @Override
     public void setEditor(MapEditorView m) {
         this.editor = m;
     }
 
     @Override
-    public void activate() {
+    public void enable() {
         editor.addKeyListener(pa);
         editor.addMouseListener(ma);
         editor.addMouseMotionListener(ma);
     }
 
     @Override
-    public void deactivate() {
+    public void disable() {
         editor.removeKeyListener(pa);
         editor.removeMouseListener(ma);
         editor.removeMouseMotionListener(ma);

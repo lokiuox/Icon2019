@@ -4,10 +4,10 @@ import com.patterson.ui.MapView;
 
 import java.awt.*;
 
-public interface IEditorMode {
+public interface IMapPlugin {
     void init();
     void draw(Graphics2D g2d);
-    void setEditor(MapEditorView m);
-    void activate();
-    void deactivate();
+    void setMapView(MapView m);
+    void enable();
+    void disable();
 }
