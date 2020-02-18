@@ -5,7 +5,6 @@ import com.patterson.utility.KnowledgeBase;
 import com.patterson.utility.ScenarioUtility;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import sun.plugin.javascript.navig4.Link;
 
 import javax.swing.ImageIcon;
 import java.awt.*;
@@ -16,11 +15,13 @@ import java.util.List;
 public class Car implements IEntity {
 
     private static int counter = 0;
-
     private String ID;
     private Point2D position = new Point2D.Float(0, 0);
     private Angle direction;
     protected float speed;
+    protected int elapsed = 0;
+    protected int completed_destinations = 0;
+    protected float elapsed_average = 0;
     //private final float maxSpeed = 8;
     private final float acceleration = 0.35f;
     protected INavigator navigator = new NavigatorAStar();
@@ -129,6 +130,7 @@ public class Car implements IEntity {
 
     // do stuff during the next frame
     public void tick() {
+        elapsed++;
 
         // stop if there is no road to follow
         if (road == null) {
@@ -178,6 +180,9 @@ public class Car implements IEntity {
                 calculatePath();
                 i++;
             } while (isUTurnPath() && i<10);
+            completed_destinations++;
+            elapsed_average = elapsed_average + (elapsed-elapsed_average)/completed_destinations;
+            elapsed = 0;
         }
 
         // check right of way
@@ -191,6 +196,10 @@ public class Car implements IEntity {
                 road.getIntersection().giveRightToPass();
             }
         }
+    }
+
+    public float getAverageTime() {
+        return elapsed_average;
     }
 
     private void setRoad(Road r) {
