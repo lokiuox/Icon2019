@@ -51,7 +51,7 @@ somma([X|Y],D):- somma(Y,G),velocita(X,F,_L),D is F + G.
 peso(L,X):-
 	lunghezza(L,K),
 	contamacchine(L,N),
-	(semaforo(L) -> temporosso(L,J); J is 0),
+	(semaforo(L) -> J is 2.5*30; J is 0),
 	(N is 0 -> D is 1,W is 0 ; velocitamedia(L,D), W is 1),
 	(stop(L) -> Costante is 3 ; Costante is 0),
 	velocitamax(L,F),
