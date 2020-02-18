@@ -19,7 +19,7 @@ import java.util.Set;
  */
 public class AStarGraph<T extends Comparable<T>>  {
 
-    final int VMAX = 30;
+    final int VMAX = 10;
 
     public AStarGraph() { }
 

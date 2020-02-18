@@ -2,8 +2,7 @@ package com.patterson.ui.editor;
 
 import com.patterson.entity.Car;
 import com.patterson.entity.CarIE;
-import com.patterson.entity.Car_green;
-import com.patterson.entity.Car_red;
+
 import com.patterson.ui.MapView;
 import com.patterson.utility.Angle;
 
@@ -17,7 +16,7 @@ import java.awt.event.MouseEvent;
 import static com.patterson.ui.editor.MapEditorView.toGrid;
 
 public class CarPositioningPlugin implements IEditorPlugin {
-    private enum CarType {CAR, CAR_GREEN, CAR_RED, CAR_IE}
+    private enum CarType {CAR, /*CAR_GREEN, CAR_RED,*/ CAR_IE}
     private static CarType[] car_types = CarType.values();
     private MapEditorView editor;
     private Pointer pointer = new Pointer(-16,-16);
@@ -139,12 +138,12 @@ public class CarPositioningPlugin implements IEditorPlugin {
                             case CAR:
                                 c = new Car(Car.nextID(), pos.x, pos.y, t.road.getDirection().getAngle());
                                 break;
-                            case CAR_GREEN:
+                            /*case CAR_GREEN:
                                 c = new Car_green(Car.nextID(), pos.x, pos.y, t.road.getDirection().getAngle());
                                 break;
                             case CAR_RED:
                                 c = new Car_red(Car.nextID(), pos.x, pos.y, t.road.getDirection().getAngle());
-                                break;
+                                break;*/
                             case CAR_IE:
                                 c = new CarIE(Car.nextID(), pos.x, pos.y, t.road.getDirection().getAngle());
                                 break;

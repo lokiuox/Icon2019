@@ -31,13 +31,13 @@ public class DemoScenario {
         r3.setIntersection(i0);
         s.addRoad(r3);
 
-        Car c1 = new Car_green("c1", 32 * 2, 0, 0);
+        Car c1 = new Car("c1", 32 * 2, 0, 0);
         c1.addRoad(r0);
         c1.addRoad(r1);
         c1.addRoad(r2);
         s.addCar(c1);
 
-        Car c2 = new Car_red("c0", 32, 0, 0);
+        Car c2 = new Car("c0", 32, 0, 0);
         c2.addRoad(r0);
         c2.addRoad(r1);
         c2.addRoad(r2);

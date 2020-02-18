@@ -4,6 +4,7 @@ import com.patterson.utility.KnowledgeBaseIF;
 import com.patterson.utility.Packet;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +39,15 @@ public class CarIE extends Car {
         super.roadEnd();
     }
 */
+
+    @Override
+    protected void loadImage() {
+        img[0] = new ImageIcon("resources/car/car0_red.png").getImage();
+        img[1] = new ImageIcon("resources/car/car1_red.png").getImage();
+        img[2] = new ImageIcon("resources/car/car2_red.png").getImage();
+        img[3] = new ImageIcon("resources/car/car3_red.png").getImage();
+    }
+
     @Override
     protected void calculatePath() {
         kb.assertToKB();
@@ -73,9 +83,9 @@ public class CarIE extends Car {
             c.getKB().addPackets(kb);   // invia tutti i paccketti nella KB
         }
 
-        System.out.println(getID() + "KB: ");
-        kb.print();
-        System.out.println("");
+        //System.out.println(getID() + "KB: ");
+        //kb.print();
+        //System.out.println("");
     }
 
     public KnowledgeBaseIF getKB() {

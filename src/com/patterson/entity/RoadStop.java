@@ -63,5 +63,9 @@ public class RoadStop extends Road {
                 g.drawImage(img.get(10), position.x - 32, position.y + i * direction.sin() - 8, null);
                 break;
         }
+
+        // debug
+        g.setColor(Color.WHITE);
+        g.drawString(getID(), position.x, position.y);
     }
 }

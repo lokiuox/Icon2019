@@ -84,6 +84,7 @@ public class Intersection implements IEntity {
 
     public void giveRightToPass() {
 
+        boolean given = false;
         //System.out.println("Contest triggered");
 
         String assertion;
@@ -99,32 +100,40 @@ public class Intersection implements IEntity {
                     contenders.add(r.firstCar());
                 }
             }
+
+
+            // define facts about contenders
+            for (Car c : contenders) {
+                assertion = "strada_corrente(" + c.getID() + "," + c.getCurrentRoad().getID() + ")";
+                //System.out.println(assertion);
+                kb.addAssertion(assertion);
+                if (c.getNextRoad() != null)
+                    assertion = "prossima_strada(" + c.getID() + "," + c.getNextRoad().getID() + ")";
+                kb.addAssertion(assertion);
+                //System.out.println(assertion);
+            }
+
+            // add contenders facts to KB
+            kb.assertToKB();
+
+            // give the right of way to the right car
+            for (Car c : contenders) {
+                boolean right = kb.boolQuery("precedenza(" + c.getID() + ").");
+                //System.out.println( "precedenza("+c.getID()+"): "  + right );
+                if (right) {
+                    c.setRightToPass();
+                    given = true;
+                }
+            }
+
+            if (!contenders.isEmpty() && !given) {
+                contenders.iterator().next().setRightToPass();
+                System.out.println("given");
+            }
+
+            // remove contenders facts from KB
+            kb.retractFromKB();
         }
-
-        // define facts about contenders
-        for (Car c: contenders) {
-            assertion = "strada_corrente(" + c.getID() + "," + c.getCurrentRoad().getID() + ")";
-            //System.out.println(assertion);
-            kb.addAssertion(assertion);
-            if (c.getNextRoad()!=null)
-                assertion = "prossima_strada(" + c.getID() + "," + c.getNextRoad().getID() + ")";
-            kb.addAssertion(assertion);
-            //System.out.println(assertion);
-        }
-
-        // add contenders facts to KB
-        kb.assertToKB();
-
-        // give the right of way to the right car
-        for (Car c: contenders) {
-            boolean right = kb.boolQuery("precedenza("+c.getID()+").");
-            //System.out.println( "precedenza("+c.getID()+"): "  + right );
-            if (right)
-                c.setRightToPass();
-        }
-
-        // remove contenders facts from KB
-        kb.retractFromKB();
     }
 
 
