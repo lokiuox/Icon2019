@@ -195,7 +195,7 @@ Il predicato percorso dunque costruisce una lista Path di lunghezza complessiva 
 ```
 spostamento(A,B,P,[B|P],L) :- 
        collega(A,C,B),
-	   peso(C,L).
+       peso(C,L).
 ```
 
 Nel caso semplice o passo base verifica che A e B,incroci, siano collegati mediante una strada C di peso L. Tale incrocio B viene così aggiunto in testa alla lista dei nodi P già considerati.
