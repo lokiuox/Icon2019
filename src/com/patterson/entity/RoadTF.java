@@ -105,8 +105,10 @@ public class RoadTF extends Road {
                 g.drawImage(img.get(light?13:14), position.x - 32, position.y + i * direction.sin() - 8, null);
                 break;
         }
+        /*
         // debug
         g.setColor(Color.WHITE);
         g.drawString(getID(), position.x, position.y);
+         */
     }
 }
