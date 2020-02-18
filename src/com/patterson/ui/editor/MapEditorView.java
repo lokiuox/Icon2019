@@ -166,7 +166,7 @@ class MapEditorView extends MapView {
         } else {
             new_intersection = new IntersectionTF(i.getID(), i.getPosition().x, i.getPosition().y, i.getSize().width, i.getSize().height);
         }
-        for (Road r: i.getRoads()) {
+        for (Road r: new ArrayList<>(i.getRoads())) {
             r.setIntersection(new_intersection);
         }
         removeIntersection(i);
