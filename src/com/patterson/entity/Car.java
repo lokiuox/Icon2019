@@ -5,6 +5,7 @@ import com.patterson.utility.KnowledgeBase;
 import com.patterson.utility.ScenarioUtility;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import sun.plugin.javascript.navig4.Link;
 
 import javax.swing.ImageIcon;
 import java.awt.*;
@@ -166,11 +167,15 @@ public class Car implements IEntity {
 
     protected void roadEnd() {
         // if the path has been completed, create a new path to a random destination
+        int i = 0;
         if (path.peek() == null && navigator != null) {
             do {
-                destination = randomDestination();
-            } while (destination.equals(road.getID()));
-            calculatePath();
+                do {
+                    destination = randomDestination();
+                } while (destination.equals(road.getID()));
+                calculatePath();
+                i++;
+            } while (isUTurnPath() && i<10);
         }
 
         // check right of way
@@ -255,10 +260,36 @@ public class Car implements IEntity {
     // check if the car is near the end of the road
     private boolean isRoadEnd() {
         boolean a = false;
-            if (hasRoadLine() && hasRoadDir() && isNear(road.getEnd(), 24, 20)) {
-                a = true;
-                roadEnd();
-            }
+            //if (hasRoadLine() && hasRoadDir() && isNear(road.getEnd(), 24, 20)) {
+            //    a = true;
+            //    roadEnd();
+            //}
+
+        switch (direction.getAngle()) {
+            case 0:
+                if (position.getX() + (brakeSpace()+24+speed) * direction.cos() >= road.getEnd().getX())
+                    a = true;
+                break;
+            case 1:
+                if (position.getY() + (brakeSpace()+20+speed) * direction.sin() <= road.getEnd().getY())
+                    a = true;
+                break;
+            case 2:
+                if (position.getX() + (brakeSpace()+24+speed) * direction.cos() <= road.getEnd().getX())
+                    a = true;
+                break;
+            case 3:
+                if (position.getY() + (brakeSpace()+20+speed) * direction.sin() >= road.getEnd().getY())
+                    a = true;
+                break;
+        }
+
+        if (a) {
+            a = hasRoadLine() && hasRoadDir();
+        }
+        if (a)
+            roadEnd();
+
         return a;
     }
 
@@ -350,5 +381,28 @@ public class Car implements IEntity {
     public String toJSON() {
         JSONObject json_object = this.toJSONObject();
         return json_object.toString();
+    }
+
+    boolean isUTurn(Road r1, Road r2) {
+        boolean b = false;
+
+        if (r1.getDirection().isHorizontal() && r2.getDirection().isHorizontal() || r1.getDirection().isVertical() && r2.getDirection().isVertical())
+            if (r1.getDirection().getAngle()!=r2.getDirection().getAngle())
+                b = true;
+
+        return b;
+    }
+
+    boolean isUTurnPath() {
+        boolean b = false;
+
+        LinkedList<Road> list = new LinkedList<>(path);
+        list.addFirst(road);
+
+        for (int i=1; i<list.size(); i++)
+            if (isUTurn(list.get(i-1),list.get(i)))
+                b = true;
+
+        return b;
     }
 }
