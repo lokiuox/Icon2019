@@ -5,10 +5,6 @@ import java.util.Set;
 
 public class KnowledgeBaseIF extends KnowledgeBase {
     private Set<Packet> packetSet = new HashSet<>();
-    //private Map<KnowledgeBaseExchange, Integer> lastMerge = new HashMap<>();
-    //private int minExchangeTime = 30;
-
-    long countTick = 0;
 
     public Set<Packet> getPacketSet() {
         return packetSet;
@@ -18,8 +14,8 @@ public class KnowledgeBaseIF extends KnowledgeBase {
         packetSet.add(pkg);
     }
 
-    public void addPackets(KnowledgeBaseIF kb) {
-        packetSet.addAll(kb.getPacketSet());
+    public void addPackets(Set<Packet> p) {
+        packetSet.addAll(p);
     }
 
     @Override
@@ -37,12 +33,9 @@ public class KnowledgeBaseIF extends KnowledgeBase {
     }
 
     public void tick() {
-        countTick++;
-
         HashSet<Packet> tSet = new HashSet<>(packetSet);
 
         for (Packet p: tSet) {
-            p.tick();
             if (!p.isValid())
                 packetSet.remove(p);
         }
