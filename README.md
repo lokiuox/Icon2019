@@ -200,20 +200,20 @@ spostamento(A,B,P,[B|P],L) :-
 
 Nel caso semplice o passo base verifica che A e B,incroci, siano collegati mediante una strada C di peso L. Tale incrocio B viene così aggiunto in testa alla lista dei nodi P già considerati.
 ```
-spostamento(A,B,Visitato,Path,L) :-
+spostamento(A,B,Visitato,Perc,L) :-
 		collega(A,D,C),
 		peso(D,F),
 		C \== B,
 		\+member(C,Visitato),
-		spostamento(C,B,[C|Visitato],Path,L1),
+		spostamento(C,B,[C|Visitato],Perc,L1),
 		L is F+L1.  
 ```
 Nel passo ricorsivo,invece viene verificato che B sia differente da C,nodo collegato ad A, e che C non sia già stato visitato (eseguendo dunque una potatura dei cicli) , e si procede dunque ad aggiungerne il valore F del peso al peso complessivo L e ha ricalcolare lo spostamento da C a B aggiungendo C alla lista dei Visitati. Una volta giunti al passo base la lista dei Visitato sarà ripresa da Path che ci aggiungerà l’ultimo elemento e verrà restituita come lista finale del percorso.
 ```
-piubreve(A,B,Path,Length) :-
+piubreve(A,B,Perc,Lung) :-
    setof([P,L],percorso(A,B,P,L),Set),
    Set = [_|_],
-   minimo(Set,[Path,Length]).
+   minimo(Set,[Perc,Lung]).
 ```
 Il predicato piubreve crea un insieme di liste formate da ogni percorso P con relativa lunghezza L e di questi stabilisce il percorso con lunghezza minima.
 ```
