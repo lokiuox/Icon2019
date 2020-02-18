@@ -23,7 +23,7 @@ public class NavigatorProlog implements INavigator {
             path.add(road);
         }
 
-        path.add(endIntersection);
+        path.add(endRoad);
 
         return path;
     }
