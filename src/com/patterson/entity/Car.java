@@ -249,7 +249,29 @@ public class Car implements IEntity {
 
     // check if the car has reached his road
     private boolean hasReachedRoad() {
-        return /*isNear(road.getPosition(),0,0) &&*/ hasRoadDir();
+        //return /*isNear(road.getPosition(),0,0) &&*/ hasRoadDir();
+        boolean b = false;
+
+        switch (direction.getAngle()) {
+            case 0:
+                if (position.getX() + (brakeSpace()+24+speed) * direction.cos() >= road.getPosition().getX())
+                    b = true;
+                break;
+            case 1:
+                if (position.getY() + (brakeSpace()+20+speed) * direction.sin() <= road.getPosition().getY())
+                    b = true;
+                break;
+            case 2:
+                if (position.getX() + (brakeSpace()+24+speed) * direction.cos() <= road.getPosition().getX())
+                    b = true;
+                break;
+            case 3:
+                if (position.getY() + (brakeSpace()+20+speed) * direction.sin() >= road.getPosition().getY())
+                    b = true;
+                break;
+        }
+
+        return b && hasRoadDir();
     }
 
     // check if the car is orthogonal to the road
