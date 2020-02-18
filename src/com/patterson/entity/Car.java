@@ -5,7 +5,6 @@ import com.patterson.utility.KnowledgeBase;
 import com.patterson.utility.ScenarioUtility;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import sun.plugin.javascript.navig4.Link;
 
 import javax.swing.ImageIcon;
 import java.awt.*;
@@ -21,7 +20,6 @@ public class Car implements IEntity {
     private Point2D position = new Point2D.Float(0, 0);
     private Angle direction;
     protected float speed;
-    //private final float maxSpeed = 8;
     private final float acceleration = 0.35f;
     protected INavigator navigator = new NavigatorAStar();
 
