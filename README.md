@@ -281,6 +281,10 @@ Si è applicato il MPP, attraverso due insiemi, uno dei nodi attraversati ed uno
 Questo permette di visitare un nodo, trovare i nodi adiacenti e scegliere tra tutti i nodi disponibili il prossimo da percorrere.
 
 
+# IDA*
+L'algoritmo **IDA*** permette di essere più efficiente dell'A* in termini di spazio, applicando la DFS con una limitazione su f(p) (definita come sopra). 
+Si riceve il nodo di partenza e quello goal, partendo dal nodo start attraverso una pila si itera in maniera infita (while(true)) fintantochè uno dei tre seguenti casi si avveri. Ovvero il percorso verso il goal è trovato, non trovato, nel caso non sia trovato o si aumenta il limite di f(p) oppure si determina la non esistenza di un percorso attraverso un limite (Float.MAX_VALUE).
 
+All'interno della funzione della ricerca si verifica se il valore di f è maggiore del massimo corrente, e si ridefinisce il massimo. Si controlla se si è arrivati al goal, altrimenti si itera sugli archi collegati al nodo in analisi, che in caso di successo si aggiungono alla pila formando il path.
 
 
