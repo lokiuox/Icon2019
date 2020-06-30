@@ -95,4 +95,6 @@ public class MapView extends JPanel implements ActionListener {
         plugins.add(new CarPathPlugin(this));
         plugins.get(0).enable();
     }
+
+    public int getTimerDelay() { return this.timer.getDelay(); }
 }

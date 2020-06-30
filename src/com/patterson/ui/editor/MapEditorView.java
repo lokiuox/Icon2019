@@ -65,6 +65,7 @@ class MapEditorView extends MapView {
         modes.put("IntersectionDesign", new IntersectionDesignPlugin(this));
         modes.put("CarPlacing", new CarPositioningPlugin(this));
         modes.put("InfoPlugin", new InfoPlugin(this));
+        modes.put("AutoSpawner", new AutoSpawnerPlugin(this));
         this.activateMode("RoadDesign");
     }
 

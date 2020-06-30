@@ -48,6 +48,9 @@ public class EditorWindow extends MapWindow {
         JButton auto = new JButton("Auto");
         def_card.add(auto);
         def_card.add(Box.createRigidArea(BUTTON_SPACING));
+        JButton spawner = new JButton("AutoSpawner");
+        def_card.add(spawner);
+        def_card.add(Box.createRigidArea(BUTTON_SPACING));
         JButton info = new JButton("Info");
         def_card.add(info);
         def_card.add(Box.createHorizontalGlue());
@@ -75,6 +78,11 @@ public class EditorWindow extends MapWindow {
         auto.addActionListener(e -> {
             MapEditorView editor = (MapEditorView) mapView;
             editor.activateMode("CarPlacing");
+        });
+
+        spawner.addActionListener(e -> {
+            MapEditorView editor = (MapEditorView) mapView;
+            editor.activateMode("AutoSpawner");
         });
 
         info.addActionListener(e -> {
