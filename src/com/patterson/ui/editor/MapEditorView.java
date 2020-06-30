@@ -683,6 +683,19 @@ class MapEditorView extends MapView {
             set(x, y, w, h);
         }
 
+        void set(Car c) {
+            if (c.getDirection().isHorizontal()) {
+                start = toGrid((int)(c.getPosition().getX())-16, (int)(c.getPosition().getY()));
+                dimensions.setSize(64, 32);
+            } else {
+                start = toGrid((int)(c.getPosition().getX()), (int)(c.getPosition().getY())-16);
+                dimensions.setSize(32, 64);
+            }
+            start.x -= 16;
+            start.y -= 16;
+            visible();
+        }
+
         void set(int x, int y) {
             start = toGrid(x, y);
             start.x -= 16;

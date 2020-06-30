@@ -18,10 +18,10 @@ public class AutoSpawnerPlugin implements IEditorPlugin {
     private java.util.List<Car> cars = new ArrayList<>();
     private int maxCars = 20;
     private double normalCarProbability = 0.5;
-    private int delayMS = 2000;
+    private int delayMS = 500;
     private int screenTickMS;
     private int msCounter = 0;
-    private int carToSpawn = 2;
+    private int carsToSpawn = 2;
     private boolean carsDisappearOnGoal = true;
     private boolean enabled = false;
     private Timer timer;

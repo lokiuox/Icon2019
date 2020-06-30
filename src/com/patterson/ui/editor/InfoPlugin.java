@@ -1,5 +1,7 @@
 package com.patterson.ui.editor;
 
+import com.patterson.entity.Car;
+import com.patterson.entity.CarIE;
 import com.patterson.entity.Intersection;
 import com.patterson.entity.Road;
 import com.patterson.ui.MapView;
@@ -11,6 +13,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import static com.patterson.ui.editor.MapEditorView.toGrid;
 
@@ -64,6 +67,98 @@ public class InfoPlugin implements IEditorPlugin {
         editor.removeKeyListener(pa);
         editor.removeMouseListener(ma);
         editor.removeMouseMotionListener(ma);
+    }
+
+    private void printRoadInfo(Road r) {
+        System.out.println("Road " + r.getID());
+        System.out.println("Type: " + r.getType());
+        System.out.println("Pos in pixels: " + r.getPosition().x + "," + r.getPosition().y + "px = " + r.getPosition().x/32 + "," + r.getPosition().y/32 + " tiles");
+        System.out.println("Length: " + r.getLength() + "px = " + r.getLength()/32 + " tiles");
+        System.out.println((r.getDirection().isHorizontal() ? "Horizontal" : "Vertical"));
+        String direction;
+        switch (r.getDirection().getAngle()) {
+            case 0:
+                direction = "Left to Right";
+                break;
+            case 1:
+                direction = "Down to Up";
+                break;
+            case 2:
+                direction = "Right to Left";
+                break;
+            case 3:
+                direction = "Up to Down";
+                break;
+            default:
+                direction = "unknown";
+                break;
+        }
+        System.out.println("Direction: " + r.getDirection().getAngle() + ": " + direction);
+        System.out.println("Insersection: " + (r.getIntersection() == null ? "null" : r.getIntersection().getID()));
+        System.out.println("End: " + r.getEnd().x/32 + "," + r.getEnd().y/32);
+        int next_x = r.getEnd().x/32 + Math.min(0, r.getDirection().cos());
+        int next_y = r.getEnd().y/32 + Math.min(0, r.getDirection().sin());
+        System.out.println("Next: " + next_x + "," + next_y);
+        for (Car c: r.getCars()) {
+            System.out.println("Car: " + c.getID());
+        }
+    }
+
+    private void printIntersectionInfo(Intersection i) {
+        System.out.println("Intersection " + i.getID());
+        System.out.println("Type: " + i.getType());
+        System.out.println("Pos in pixels: " + i.getPosition().x + "," + i.getPosition().y);
+        System.out.println("Dimensions: " + i.getSize().width/32 + "x" + i.getSize().height/32 + " tiles");
+        System.out.println("Incoming Roads:");
+        for (Road r: i.getRoads())
+            System.out.println("- " + r.getID());
+        System.out.println("Outgoing Roads:");
+        for (Road r: editor.getIntersectionOutgoingRoads(i))
+            System.out.println("- " + r.getID());
+    }
+
+    private Car checkCarPresence(int x, int y) {
+        for (Car c: editor.getScenario().getCars()) {
+            int car_x = (int) c.getPosition().getX();
+            int car_y = (int) c.getPosition().getY();
+            if (car_x-30 <= x && x <= car_x+30 && car_y-30 <= y && y <= car_y+30) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    private void printCarInfo(Car c) {
+        System.out.println("Car " + c.getID());
+        System.out.println("Type: " + c.getType());
+        System.out.println("Pos in pixels: " + c.getPosition().getX() + "," + c.getPosition().getY() + "px = " + c.getPosition().getX()/32 + "," + c.getPosition().getY()/32 + " tiles");
+        System.out.println((c.getDirection().isHorizontal() ? "Horizontal" : "Vertical"));
+        String direction;
+        switch (c.getDirection().getAngle()) {
+            case 0:
+                direction = "Going East";
+                break;
+            case 1:
+                direction = "Going North";
+                break;
+            case 2:
+                direction = "Going West";
+                break;
+            case 3:
+                direction = "Going South";
+                break;
+            default:
+                direction = "unknown";
+                break;
+        }
+        System.out.println("Direction: " + c.getDirection().getAngle() + ": " + direction);
+        System.out.println("Prev Road: " + (c.getPreviousRoad() == null ? "null" : c.getPreviousRoad().getID()));
+        System.out.println("Current Road: " + (c.getCurrentRoad() == null ? "null" : c.getCurrentRoad().getID()));
+        System.out.println("Next Road: " + (c.getNextRoad() == null ? "null" : c.getNextRoad().getID()));
+        System.out.println("Path:");
+        for (Road r: new ArrayList<>(c.getPath())) {
+            System.out.println("Road: " + r.getID());
+        }
     }
 
     class Pointer {
@@ -132,53 +227,20 @@ public class InfoPlugin implements IEditorPlugin {
                 System.out.println("Selected Tile: " + pos.x + "," + pos.y +": ");
                 if (t.isEmpty()) {
                     System.out.println("Empty");
+                } else if (checkCarPresence(x, y) != null) {
+                    Car c = checkCarPresence(x, y);
+                    highlighter.set(c);
+                    printCarInfo(c);
                 } else if (t.isRoad()) {
                     Road r = t.road;
                     selectedRoad = r;
                     highlighter.set(r);
-                    System.out.println("Road " + r.getID());
-                    System.out.println("Type: " + r.getType());
-                    System.out.println("Pos in pixels: " + r.getPosition().x + "," + r.getPosition().y + "px = " + r.getPosition().x/32 + "," + r.getPosition().y/32 + " tiles");
-                    System.out.println("Length: " + r.getLength() + "px = " + r.getLength()/32 + " tiles");
-                    System.out.println((r.getDirection().isHorizontal() ? "Horizontal" : "Vertical"));
-                    String direction;
-                    switch (r.getDirection().getAngle()) {
-                        case 0:
-                            direction = "Left to Right";
-                            break;
-                        case 1:
-                            direction = "Down to Up";
-                            break;
-                        case 2:
-                            direction = "Right to Left";
-                            break;
-                        case 3:
-                            direction = "Up to Down";
-                            break;
-                        default:
-                            direction = "unknown";
-                            break;
-                    }
-                    System.out.println("Direction: " + r.getDirection().getAngle() + ": " + direction);
-                    System.out.println("Insersection: " + (r.getIntersection() == null ? "null" : r.getIntersection().getID()));
-                    System.out.println("End: " + r.getEnd().x/32 + "," + r.getEnd().y/32);
-                    int next_x = r.getEnd().x/32 + Math.min(0, r.getDirection().cos());
-                    int next_y = r.getEnd().y/32 + Math.min(0, r.getDirection().sin());
-                    System.out.println("Next: " + next_x + "," + next_y);
+                    printRoadInfo(r);
                 } else if (t.isIntersection()) {
                     Intersection i = t.intersection;
                     selectedIntersection = i;
                     highlighter.set(i);
-                    System.out.println("Intersection " + i.getID());
-                    System.out.println("Type: " + i.getType());
-                    System.out.println("Pos in pixels: " + i.getPosition().x + "," + i.getPosition().y);
-                    System.out.println("Dimensions: " + i.getSize().width/32 + "x" + i.getSize().height/32 + " tiles");
-                    System.out.println("Incoming Roads:");
-                    for (Road r: i.getRoads())
-                        System.out.println("- " + r.getID());
-                    System.out.println("Outgoing Roads:");
-                    for (Road r: editor.getIntersectionOutgoingRoads(i))
-                        System.out.println("- " + r.getID());
+                    printIntersectionInfo(i);
                 }
                 System.out.println("=================================================================");
             }

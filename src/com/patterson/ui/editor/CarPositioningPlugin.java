@@ -164,7 +164,6 @@ public class CarPositioningPlugin implements IEditorPlugin {
                     selectedCar = null;
                 } else {
                     if (!t.isEmpty()) {
-                        Road r = t.road;
                         for (Car c: editor.getScenario().getCars()) {
                             int car_x = (int) c.getPosition().getX();
                             int car_y = (int) c.getPosition().getY();
