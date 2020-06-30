@@ -128,7 +128,7 @@ public class Intersection implements IEntity {
 
             if (!contenders.isEmpty() && !given) {
                 contenders.iterator().next().setRightToPass();
-                System.out.println("given");
+                //System.out.println("given");
             }
 
             // remove contenders facts from KB

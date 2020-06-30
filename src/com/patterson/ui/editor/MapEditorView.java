@@ -20,6 +20,7 @@ class MapEditorView extends MapView {
 
     private Map<String, IEditorPlugin> modes = new HashMap<>();
     private IEditorPlugin currentMode = null;
+    private IEditorPlugin deadlockSolver = null;
 
     private Map<String, Road> roads;
     private Map<String, Intersection> intersections;
@@ -66,6 +67,7 @@ class MapEditorView extends MapView {
         modes.put("CarPlacing", new CarPositioningPlugin(this));
         modes.put("InfoPlugin", new InfoPlugin(this));
         modes.put("AutoSpawner", new AutoSpawnerPlugin(this));
+        deadlockSolver = new DeadlockSolverPlugin(this);
         this.activateMode("RoadDesign");
     }
 
@@ -651,6 +653,7 @@ class MapEditorView extends MapView {
         g2d.setColor(Color.BLACK);
         currentMode.draw(g2d);
         highlighter.draw(g2d);
+        deadlockSolver.draw(g2d);
     }
 
     class Highlighter {

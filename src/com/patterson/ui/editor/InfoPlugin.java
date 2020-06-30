@@ -13,6 +13,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 import static com.patterson.ui.editor.MapEditorView.toGrid;
@@ -25,6 +26,7 @@ public class InfoPlugin implements IEditorPlugin {
     private PressAdapter pa = new PressAdapter();
     private Road selectedRoad = null;
     private Intersection selectedIntersection = null;
+    private Car selectedCar = null;
 
     InfoPlugin(MapEditorView m) {
         this.editor = m;
@@ -95,6 +97,8 @@ public class InfoPlugin implements IEditorPlugin {
         }
         System.out.println("Direction: " + r.getDirection().getAngle() + ": " + direction);
         System.out.println("Insersection: " + (r.getIntersection() == null ? "null" : r.getIntersection().getID()));
+        System.out.println("Is Full: " + (r.isFull()? "Yes" : "No"));
+        System.out.println("First Car: " + (r.firstCar() == null ? "null" : r.firstCar().getID()));
         System.out.println("End: " + r.getEnd().x/32 + "," + r.getEnd().y/32);
         int next_x = r.getEnd().x/32 + Math.min(0, r.getDirection().cos());
         int next_y = r.getEnd().y/32 + Math.min(0, r.getDirection().sin());
@@ -152,6 +156,7 @@ public class InfoPlugin implements IEditorPlugin {
                 break;
         }
         System.out.println("Direction: " + c.getDirection().getAngle() + ": " + direction);
+        System.out.println("Is Near Car: " + (c.isNearCar()? "Yes" : "No"));
         System.out.println("Prev Road: " + (c.getPreviousRoad() == null ? "null" : c.getPreviousRoad().getID()));
         System.out.println("Current Road: " + (c.getCurrentRoad() == null ? "null" : c.getCurrentRoad().getID()));
         System.out.println("Next Road: " + (c.getNextRoad() == null ? "null" : c.getNextRoad().getID()));
@@ -190,11 +195,21 @@ public class InfoPlugin implements IEditorPlugin {
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
-                case KeyEvent.VK_LEFT:
-                    System.out.println("left");
+                case KeyEvent.VK_SPACE:
+                    if (selectedCar == null) {
+                        System.err.println("No car selected");
+                    } else {
+                        System.out.println("Giving right to pass to car " + selectedCar.getID());
+                        selectedCar.setRightToPass();
+                    }
                     break;
-                case KeyEvent.VK_RIGHT:
-                    System.out.println("right");
+                case KeyEvent.VK_G:
+                    if (selectedCar == null) {
+                        System.err.println("No car selected");
+                    } else {
+                        System.out.println("Making car go " + selectedCar.getID());
+                        selectedCar.go();
+                    }
                     break;
             }
             repaint();
@@ -220,6 +235,7 @@ public class InfoPlugin implements IEditorPlugin {
             if (SwingUtilities.isLeftMouseButton(e)) {
                 selectedRoad = null;
                 selectedIntersection = null;
+                selectedCar = null;
                 MapMatrix.Tile t = editor.getMatrix().getCoords(x, y);
                 Point pos = toGrid(x, y);
                 pos.setLocation(pos.x/32, pos.y/32);
@@ -230,6 +246,7 @@ public class InfoPlugin implements IEditorPlugin {
                 } else if (checkCarPresence(x, y) != null) {
                     Car c = checkCarPresence(x, y);
                     highlighter.set(c);
+                    selectedCar = c;
                     printCarInfo(c);
                 } else if (t.isRoad()) {
                     Road r = t.road;

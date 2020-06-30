@@ -74,9 +74,9 @@ public class CarIE extends Car {
             c.getKB().addPackets(kb.getPacketSet());   // invia tutti i paccketti nella KB
 
             // stampa contenuto kb
-            System.out.println(getID() + " KB: ");
-            kb.print();
-            System.out.println();
+            //System.out.println(getID() + " KB: ");
+            //kb.print();
+            //System.out.println();
         }
     }
 

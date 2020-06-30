@@ -153,7 +153,7 @@ public class Car implements IEntity {
             }
 
             // if near the end of the road stop, otherwise go straight on
-            if (isNearCar() || isRoadEnd()) {
+            if ((!passing && isNearCar()) || isRoadEnd()) {
                 stop();
             } else {
                 go();
@@ -186,7 +186,7 @@ public class Car implements IEntity {
         }
 
         // check right of way
-        if (path.peek() != null && !isNearCar() && greenTF() && !getNextRoad().isFull() ) {
+        if (path.peek() != null && greenTF() && !getNextRoad().isFull() ) {
             if (rightToPass || road.getIntersection()==null) {
                 rightToPass = false;
                 road.getIntersection().carPassing(this);
@@ -195,6 +195,8 @@ public class Car implements IEntity {
             } else {
                 road.getIntersection().giveRightToPass();
             }
+        } else if (path.peek() != null) {
+            road.getIntersection().giveRightToPass();
         }
     }
 
@@ -215,7 +217,7 @@ public class Car implements IEntity {
     }
 
     // accelerate
-    private void go() {
+    public void go() {
         speed += acceleration;
         if (speed > road.getMaxSpeed())
             speed = road.getMaxSpeed();
@@ -326,7 +328,7 @@ public class Car implements IEntity {
         return a;
     }
 
-    protected boolean isNearCar() {
+    public boolean isNearCar() {
         boolean a = false;
         if (road != null )
             for (Car c: road.getCars()) {
@@ -334,7 +336,6 @@ public class Car implements IEntity {
                     a = true;
                 }
             }
-
         return a;
     }
 

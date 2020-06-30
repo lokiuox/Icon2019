@@ -75,7 +75,7 @@ public class AutoSpawnerPlugin implements IEditorPlugin {
 
     private void spawnCar() {
         Road road = selectRandomRoad();
-        System.out.println(road.getID());
+        //System.out.println(road.getID());
 
         // Create the car
         Car c;

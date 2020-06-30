@@ -151,6 +151,8 @@ public class Road implements IEntity {
     }
 
     public Car firstCar() {
+        if (cars.isEmpty())
+            return null;
         Car current = cars.iterator().next();
 
         for (Car c : cars) {
