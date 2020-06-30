@@ -19,7 +19,7 @@ public class MapView extends JPanel implements ActionListener {
     protected int counter = 0;
     protected Map<String, MapControls> windowControls = new HashMap<>();
     protected List<IMapPlugin> plugins = new ArrayList<>();
-
+    protected double scaleFactor = 0.8;
     protected Scenario scenario;
 
     public MapView() {
@@ -51,11 +51,15 @@ public class MapView extends JPanel implements ActionListener {
         timer.restart();
     }
 
+    public double getScaleFactor() { return scaleFactor; }
+    public void setScaleFactor(double scale) { scaleFactor = scale; }
+
     private void doDrawing(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.scale(scaleFactor, scaleFactor);
         scenario.draw(g2d);
         for (IMapPlugin p: plugins)
-            p.draw(g2d);
+            p.draw(g2d);;
     }
 
     @Override

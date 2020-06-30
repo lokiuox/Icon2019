@@ -113,14 +113,14 @@ public class InfoPlugin implements IEditorPlugin {
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            pointer.setPosition(e.getX(), e.getY());
+            pointer.setPosition((int)(e.getX()/editor.getScaleFactor()), (int)(e.getY()/editor.getScaleFactor()));
             repaint();
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-            x = e.getX();
-            y = e.getY();
+            x = (int)(e.getX()/editor.getScaleFactor());
+            y = (int)(e.getY()/editor.getScaleFactor());
 
             if (SwingUtilities.isLeftMouseButton(e)) {
                 selectedRoad = null;

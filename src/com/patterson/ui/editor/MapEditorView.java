@@ -638,8 +638,10 @@ class MapEditorView extends MapView {
 
     @Override
     public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.scale(this.getScaleFactor(), this.getScaleFactor());
         super.paintComponent(g);
+
         g2d.setColor(Color.WHITE);
         for (Road r: roads.values()) {
             Polygon p = createDirectionIndicator(r);

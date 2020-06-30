@@ -220,14 +220,14 @@ public class RoadDesignPlugin implements IEditorPlugin {
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            p.setPosition(e.getX(),e.getY());
+            p.setPosition((int) (e.getX()/editor.getScaleFactor()), (int) (e.getY()/editor.getScaleFactor()));
             repaint();
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-            x = e.getX();
-            y = e.getY();
+            x = (int) (e.getX()/editor.getScaleFactor());
+            y = (int) (e.getY()/editor.getScaleFactor());
             MapMatrix.Tile t = editor.getMatrix().getCoords(x, y);
             if (SwingUtilities.isLeftMouseButton(e)) {
                 if (t.isRoad()) {
@@ -251,16 +251,17 @@ public class RoadDesignPlugin implements IEditorPlugin {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-
-            tempRoad.set(x,y,e.getX(),e.getY());
+            int new_x = (int) (e.getX()/editor.getScaleFactor());
+            int new_y = (int) (e.getY()/editor.getScaleFactor());
+            tempRoad.set(x, y, new_x, new_y);
             if (tempRoad.length() > 10) {
                 selectedRoad = null;
                 highlighter.invisible();
             }
             if (tempRoad.direction().isHorizontal())
-                p.setPosition(e.getX(), y);
+                p.setPosition(new_x, y);
             else
-                p.setPosition(x, e.getY());
+                p.setPosition(x, new_y);
             repaint();
         }
 
