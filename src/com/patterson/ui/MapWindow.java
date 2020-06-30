@@ -11,7 +11,7 @@ import java.awt.*;
 public class MapWindow extends JFrame {
     protected MapView mapView;
     private Map<String, MapControls> controls = new HashMap<>();
-    public Dimension mapSize = new Dimension(600, 500);
+    public Dimension mapSize = new Dimension(1024, 768);
     private JPanel main;
 
     public MapWindow(MapView m) {
