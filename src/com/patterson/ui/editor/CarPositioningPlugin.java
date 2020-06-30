@@ -3,6 +3,7 @@ package com.patterson.ui.editor;
 import com.patterson.entity.Car;
 import com.patterson.entity.CarIE;
 
+import com.patterson.entity.Road;
 import com.patterson.ui.MapView;
 import com.patterson.utility.Angle;
 
@@ -161,6 +162,21 @@ public class CarPositioningPlugin implements IEditorPlugin {
                 if (selectedCar != null) {
                     editor.removeCar(selectedCar);
                     selectedCar = null;
+                } else {
+                    if (!t.isEmpty()) {
+                        Road r = t.road;
+                        for (Car c: editor.getScenario().getCars()) {
+                            int car_x = (int) c.getPosition().getX();
+                            int car_y = (int) c.getPosition().getY();
+                            if (car_x-30 <= x && x <= car_x+30 && car_y-30 <= y && y <= car_y+30) {
+                                System.out.println("FOUND CAR : " + c.getID());
+                                editor.removeCar(c);
+                                break;
+                            }
+                        }
+                    } else {
+                        System.err.println("This is not a road");
+                    }
                 }
             }
             repaint();
