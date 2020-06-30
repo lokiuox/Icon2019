@@ -1,6 +1,7 @@
 package com.patterson.ui.editor;
 
 import com.patterson.ui.MapControls;
+import com.patterson.ui.MapView;
 import com.patterson.ui.MapWindow;
 import com.patterson.world.Scenario;
 
@@ -8,6 +9,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
+import java.util.Map;
 
 public class EditorWindow extends MapWindow {
     private static Dimension BUTTON_SPACING = new Dimension(5, 0);
@@ -53,6 +55,20 @@ public class EditorWindow extends MapWindow {
         def_card.add(Box.createRigidArea(BUTTON_SPACING));
         JButton info = new JButton("Info");
         def_card.add(info);
+        def_card.add(Box.createRigidArea(BUTTON_SPACING));
+        JSlider zoom = new JSlider(JSlider.HORIZONTAL, 20, 200, (int) (MapView.DEFAULT_SCALE_FACTOR * 100));
+        zoom.setMajorTickSpacing(20);
+        zoom.setMinorTickSpacing(10);
+        zoom.setPaintTicks(true);
+        zoom.setPaintLabels(true);
+        def_card.add(zoom);
+        def_card.add(Box.createRigidArea(BUTTON_SPACING));
+        JSlider fps = new JSlider(JSlider.HORIZONTAL, 0, 500, 100);
+        fps.setMajorTickSpacing(100);
+        fps.setMinorTickSpacing(50);
+        fps.setPaintLabels(true);
+        fps.setPaintTicks(true);
+        def_card.add(fps);
         def_card.add(Box.createHorizontalGlue());
         JButton play = new JButton("Play");
         def_card.add(play);
@@ -88,6 +104,18 @@ public class EditorWindow extends MapWindow {
         info.addActionListener(e -> {
             MapEditorView editor = (MapEditorView) mapView;
             editor.activateMode("InfoPlugin");
+        });
+
+        zoom.addChangeListener(e -> {
+            JSlider source = (JSlider) e.getSource();
+            double scaleFactor = source.getValue() / 100.0;
+            EditorWindow.this.getMapView().setScaleFactor(scaleFactor);
+        });
+
+        fps.addChangeListener(e -> {
+            JSlider source = (JSlider) e.getSource();
+            int frame_time_ms = (int) (MapView.DEFAULT_TICK_TIME_MS / (source.getValue() / 100.0)) ;
+            EditorWindow.this.getMapView().setTimerDelay(frame_time_ms);
         });
 
         reset.addActionListener(e -> reset(play));

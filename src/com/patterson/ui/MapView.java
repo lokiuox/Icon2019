@@ -15,11 +15,13 @@ import java.awt.event.ActionListener;
 
 public class MapView extends JPanel implements ActionListener {
 
-    protected Timer timer = new Timer(20, this);
+    public static final int DEFAULT_TICK_TIME_MS = 20;
+    public static final double DEFAULT_SCALE_FACTOR = 0.8;
+    protected Timer timer = new Timer(DEFAULT_TICK_TIME_MS, this);
     protected int counter = 0;
     protected Map<String, MapControls> windowControls = new HashMap<>();
     protected List<IMapPlugin> plugins = new ArrayList<>();
-    protected double scaleFactor = 0.8;
+    protected double scaleFactor = DEFAULT_SCALE_FACTOR;
     protected Scenario scenario;
 
     public MapView() {
@@ -97,4 +99,12 @@ public class MapView extends JPanel implements ActionListener {
     }
 
     public int getTimerDelay() { return this.timer.getDelay(); }
+
+    public void setTimerDelay(int delay) {
+        boolean running = this.timer.isRunning();
+        this.timer.stop();
+        this.timer = new Timer(delay, this);
+        if (running)
+            this.timer.start();
+    }
 }
