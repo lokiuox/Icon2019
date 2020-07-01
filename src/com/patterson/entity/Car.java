@@ -37,6 +37,7 @@ public class Car implements IEntity {
 
     protected Queue<Road> path = new LinkedList<>();
 
+    public final static int STOP_WAITING_TIME = 20;
     private int waiting = 0;
     private double randomRoadProbability = 0.35;
 
@@ -210,7 +211,7 @@ public class Car implements IEntity {
             elapsed_average = elapsed_average + (elapsed-elapsed_average)/completed_destinations;
             elapsed = 0;
             stop();
-            waiting = 25;
+            waiting = STOP_WAITING_TIME;
         }
 
         // check right of way
