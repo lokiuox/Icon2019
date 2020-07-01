@@ -255,6 +255,18 @@ public class Scenario {
         for (Car c : cars.values()) c.draw(g);
     }
 
+    public float getCarAverageTime(String type) {
+        float value = 0;
+        int cars_total = 0;
+        for (Car c: cars.values()) {
+            if (c.getType().equals(type)) {
+                value += c.getAverageTime();
+                cars_total++;
+            }
+        }
+        return value/cars_total;
+    }
+
     public void tick() {
         updateTTL();
         exchangeInformation();

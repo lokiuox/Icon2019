@@ -193,8 +193,8 @@ public class CarPathPlugin implements IMapPlugin {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:
-                    int index = (selectedCarIndex == 0 ? cars.size()-1 : --selectedCarIndex);
-                    selectedCar = new LinkedList<>(cars.values()).get(index);
+                    selectedCarIndex = (selectedCarIndex == 0 ? cars.size()-1 : selectedCarIndex-1);
+                    selectedCar = new LinkedList<>(cars.values()).get(selectedCarIndex);
                     break;
                 case KeyEvent.VK_DOWN:
                     selectedCarIndex = (selectedCarIndex+1) % cars.size();
@@ -203,6 +203,12 @@ public class CarPathPlugin implements IMapPlugin {
                 case KeyEvent.VK_D:
                     selectedCar = null;
                     break;
+                case KeyEvent.VK_T:
+                    float car_time = map.getScenario().getCarAverageTime("Car");
+                    float carie_time = map.getScenario().getCarAverageTime("CarIE");
+                    System.out.println("Average time to complete a path:");
+                    System.out.println("Normal Car: " + car_time);
+                    System.out.println("Info Sharing Car: " + carie_time);
             }
             repaint();
         }
