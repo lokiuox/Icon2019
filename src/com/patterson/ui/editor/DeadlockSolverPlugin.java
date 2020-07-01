@@ -37,7 +37,6 @@ public class DeadlockSolverPlugin {
         msCounter++;
         if (msCounter >= delayTicks) {
             msCounter = 0;
-            System.err.println("Deadlock solver checking...");
             checkDeadlock();
         }
     }
@@ -69,21 +68,34 @@ public class DeadlockSolverPlugin {
                 solveDeadlock(i);
             }
         }
-        /*
+
         if (deadlock && !all_empty) {
+            changeDestinations();/*
             if (deadlock_detected) {
                 deadlock_detected = false;
-                System.out.println("Deadlock detected, trying to solve...");
-                solveDeadlock();
+                System.err.println("Deadlock detected, trying to solve...");
+                changeDestinations();
             } else {
                 //second chance
                 System.out.println("Deadlock detected, giving second chance.");
                 deadlock_detected = true;
-            }
-        } else if (deadlock_detected) {
-            deadlock_detected = false;
+            }*/
         }
-        */
+
+    }
+
+    private void changeDestinations() {
+        for (Intersection i: map.getScenario().getIntersections()) {
+            for (Car c: getIncomingCarSet(i)) {
+                Road next = c.getNextRoad();
+                if (next != null && next.isFull()) {
+                    System.err.println("Assigning new dest to car " + c.getID());
+                    do {
+                        c.chooseNewDestination();
+                    } while (c.getPath().peek() != null && !c.getPath().peek().isFull());
+                }
+            }
+        }
     }
 
     private void solveDeadlock(Intersection i) {
@@ -93,6 +105,7 @@ public class DeadlockSolverPlugin {
             Road next = c.getNextRoad();
             if (next != null && !next.isFull()) {
                 if (c.isNearCar()) {
+                    c.disableNearCarTemporarily(20);
                     c.go();
                     continue;
                     //return;

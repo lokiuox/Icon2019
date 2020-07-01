@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Car implements IEntity {
 
@@ -36,10 +37,11 @@ public class Car implements IEntity {
     protected boolean rightToPass = false;
 
     protected Queue<Road> path = new LinkedList<>();
+    private int nearCarDisabled = 0;
 
     public final static int STOP_WAITING_TIME = 20;
     private int waiting = 0;
-    private double randomRoadProbability = 0.35;
+    private final static double RANDOM_DESTINATION_PROB = 0.45;
 
     Map<String, PointOfInterest> pois;
 
@@ -47,7 +49,7 @@ public class Car implements IEntity {
 
     public String randomDestination() {
         double randomRoad = new Random().nextDouble();
-        if (randomRoad <= randomRoadProbability) {
+        if (randomRoad <= RANDOM_DESTINATION_PROB) {
             return randomDestinationRoad();
         }
         int item = new Random().nextInt(pois.size());
@@ -159,6 +161,9 @@ public class Car implements IEntity {
             return;
         }
 
+        if (nearCarDisabled > 0)
+            nearCarDisabled--;
+
         // stop if there is no road to follow
         if (road == null) {
             setRoad(path.poll());
@@ -196,17 +201,25 @@ public class Car implements IEntity {
         return !(road instanceof RoadTF) || ((RoadTF) road).isGreen();
     }
 
+    public void chooseNewDestination() {
+        if (path.peek() != null) {
+            path.clear();
+            elapsed = 0;
+        }
+        int i = 0;
+        do {
+            do {
+                destination = randomDestination();
+            } while (destination.equals(road.getID()));
+            calculatePath();
+            i++;
+        } while (isUTurnPath() && i<10);
+    }
+
     protected void roadEnd() {
         // if the path has been completed, create a new path to a random destination
-        int i = 0;
         if (path.peek() == null && navigator != null) {
-            do {
-                do {
-                    destination = randomDestination();
-                } while (destination.equals(road.getID()));
-                calculatePath();
-                i++;
-            } while (isUTurnPath() && i<10);
+            chooseNewDestination();
             completed_destinations++;
             elapsed_average = elapsed_average + (elapsed-elapsed_average)/completed_destinations;
             elapsed = 0;
@@ -357,8 +370,15 @@ public class Car implements IEntity {
         return a;
     }
 
+    public void disableNearCarTemporarily(int ticks) {
+        nearCarDisabled = ticks;
+    }
+
+
     public boolean isNearCar() {
         boolean a = false;
+        if (nearCarDisabled > 0)
+            return false;
         if (road != null )
             for (Car c: road.getCars()) {
                 if (c!=this && isNear(new Point2D.Float((float) c.getPosition().getX(), (float) c.getPosition().getY()), 42, 32) ) {

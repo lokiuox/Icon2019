@@ -1,11 +1,10 @@
 package com.patterson.entity;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PointOfInterest implements IEntity {
     private static int counter = 0;
@@ -26,7 +25,18 @@ public class PointOfInterest implements IEntity {
     }
 
     protected void loadImage() {
-        img = new ImageIcon("resources/marker/marker.png").getImage();
+        double random = ThreadLocalRandom.current().nextDouble();
+        if (random <= 0.1) {
+            img = new ImageIcon("resources/marker/poste.png").getImage();
+        } else if (random <= 0.3) {
+            img = new ImageIcon("resources/marker/scuola.png").getImage();
+        } else if (random <= 0.5) {
+            img = new ImageIcon("resources/marker/lavoro.png").getImage();
+        } else if (random <= 0.7) {
+            img = new ImageIcon("resources/marker/ufficio.png").getImage();
+        } else {
+            img = new ImageIcon("resources/marker/negozio.png").getImage();
+        }
     }
 
     public PointOfInterest(String id, int x, int y) {
