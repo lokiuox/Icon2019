@@ -1,9 +1,6 @@
 package com.patterson.ui.editor;
 
-import com.patterson.entity.Car;
-import com.patterson.entity.CarIE;
-import com.patterson.entity.Intersection;
-import com.patterson.entity.Road;
+import com.patterson.entity.*;
 import com.patterson.ui.MapView;
 import com.patterson.utility.Angle;
 
@@ -166,6 +163,14 @@ public class InfoPlugin implements IEditorPlugin {
         }
     }
 
+    private void printPOIInfo(PointOfInterest p) {
+        System.out.println("Point Of Interest " + p.getID());
+        System.out.println("Pos in pixels: " + p.getPosition().x + "," + p.getPosition().y);
+        System.out.println("Roads:");
+        for (Road r: p.getRoads())
+            System.out.println(r.getID());
+    }
+
     class Pointer {
         Point position = new Point();
 
@@ -258,6 +263,10 @@ public class InfoPlugin implements IEditorPlugin {
                     selectedIntersection = i;
                     highlighter.set(i);
                     printIntersectionInfo(i);
+                } else if (t.isPOI()) {
+                    PointOfInterest p = t.poi;
+                    highlighter.set(p);
+                    printPOIInfo(p);
                 }
                 System.out.println("=================================================================");
             }

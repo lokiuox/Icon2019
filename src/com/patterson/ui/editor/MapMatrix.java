@@ -2,24 +2,27 @@ package com.patterson.ui.editor;
 
 import com.patterson.entity.Car;
 import com.patterson.entity.Intersection;
+import com.patterson.entity.PointOfInterest;
 import com.patterson.entity.Road;
 
 import java.util.*;
 import java.awt.*;
 
 class MapMatrix {
-    public enum TileType {EMPTY, ROAD_H, ROAD_V, INTERSECTION}
+    public enum TileType {EMPTY, ROAD_H, ROAD_V, INTERSECTION, POI}
     private static int TILESIZE = 32;
 
     private MapEditorView editor;
     private Map<String, Road> roads;
     private Map<String, Intersection> intersections;
+    private Map<String, PointOfInterest> pois;
     private Map<Point, Tile> matrix = new HashMap<>();
 
     MapMatrix(MapEditorView m) {
         this.editor = m;
         this.roads = editor.getScenario().getRoadMap();
         this.intersections = editor.getScenario().getIntersectionMap();
+        this.pois = editor.getScenario().getPoiMap();
         initMatrix();
     }
 
@@ -28,6 +31,23 @@ class MapMatrix {
             addRoad(r);
         for (Intersection i: intersections.values())
             addIntersection(i);
+        for (PointOfInterest p: pois.values()){
+            addPOI(p);
+        }
+    }
+
+    void addPOI(PointOfInterest p) {
+        Point pos = p.getPosition();
+        int x = pos.x / TILESIZE;
+        int y = pos.y / TILESIZE;
+        matrix.put(new Point(x, y), new Tile(p));
+    }
+
+    void removePOI(PointOfInterest p) {
+        Point pos = p.getPosition();
+        int x = pos.x / TILESIZE;
+        int y = pos.y / TILESIZE;
+        matrix.put(new Point(x, y), new Tile());
     }
 
     void addRoad(Road r) {
@@ -148,6 +168,7 @@ class MapMatrix {
         Road road = null;
         Intersection intersection = null;
         Car c = null;
+        PointOfInterest poi = null;
 
         Tile() {}
 
@@ -161,6 +182,11 @@ class MapMatrix {
             intersection = i;
         }
 
+        Tile(PointOfInterest p) {
+            type = TileType.POI;
+            poi = p;
+        }
+
         boolean isEmpty() {
             return type == TileType.EMPTY;
         }
@@ -168,6 +194,8 @@ class MapMatrix {
         public boolean isRoad() { return type == TileType.ROAD_H || type == TileType.ROAD_V; }
 
         boolean isIntersection() { return type == TileType.INTERSECTION; }
+
+        boolean isPOI() { return type == TileType.POI; }
 
         boolean hasCar() {
             return c != null;

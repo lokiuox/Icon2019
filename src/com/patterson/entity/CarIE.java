@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class CarIE extends Car {
 
@@ -19,7 +18,7 @@ public class CarIE extends Car {
 
     public CarIE(String id, float x, float y, int d) {
         super(id, x, y, d);
-        navigator = new NavigatorProlog();
+        navigator = new NavigatorAStarIF();
     }
 
     public CarIE(JSONObject jo_car) {

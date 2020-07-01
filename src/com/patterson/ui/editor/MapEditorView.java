@@ -20,11 +20,12 @@ class MapEditorView extends MapView {
 
     private Map<String, IEditorPlugin> modes = new HashMap<>();
     private IEditorPlugin currentMode = null;
-    private IEditorPlugin deadlockSolver = null;
+    //private IEditorPlugin deadlockSolver = null;
 
     private Map<String, Road> roads;
     private Map<String, Intersection> intersections;
     private Map<String, Car> cars;
+    private Map<String, PointOfInterest> pois;
     private MapMatrix matrix;
     Highlighter highlighter = new Highlighter();
 
@@ -50,6 +51,7 @@ class MapEditorView extends MapView {
         roads = scenario.getRoadMap();
         intersections = scenario.getIntersectionMap();
         cars = scenario.getCarsMap();
+        pois = scenario.getPoiMap();
         matrix = new MapMatrix(this);
     }
 
@@ -65,9 +67,10 @@ class MapEditorView extends MapView {
         modes.put("TileSelect", new InfoPlugin(this));
         modes.put("IntersectionDesign", new IntersectionDesignPlugin(this));
         modes.put("CarPlacing", new CarPositioningPlugin(this));
+        modes.put("POIPlacer", new POIPlacerPlugin(this));
         modes.put("InfoPlugin", new InfoPlugin(this));
         modes.put("AutoSpawner", new AutoSpawnerPlugin(this));
-        deadlockSolver = new DeadlockSolverPlugin(this);
+        //deadlockSolver = new DeadlockSolverPlugin(this);
         this.activateMode("RoadDesign");
     }
 
@@ -120,6 +123,24 @@ class MapEditorView extends MapView {
         removeRoad(roads.get(id));
     }
 
+    void addPOI(PointOfInterest p) {
+        if (p != null) {
+            pois.put(p.getID(), p);
+            matrix.addPOI(p);
+        }
+    }
+
+    void removePOI(PointOfInterest p) {
+        pois.remove(p.getID());
+        matrix.removePOI(p);
+    }
+
+    void removePOI(String ID) {
+        PointOfInterest p = pois.get(ID);
+        pois.remove(ID);
+        matrix.removePOI(p);
+    }
+
     private boolean isPlaceable(Road r) {
         List<Point> overlappings = checkOverlappings(r);
         for (Point p: overlappings) {
@@ -136,6 +157,22 @@ class MapEditorView extends MapView {
 
     void removeCar(Car c) {
         cars.remove(c.getID());
+    }
+
+    void placePOI(int x, int y) {
+        if (!matrix.get(x, y).isEmpty()) {
+            System.err.println("Can't put an intersection there, it's not an empty tile");
+            return;
+        }
+        PointOfInterest p = new PointOfInterest(PointOfInterest.nextID(), x, y);
+
+        List<Road> incoming_roads = new ArrayList<>();
+        MapMatrix.Tile[] neighbors = matrix.getNeighboringTiles(x/32, y/32);
+        for (MapMatrix.Tile t: neighbors) {
+            if (t.isRoad())
+                p.addRoad(t.road);
+        }
+        addPOI(p);
     }
 
     void placeRoad(Road r) {
@@ -653,7 +690,7 @@ class MapEditorView extends MapView {
         g2d.setColor(Color.BLACK);
         currentMode.draw(g2d);
         highlighter.draw(g2d);
-        deadlockSolver.draw(g2d);
+        //deadlockSolver.draw(g2d);
     }
 
     class Highlighter {
@@ -683,6 +720,14 @@ class MapEditorView extends MapView {
             int y = i.getPosition().y;
             int w = i.getSize().width;
             int h = i.getSize().height;
+            set(x, y, w, h);
+        }
+
+        void set(PointOfInterest p) {
+            int x = p.getPosition().x;
+            int y = p.getPosition().y;
+            int w = 32;
+            int h = 32;
             set(x, y, w, h);
         }
 

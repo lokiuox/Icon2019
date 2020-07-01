@@ -12,55 +12,34 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 
-public class DeadlockSolverPlugin implements IEditorPlugin {
-    private MapEditorView editor;
+public class DeadlockSolverPlugin {
+    private MapView map;
     private int msCounter = 0;
     private int delayTicks = 100;
     private HashMap<Intersection, HashSet<Car>> intersections_incoming_cars = new HashMap<>();
     private boolean deadlock_detected = false;
 
-    DeadlockSolverPlugin(MapEditorView m) {
-        this.setEditor(m);
+    public DeadlockSolverPlugin(MapView m) {
+        map = m;
         init();
     }
 
-    @Override
-    public void setEditor(MapEditorView m) {
-        this.editor = m;
-    }
 
-    @Override
     public void init() {
         //screenTickMS = this.editor.getTimerDelay();
-        for (Intersection i: editor.getScenario().getIntersections()) {
+        for (Intersection i: map.getScenario().getIntersections()) {
             intersections_incoming_cars.put(i, new HashSet<>());
         }
         System.err.println("DeadLockSolver activated");
     }
 
-    @Override
-    public void draw(Graphics2D g2d) {
+    public void tick() {
         msCounter++;
         if (msCounter >= delayTicks) {
             msCounter = 0;
             System.err.println("Deadlock solver checking...");
             checkDeadlock();
         }
-    }
-
-    @Override
-    public void setMapView(MapView m) {
-        this.editor = (MapEditorView) m;
-    }
-
-    @Override
-    public void enable() {
-
-    }
-
-    @Override
-    public void disable() {
-
     }
 
     private HashSet<Car> getIncomingCarSet(Intersection i) {
@@ -75,7 +54,7 @@ public class DeadlockSolverPlugin implements IEditorPlugin {
     private void checkDeadlock() {
         boolean deadlock = true;
         boolean all_empty = true;
-        for (Intersection i: editor.getScenario().getIntersections()) {
+        for (Intersection i: map.getScenario().getIntersections()) {
             HashSet<Car> incoming_cars = getIncomingCarSet(i);
             if (incoming_cars.isEmpty()) {
                 continue;

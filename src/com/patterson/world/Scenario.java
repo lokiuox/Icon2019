@@ -14,6 +14,7 @@ public class Scenario {
     private Map<String, Intersection> intersections = new LinkedHashMap<>();
     private Map<String, Road> roads = new LinkedHashMap<>();
     private Map<String, Car> cars = new LinkedHashMap<>();
+    private Map<String, PointOfInterest> pois = new LinkedHashMap<>();
     //private String kb_path = "resources/KB.pl";
     private String kb_path = "resources/KB.pl"; //solo per test
     private String json_path = null;
@@ -135,6 +136,14 @@ public class Scenario {
         return new ArrayList<>(roads.values());
     }
 
+    public List<PointOfInterest> getPois() {
+        return new ArrayList<>(pois.values());
+    }
+
+    public Map<String, PointOfInterest> getPoiMap() {
+        return pois;
+    }
+
     public Map<String, Road> getRoadMap() {
         return roads;
     }
@@ -146,6 +155,21 @@ public class Scenario {
     public Scenario addRoad(Road r) {
         roads.put(r.getID(), r);
         return this;
+    }
+
+    public Scenario addPoi(PointOfInterest p) {
+        pois.put(p.getID(), p);
+        return this;
+    }
+
+    public Scenario addPois(Collection<PointOfInterest> list) {
+        for (PointOfInterest p : list)
+            pois.put(p.getID(), p);
+        return this;
+    }
+
+    public PointOfInterest getPOIByID(String id) {
+        return pois.get(id);
     }
 
     public Scenario addRoads(Collection<Road> list) {
@@ -253,6 +277,7 @@ public class Scenario {
         for (Intersection i : intersections.values()) i.draw(g);
         for (Road r : roads.values()) r.draw(g);
         for (Car c : cars.values()) c.draw(g);
+        for (PointOfInterest p : pois.values()) p.draw(g);
     }
 
     public float getCarAverageTime(String type) {
@@ -280,5 +305,6 @@ public class Scenario {
         this.intersections.clear();
         this.roads.clear();
         this.cars.clear();
+        this.pois.clear();
     }
 }

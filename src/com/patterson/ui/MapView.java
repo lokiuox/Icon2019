@@ -1,5 +1,6 @@
 package com.patterson.ui;
 
+import com.patterson.ui.editor.DeadlockSolverPlugin;
 import com.patterson.world.Scenario;
 import com.patterson.utility.ScenarioUtility;
 
@@ -23,6 +24,7 @@ public class MapView extends JPanel implements ActionListener {
     protected List<IMapPlugin> plugins = new ArrayList<>();
     protected double scaleFactor = DEFAULT_SCALE_FACTOR;
     protected Scenario scenario;
+    private DeadlockSolverPlugin deadlocksolver = null;
 
     public MapView() {
         this(new Scenario());
@@ -74,6 +76,7 @@ public class MapView extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         timer.stop();
         scenario.tick();
+        deadlocksolver.tick();
         repaint();
         this.requestFocus();
         timer.start();
@@ -96,6 +99,7 @@ public class MapView extends JPanel implements ActionListener {
     private void init() {
         plugins.add(new CarPathPlugin(this));
         plugins.get(0).enable();
+        deadlocksolver = new DeadlockSolverPlugin(this);
     }
 
     public int getTimerDelay() { return this.timer.getDelay(); }
