@@ -153,6 +153,7 @@ public class CarPositioningPlugin implements IEditorPlugin {
                                 return;
                         }
                         c.addRoad(t.road);
+                        c.setPois(editor.getScenario().getPoiMap());
                         editor.addCar(c);
                     }
                 } else {

@@ -76,14 +76,14 @@ public class AutoSpawnerPlugin implements IEditorPlugin {
         //System.out.println(road.getID());
 
         // Create the car
-        CarPOI c;
+        Car c;
         Point pos = toGrid(road.getPosition().x, road.getPosition().y);
         // Select car type based on probability
         double random = ThreadLocalRandom.current().nextDouble();
         if (random <= normalCarProbability) {
-            c = new CarPOI(Car.nextID(), pos.x, pos.y, road.getDirection().getAngle());
+            c = new Car(Car.nextID(), pos.x, pos.y, road.getDirection().getAngle());
         } else {
-            c = new CarIEPOI(Car.nextID(), pos.x, pos.y, road.getDirection().getAngle());
+            c = new CarIE(Car.nextID(), pos.x, pos.y, road.getDirection().getAngle());
         }
         c.addRoad(road);
         c.setPois(editor.getScenario().getPoiMap());

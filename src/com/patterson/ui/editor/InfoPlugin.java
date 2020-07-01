@@ -166,9 +166,7 @@ public class InfoPlugin implements IEditorPlugin {
     private void printPOIInfo(PointOfInterest p) {
         System.out.println("Point Of Interest " + p.getID());
         System.out.println("Pos in pixels: " + p.getPosition().x + "," + p.getPosition().y);
-        System.out.println("Roads:");
-        for (Road r: p.getRoads())
-            System.out.println(r.getID());
+        System.out.println("Road: " + p.getRoad().getID());
     }
 
     class Pointer {

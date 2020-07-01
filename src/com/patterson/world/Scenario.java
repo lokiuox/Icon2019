@@ -35,6 +35,7 @@ public class Scenario {
             JSONArray ja_roads = jo_scenario.getJSONArray("roads");
             JSONArray ja_intersections = jo_scenario.getJSONArray("intersections");
             JSONArray ja_cars = jo_scenario.getJSONArray("cars");
+            JSONArray ja_poi = jo_scenario.getJSONArray("pois");
             String name = jo_scenario.getString("name");
             kb_path = jo_scenario.getString("kb");
 
@@ -44,6 +45,7 @@ public class Scenario {
             Map<String, Road> roads = new HashMap<>();
             Map<String, Intersection> intersections = new HashMap<>();
             Map<String, Car> cars = new HashMap<>();
+            Map<String, PointOfInterest> pois = new HashMap<>();
 
 
             //Creating entities
@@ -99,6 +101,15 @@ public class Scenario {
                 }
                 cars.put(obj.getString("id"), car);
                 this.addCar(car);
+            }
+
+            for (int i = 0; i < ja_poi.length(); i++) {
+                JSONObject obj = ja_poi.getJSONObject(i);
+                PointOfInterest poi = new PointOfInterest(obj);
+                String r = obj.getString("road");
+                poi.setRoad(roads.get(r));
+                pois.put(obj.getString("id"), poi);
+                this.addPoi(poi);
             }
             this.setName(name);
         } catch (FileNotFoundException e) {
@@ -248,9 +259,14 @@ public class Scenario {
         for (Car c: cars.values())
             ja_cars.put(c.toJSONObject());
 
+        JSONArray ja_pois = new JSONArray();
+        for (PointOfInterest p: pois.values())
+            ja_pois.put(p.toJSONObject());
+
         scenario.put("roads", ja_roads);
         scenario.put("intersections", ja_intersections);
         scenario.put("cars", ja_cars);
+        scenario.put("pois", ja_pois);
         scenario.write(writer);
     }
 

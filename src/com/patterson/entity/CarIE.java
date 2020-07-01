@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CarIE extends Car {
-
     KnowledgeBaseIF kb = new KnowledgeBaseIF();
     private Map<CarIE, Long> lastSent = new HashMap<>();
     private int minSendTime = 30*5;
@@ -82,4 +81,5 @@ public class CarIE extends Car {
     public KnowledgeBaseIF getKB() {
         return kb;
     }
+
 }

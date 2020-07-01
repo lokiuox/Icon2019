@@ -38,6 +38,22 @@ public class Car implements IEntity {
     protected Queue<Road> path = new LinkedList<>();
 
     private int waiting = 0;
+    private double randomRoadProbability = 0.35;
+
+    Map<String, PointOfInterest> pois;
+
+    public void setPois(Map<String, PointOfInterest> map) { pois = map; }
+
+    public String randomDestination() {
+        double randomRoad = new Random().nextDouble();
+        if (randomRoad <= randomRoadProbability) {
+            return randomDestinationRoad();
+        }
+        int item = new Random().nextInt(pois.size());
+        if (pois.isEmpty())
+            return null;
+        return pois.values().toArray(new PointOfInterest[0])[item].getRoad().getID();
+    }
 
     public Car(String id, float x, float y, int d) {
         updateCounter(id);
@@ -194,7 +210,7 @@ public class Car implements IEntity {
             elapsed_average = elapsed_average + (elapsed-elapsed_average)/completed_destinations;
             elapsed = 0;
             stop();
-            waiting = 30;
+            waiting = 25;
         }
 
         // check right of way
@@ -395,7 +411,7 @@ public class Car implements IEntity {
         path.addAll(list);
     }
 
-    public String randomDestination() {
+    public String randomDestinationRoad() {
         Set<Map<String, String>> roadSet = KnowledgeBase.stringQuery("strada(X).");
 
         int size = roadSet.size();

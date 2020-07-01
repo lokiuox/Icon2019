@@ -169,8 +169,10 @@ class MapEditorView extends MapView {
         List<Road> incoming_roads = new ArrayList<>();
         MapMatrix.Tile[] neighbors = matrix.getNeighboringTiles(x/32, y/32);
         for (MapMatrix.Tile t: neighbors) {
-            if (t.isRoad())
-                p.addRoad(t.road);
+            if (t.isRoad()) {
+                p.setRoad(t.road);
+                break;
+            }
         }
         addPOI(p);
     }
