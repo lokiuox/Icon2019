@@ -37,6 +37,8 @@ public class Car implements IEntity {
 
     protected Queue<Road> path = new LinkedList<>();
 
+    private int waiting = 0;
+
     public Car(String id, float x, float y, int d) {
         updateCounter(id);
         ID = id;
@@ -131,6 +133,14 @@ public class Car implements IEntity {
     // do stuff during the next frame
     public void tick() {
         elapsed++;
+        if (waiting > 1) {
+            waiting--;
+            return;
+        } else if (waiting == 1) {
+            waiting = 0;
+            go();
+            return;
+        }
 
         // stop if there is no road to follow
         if (road == null) {
@@ -183,6 +193,8 @@ public class Car implements IEntity {
             completed_destinations++;
             elapsed_average = elapsed_average + (elapsed-elapsed_average)/completed_destinations;
             elapsed = 0;
+            stop();
+            waiting = 30;
         }
 
         // check right of way

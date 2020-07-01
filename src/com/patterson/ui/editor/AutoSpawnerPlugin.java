@@ -1,8 +1,6 @@
 package com.patterson.ui.editor;
 
-import com.patterson.entity.Car;
-import com.patterson.entity.CarIE;
-import com.patterson.entity.Road;
+import com.patterson.entity.*;
 import com.patterson.ui.MapView;
 
 import java.util.*;
@@ -78,16 +76,17 @@ public class AutoSpawnerPlugin implements IEditorPlugin {
         //System.out.println(road.getID());
 
         // Create the car
-        Car c;
+        CarPOI c;
         Point pos = toGrid(road.getPosition().x, road.getPosition().y);
         // Select car type based on probability
         double random = ThreadLocalRandom.current().nextDouble();
         if (random <= normalCarProbability) {
-            c = new Car(Car.nextID(), pos.x, pos.y, road.getDirection().getAngle());
+            c = new CarPOI(Car.nextID(), pos.x, pos.y, road.getDirection().getAngle());
         } else {
-            c = new CarIE(Car.nextID(), pos.x, pos.y, road.getDirection().getAngle());
+            c = new CarIEPOI(Car.nextID(), pos.x, pos.y, road.getDirection().getAngle());
         }
         c.addRoad(road);
+        c.setPois(editor.getScenario().getPoiMap());
         editor.addCar(c);
     }
 
