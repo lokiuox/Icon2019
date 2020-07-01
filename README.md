@@ -80,7 +80,6 @@ lunghezza(lunghezza1,lunghezza2).
 velocitamax(strada3,numero1).
 semaforo(strada5).
 stop(strada4).
-temporosso(strada5,9).
 velocita(macchina3,velocitas,stradas).
 strada(strada6).
 incrocio(incrocio3).
@@ -107,7 +106,6 @@ macchina(S):- velocita(S,_E,_L).
 ```
 
 Definizione delle conseguenze logiche di ogni predicato,ovvero viene specificato per ogni argomento quale predicato ne consegue.
-Le parti commentate fungono da eventuali miglioramenti futuri.
 
 ```
 somma([],0).
@@ -132,7 +130,7 @@ Il predicato velocitamedia calcola la media aritmetica delle velocita delle macc
 peso(L,X):- 
 	lunghezza(L,K),
 	contamacchine(L,N), 
-	(semaforo(L) -> temporosso(L,J); J is 0),
+	(semaforo(L) -> J is 5; J is 0),
 	(N is 0 -> D is 1,W is 0 ; velocitamedia(L,D), W is 1),
 	(stop(L) -> Costante is 3 ; Costante is 0),
 	velocitamax(L,F),
@@ -157,6 +155,9 @@ Il programma di simulazione,nel dover gestire un incrocio dunque domanderà alla
 precedenza(A) :- \+(precedenza(A,_B)),strada_corrente(A,L),\+(rosso(L)).
 ```
 Per determinare se la macchina A debba dare precedenza alla macchina B occorrerà dunque considerare la prossima strada di A e la strada corrente di entrambe,così da poterne confrontare gli angoli associati per determinare quella che nella figura è la destra,evidenziata in giallo, della macchina A.
+
+![](docs/incrocio.png)
+
 Ulteriori controlli sono necessari nel caso in cui la strada dI B abbia un semaforo rosso o ci sia uno stop poichè in quel caso A non deve dare precedenza.
 Infine è necessario verificare se A stesso si trovi ad uno stop o ad un semaforo rosso per determinare,a seconda dello stato di B, se occorre dare precedenza o meno.
 ```
@@ -194,25 +195,25 @@ Il predicato percorso dunque costruisce una lista Path di lunghezza complessiva 
 ```
 spostamento(A,B,P,[B|P],L) :- 
        collega(A,C,B),
-	   peso(C,L).
+       peso(C,L).
 ```
 
 Nel caso semplice o passo base verifica che A e B,incroci, siano collegati mediante una strada C di peso L. Tale incrocio B viene così aggiunto in testa alla lista dei nodi P già considerati.
 ```
-spostamento(A,B,Visitato,Path,L) :-
+spostamento(A,B,Visitato,Perc,L) :-
 		collega(A,D,C),
 		peso(D,F),
 		C \== B,
 		\+member(C,Visitato),
-		spostamento(C,B,[C|Visitato],Path,L1),
+		spostamento(C,B,[C|Visitato],Perc,L1),
 		L is F+L1.  
 ```
 Nel passo ricorsivo,invece viene verificato che B sia differente da C,nodo collegato ad A, e che C non sia già stato visitato (eseguendo dunque una potatura dei cicli) , e si procede dunque ad aggiungerne il valore F del peso al peso complessivo L e ha ricalcolare lo spostamento da C a B aggiungendo C alla lista dei Visitati. Una volta giunti al passo base la lista dei Visitato sarà ripresa da Path che ci aggiungerà l’ultimo elemento e verrà restituita come lista finale del percorso.
 ```
-piubreve(A,B,Path,Length) :-
+piubreve(A,B,Perc,Lung) :-
    setof([P,L],percorso(A,B,P,L),Set),
    Set = [_|_],
-   minimo(Set,[Path,Length]).
+   minimo(Set,[Perc,Lung]).
 ```
 Il predicato piubreve crea un insieme di liste formate da ogni percorso P con relativa lunghezza L e di questi stabilisce il percorso con lunghezza minima.
 ```
@@ -280,6 +281,10 @@ Si è applicato il MPP, attraverso due insiemi, uno dei nodi attraversati ed uno
 Questo permette di visitare un nodo, trovare i nodi adiacenti e scegliere tra tutti i nodi disponibili il prossimo da percorrere.
 
 
+# IDA*
+L'algoritmo **IDA*** permette di essere più efficiente dell'A* in termini di spazio, applicando la DFS con una limitazione su f(p) (definita come sopra). 
+Si riceve il nodo di partenza e quello goal, partendo dal nodo start attraverso una pila si itera in maniera infita (while(true)) fintantochè uno dei tre seguenti casi si avveri. Ovvero il percorso verso il goal è trovato, non trovato, nel caso non sia trovato o si aumenta il limite di f(p) oppure si determina la non esistenza di un percorso attraverso un limite (Float.MAX_VALUE).
 
+All'interno della funzione della ricerca si verifica se il valore di f è maggiore del massimo corrente, e si ridefinisce il massimo. Si controlla se si è arrivati al goal, altrimenti si itera sugli archi collegati al nodo in analisi, che in caso di successo si aggiungono alla pila formando il path.
 
 

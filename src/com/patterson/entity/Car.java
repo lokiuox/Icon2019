@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Car implements IEntity {
 
     private static int counter = 0;
+
     private String ID;
     private Point2D position = new Point2D.Float(0, 0);
     private Angle direction;
